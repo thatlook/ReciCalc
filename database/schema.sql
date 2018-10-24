@@ -12,25 +12,25 @@
  * ingredients SCHEMA:
  *   ndbno INT PRIMARY KEY,
  *   name TEXT NOT NULL,
- *   std_amount INT NOT NULL,
+ *   std_amount NUMERIC NOT NULL,
  *   std_measure TEXT NOT NULL,
- *   kcal_per INT,
- *   fat_per INT,
- *   sat_fat_per INT,
- *   fiber_per INT,
- *   cholesterol_per INT,
- *   sodium_per INT,
- *   carbs_per INT,
- *   sugar_per INT,
- *   protein_per INT
+ *   kcal_per NUMERIC,
+ *   fat_per NUMERIC,
+ *   sat_fat_per NUMERIC,
+ *   fiber_per NUMERIC,
+ *   cholesterol_per NUMERIC,
+ *   sodium_per NUMERIC,
+ *   carbs_per NUMERIC,
+ *   sugar_per NUMERIC,
+ *   protein_per NUMERIC
  * 
  * recipe_ingredients SCHEMA:
  *   id SERIAL PRIMARY KEY,
  *   recipe_id INT, 
  *   food_no INT, 
- *   quantity INT
- *   quantity_measure VARCHAR
- *   list_position INT
- *   FOREIGN KEY food_no REFERENCES ingredients(ndbno)
+ *   quantity NUMERIC,
+ *   quantity_measure VARCHAR,
+ *   list_position INT,
+ *   FOREIGN KEY food_no REFERENCES ingredients(ndbno),
  *   FOREIGN KEY recipe_id REFERENCES recipes(id)
  */
