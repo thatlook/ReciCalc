@@ -1,12 +1,21 @@
 // Postgress init here
 // Schema in separate file?
 
-const options = require('db_config');
+const options = require('../db_config.js');
 
 const knex = require('knex')({
   client: 'pg',
   connection: options
 });
+
+// EXAMPLE DATABASE ACCESS FUNCTION:
+//
+//module.exports.checkAccess = function(id) {
+// return knex
+//     .select('message')
+//     .from('sample')
+//     .where({id})
+//};
 
 module.exports.fetchRecipeList = function() {
   //return a list of short recipe descriptions
