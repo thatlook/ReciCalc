@@ -13,7 +13,7 @@ const API_KEY = require('./config.example.js').API_KEY;
   sort: r,
   max: 50,
   offset: 0
-  s: 'Standard Reference'
+  ds: 'Standard Reference'
   api_key: ${API_KEY}
 }`
 
