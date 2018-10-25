@@ -1,7 +1,7 @@
 // Postgress init here
 // Schema in separate file?
-
-const options = require('../db_config.js');
+const env = require('../db_config.js').environment;
+const options = require('../knexfile')[env];
 
 const knex = require('knex')({
   client: 'pg',
