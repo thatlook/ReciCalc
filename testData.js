@@ -1,4 +1,4 @@
-const API_KEY = require('./config.js');
+const API_KEY = require('./config.example.js').API_KEY;
 
 //EXAMPLE search process--------->
 // search for 'deli ham' with this url:
