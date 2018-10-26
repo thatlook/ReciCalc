@@ -2,17 +2,17 @@
 // Schema in separate file?
 const env = require('../db_config.js').environment;
 const options = require('../knexfile')[env];
-
+const parse = require('../helpers/parsers.js');
 const knex = require('knex')(options);
 
 // EXAMPLE DATABASE ACCESS FUNCTION:
 //
-module.exports.checkAccess = function(id) {
-  return knex
-     .select()
-     .from('sample')
-    // .where({id})
-};
+//module.exports.checkAccess = function(id) {
+//  return knex
+//     .select()
+//     .from('sample')
+//    // .where({id})
+//};
 
 module.exports.fetchRecipeList = function() {
   //return a list of short recipe descriptions
@@ -50,11 +50,16 @@ module.exports.fetchRecipeById = function(recipeId) {
 
 module.exports.searchIngredientByName = function(searchString) {
   //look for ingredients that might be the target and return them
-  return knex.select('*').from('ingredients').where('name', 'ilike', '%'+searchString+'%');
+  return knex.select('*')
+    .from('ingredients')
+    .where('name', 'ilike', '%'+searchString+'%');
 };
 
-module.exports.addIngredient = function(ingredient) {
+module.exports.addIngredient = function(usdaIngredient) {
   //takes an ingredient object and stores it to the ingredients table
+  //Assuming object is the 'usdaReturnObject.report.foods[0]'
+  let dbIngredient = parse.usdaIngredientToDatabase(usdaIngredient);
+  return knex('ingredients').insert(dbIngredient);
 }
 
 module.exports.addRecipeIngredient = function(recipeIngredient) {
