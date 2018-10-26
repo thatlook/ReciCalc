@@ -29,11 +29,11 @@ module.exports.usdaIngredientToDatabase = function(usdaIngredient) {
 
 module.exports.databaseFullRecipeToClient = function(dbOutput) {
   const fullRecipe = {
-    title: dbOutput[0].name,
-    id: dbOutput[0].id,
-    description: dbOutput[0].description,
-    topIngredients: dbOutput[0].top_ingredients,
-    instructions: dbOutput[0].instructions
+    title: dbOutput[0][0].name,
+    id: dbOutput[0][0].id,
+    description: dbOutput[0][0].description,
+    topIngredients: dbOutput[0][0].top_ingredients,
+    instructions: dbOutput[0][0].instructions
   }
   fullRecipe.ingredients = dbOutput[1].map(dbIng => {
     const ingredient = {
