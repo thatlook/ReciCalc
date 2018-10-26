@@ -44,6 +44,7 @@ module.exports.fetchRecipeById = function(recipeId) {
     .from('recipe_ingredients')
     .join('ingredients', 'recipe_ingredients.food_no', '=', 'ingredients.ndbno')
     .where({'recipe_ingredients.recipe_id': recipeId})
+    .orderBy('recipe_ingredients.list_position', 'asc')
   ]; 
   return Promise.all(queriesNeeded)
 };
@@ -66,7 +67,38 @@ module.exports.addRecipeIngredient = function(recipeIngredient) {
   //takes an ingredient entry on a recipe and adds it to the recipe_ingredient junction table
 }
 
-module.exports.addRecipe = function(recipe) {
+module.exports.addRecipe = function(clientRecipe) {
   //takes a recipe object, adds the basic data to the db, then calls addRecipeIngredient on each 
   //ingredient entry to store the necessary information
+  return knex.transaction(trx => {
+    const dbRecipe = {
+      name: clientRecipe.title,
+      description: clientRecipe.description,
+      top_ingredients: clientRecipe.topIngredients,
+      instructions: JSON.stringify(clientRecipe.instructions)
+    };
+    const dbIngredientJunction = clientRecipe.ingredients.map((ing, index) =>  {
+      return {
+        food_no: ing.ndbno,
+        quantity: ing.quantity,
+        quantity_measure: 'g',
+        list_position: index
+      }
+    })
+
+    return trx
+      .insert(dbRecipe)
+      .into('recipes')
+      .returning('id')
+      .then(recipeId => {
+        console.log('recipe ID: ', recipeId)
+        return dbIngredientJunction.map(entry => {
+          entry.recipe_id = recipeId[0];
+          return trx
+            .insert(entry)
+            .into('recipe_ingredients');
+        })
+      })
+      .all();
+  })
 }
