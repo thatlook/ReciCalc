@@ -10,62 +10,57 @@ class Create extends Component {
             title: null,
             description: null,
             ingredients: [],
-            instructions: [{text: ''}]
+            instructions: []
         }
-        this.ingredientCounter = 0;
+        this.counter = 0;
+        this.sampleIngredient = {
+            name: '',
+            ndbno: '',
+            quantity: '',
+            isValidated: false,
+            isSaved: false,
+            nutrition: {},
+        }
         this.updateRecipe = this.updateRecipe.bind(this);
         this.addNewIngredient = this.addNewIngredient.bind(this);
-        this.saveIngredient = this.saveIngredient.bind(this);
         this.deleteIngredient = this.deleteIngredient.bind(this);
     }
 
-    updateRecipe(statePiece, newValue) {
-      console.log(statePiece, newValue);
-      this.setState({[statePiece]: newValue}, () => console.log(this.state));
+
+    updateRecipe(statePiece, newValue, index, callback) {
+      if (!Array.isArray(statePiece)) {
+        this.setState({[statePiece]: newValue});
+      } else {
+          let arrayName = statePiece[0];
+          let propertyName = statePiece[1];
+          const newStateArray = this.state[arrayName].map((ingredient, ingredientIndex) => {
+              if (ingredientIndex !== index) {
+                  return ingredient;
+              } else {
+                  return {...ingredient, [propertyName]: newValue};
+              }
+          });
+          this.setState({[arrayName]: newStateArray}, () => {if (callback) {callback()}});
+      }
+    }
+
+    addNewIngredient(){
+      let newIngredient = {...this.sampleIngredient, counter: this.counter};
+      this.setState(prevState => ({ingredients: prevState.ingredients.concat([newIngredient])}), () => {this.counter++;console.log(this.state)});
+    }
+
+    deleteIngredient(index){
+      this.setState(prevState => ({
+        ingredients: prevState.ingredients.filter((ingredient, ingredientIndex) => {
+          return ingredientIndex !== index;
+        })}), () => console.log(this.state));
     }
 
     postRecipe(){
       // pull needed items from state
-      // ensure that title and description are not null
-      // filter ingredients and instructions for saved items (not the dummy starter objects)?
+      // ensure that each ingredient isValidated, isSaved, and has a title and description
       // axios call to server to post recipe to database
     }
-
-
-
-    addNewIngredient(event){
-      this.setState(prevState => ({ingredients: prevState.ingredients.concat([this.ingredientCounter])}), () => {this.ingredientCounter++; console.log(this.state)});
-    }
-
-    saveIngredient(index, ingredient){
-      console.log(`saveIngredient called with index ${index} and ingredient ${ingredient}`)
-      let updatedIngredients = this.state.ingredients;
-      updatedIngredients[index] = ingredient;
-      this.setState({ingredients: updatedIngredients}, () => console.log(this.state));
-    }
-
-    deleteIngredient(index){
-      console.log(`deleteIngredient called with index ${index}`);
-      let updatedIngredients = this.state.ingredients;
-      updatedIngredients.splice(index, 1);
-      this.setState({ingredients: updatedIngredients}, () => console.log(this.state));
-      // not really necessary
-      this.ingredientCounter--;
-    }
-
-    editIngredient(){
-
-    }
-    
-    //reference below
-    // handleShareholderNameChange = (idx) => (evt) => {
-    //     const newShareholders = this.state.shareholders.map((shareholder, sidx) => {
-    //       if (idx !== sidx) return shareholder;
-    //       return { ...shareholder, name: evt.target.value };
-    //     });
-    
-    //     this.setState({ shareholders: newShareholders });
-    //   }
 
     render() {
       return (
@@ -75,7 +70,7 @@ class Create extends Component {
           <CreateIngredients 
             ingredients={this.state.ingredients}
             addNewIngredient={this.addNewIngredient}
-            saveIngredient={this.saveIngredient}
+            updateRecipe={this.updateRecipe}
             deleteIngredient={this.deleteIngredient}
           />
         </div>

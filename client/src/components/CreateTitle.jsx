@@ -27,19 +27,19 @@ class CreateTitle extends Component {
       } else {
         if(this.state.title) {
           this.toggleSaved();
-          this.props.updateRecipe('title', this.state.title);
+          this.props.updateRecipe(event.target.name, this.state.title);
         }
       }
     }
 
     render () {
         return (
-          <form id='create-title' onSubmit={this.handleSubmit}>
+          <form id='create-title' name='title' onSubmit={this.handleSubmit}>
             <label>
               Recipe title:
               <input type='text' placeholder='recipe title here' onChange={this.updateTitle} disabled={this.state.isSaved}/>
             </label>
-            <input className = 'button' type='submit' value={this.state.isSaved ? 'Edit' : 'Save'} />
+            <input className='button' type='submit' value={this.state.isSaved ? 'Edit' : 'Save'} />
           </form>)
     }
 }
