@@ -1,9 +1,6 @@
-<<<<<<< HEAD
 const API_KEY = require('../config.example.js').API_KEY;
-=======
 const db = require('../database/db.js');
 
->>>>>>> 2bbea1df662ab87843b0d8fb641b823f457a3b66
 module.exports.recipes = {
   getList: (req, res) => {
     //query datbase for a list of short recipe descriptions and return them
