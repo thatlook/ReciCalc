@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 
+// refactor to functional component?
 class Header extends Component {
   constructor() {
       super();

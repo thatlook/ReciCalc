@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import {BrowserRouter as Router} from 'react-router-dom';
 
-// import Route components
+// import top-level Route components
 import Header from './components/Header.jsx';
 import Main from './components/Main.jsx';
 
