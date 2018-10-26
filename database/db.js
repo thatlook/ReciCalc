@@ -3,15 +3,12 @@
 const env = require('../db_config.js').environment;
 const options = require('../knexfile')[env];
 
-const knex = require('knex')({
-  client: 'pg',
-  connection: options
-});
+const knex = require('knex')(options);
 
 // EXAMPLE DATABASE ACCESS FUNCTION:
 //
 //module.exports.checkAccess = function(id) {
-// return knex
+//  return knex
 //     .select('message')
 //     .from('sample')
 //     .where({id})
