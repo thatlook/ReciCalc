@@ -46,7 +46,9 @@ module.exports.fetchRecipeById = function(recipeId) {
       .where({'recipe_ingredients.recipe_id': recipeId})
       .orderBy('recipe_ingredients.list_position', 'asc')
   ]; 
-  return Promise.all(queriesNeeded)
+  return Promise
+    .all(queriesNeeded)
+    .then(data => parse.databaseFullRecipeToClient(data));
 };
 
 module.exports.searchIngredientByName = function(searchString) {
