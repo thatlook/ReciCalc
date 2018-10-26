@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 const API_KEY = require('../config.example.js').API_KEY;
+=======
+const db = require('../database/db.js');
+
+>>>>>>> 2bbea1df662ab87843b0d8fb641b823f457a3b66
 module.exports.recipes = {
   getList: (req, res) => {
     //query datbase for a list of short recipe descriptions and return them
@@ -106,3 +111,15 @@ module.exports.ingredients = {
     res.status(404).send('Under construction! We are not currently able to store data.');
   }
 }
+
+
+//EXAMPLE DATABASE INTERACTION:
+//
+//confirmAccess = function(req, res) => {
+//  db.checkAccess(req.params.number)
+//    .then(data => {
+//      //do some calculations with the data and make formattedData
+//      res.status(200).json(formattedData);
+//    })
+//    .catch(err => res.status(500).send(err));
+//}
