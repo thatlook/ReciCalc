@@ -24,6 +24,9 @@
  *   sugar_per NUMERIC,
  *   protein_per NUMERIC
  * 
+ *   //NOTE: cholesterol and sodium stored in mg
+ *   // rest are in g (except kcal)
+ * 
  * recipe_ingredients SCHEMA:
  *   id SERIAL PRIMARY KEY,
  *   recipe_id INT, 

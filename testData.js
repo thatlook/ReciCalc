@@ -1,21 +1,21 @@
-const API_KEY = require('./config.example.js').API_KEY;
-
+//const API_KEY = require('./config.example.js').API_KEY;
+let API_KEY = () => '';
 //EXAMPLE search process--------->
 // search for 'deli ham' with this url:
-`https://api.nal.usda.gov/ndb/search/?format=json&q=deli%20ham&sort=r&max=50&offset=0&ds=Standard%20Reference&api_key=${API_KEY}`
+//`https://api.nal.usda.gov/ndb/search/?format=json&q=deli%20ham&sort=r&max=50&offset=0&ds=Standard%20Reference&api_key=${API_KEY}`
 //Grab the resulting list from list[...item] (item is an array of objects)
 //Each item has a ndbno number that is unique to that food item
 //This list can be trimmed and given as options for when a user wants to validate an ingredient
 
-`params: {
-  format: JSON,
-  q: query,
-  sort: r,
-  max: 50,
-  offset: 0
-  ds: 'Standard Reference'
-  api_key: ${API_KEY}
-}`
+//`params: {
+//  format: JSON,
+//  q: query,
+//  sort: r,
+//  max: 50,
+//  offset: 0
+//  ds: 'Standard Reference'
+//  api_key: ${API_KEY}
+//}`
 
 const testDataSearch = {
   "list": {
@@ -49,14 +49,14 @@ const testDataSearch = {
 }
 
 //Use the nutrient search api with this url:
-`https://api.nal.usda.gov/ndb/nutrients/?format=json&api_key=${API_KEY}&nutrients=208&nutrients=204&nutrients=205&nutrients=606&nutrients=291&nutrients=203&nutrients=307&nutrients=601&nutrients=269&ndbno=07028`
+//`https://api.nal.usda.gov/ndb/nutrients/?format=json&api_key=${API_KEY}&nutrients=208&nutrients=204&nutrients=205&nutrients=606&nutrients=291&nutrients=203&nutrients=307&nutrients=601&nutrients=269&ndbno=07028`
 
-`params: {
-  format: JSON,
-  api_key: ${API_KEY}
-  nutrients: [208, 204, 606, 291, 203, 307, 601, 269, 205],
-  ndbno: ndbno
-}`
+//`params: {
+//  format: JSON,
+//  api_key: ${API_KEY}
+//  nutrients: [208, 204, 606, 291, 203, 307, 601, 269, 205],
+//  ndbno: ndbno
+//}`
 //The nutrients list will be an array of pre-chosen nutrient id numbers via the options in a get request, the ndbno number comes from the previous search
 //Resulting object should look similar to this:
 
