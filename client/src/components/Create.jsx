@@ -13,25 +13,42 @@ class Create extends Component {
             instructions: [{text: ''}]
         }
         this.updateRecipe = this.updateRecipe.bind(this);
-        this.addIngredient = this.addIngredient.bind(this);
+        this.addNewIngredient = this.addNewIngredient.bind(this);
+        this.saveIngredient = this.saveIngredient.bind(this);
     }
 
+    updateRecipe(statePiece, newValue) {
+      console.log(statePiece, newValue);
+      this.setState({[statePiece]: newValue}, () => console.log(this.state));
+    }
 
     postRecipe(){
       // pull needed items from state
+      // ensure that title and description are not null
       // filter ingredients and instructions for saved items (not the dummy starter objects)?
       // axios call to server to post recipe to database
     }
 
 
 
-    addIngredient(event){
+    addNewIngredient(event){
       this.setState(prevState => ({ingredients: prevState.ingredients.concat([{name: ''}])}), () => console.log(this.state));
     }
 
-    removeIngredient(){
-
+    saveIngredient(index, ingredient){
+      console.log(`saveIngredient called with index ${index} and ingredient ${ingredient}`)
+      let updatedIngredients = this.state.ingredients;
+      updatedIngredients[index] = ingredient;
+      this.setState({ingredients: updatedIngredients}, () => console.log(this.state));
     }
+
+    deleteIngredient(index){
+      console.log(`deleteIngredient called with index ${index}`);
+      let updatedIngredients = this.state.ingredients;
+      updatedIngredients.splice(i, 1);
+      this.setState({ingredients: updatedIngredients}, () => console.log(this.state));
+    }
+
    // reference below
     // handleRemoveShareholder = (idx) => () => {
     //     this.setState({
@@ -43,7 +60,8 @@ class Create extends Component {
     editIngredient(){
 
     }
-//reference below
+    
+    //reference below
     // handleShareholderNameChange = (idx) => (evt) => {
     //     const newShareholders = this.state.shareholders.map((shareholder, sidx) => {
     //       if (idx !== sidx) return shareholder;
@@ -53,18 +71,6 @@ class Create extends Component {
     //     this.setState({ shareholders: newShareholders });
     //   }
 
-
-    addInstruction(){
-        // function to render additional ingredient or instruction
-        // pass it down as a prop to each of those componenets
-      }
-
-
-    updateRecipe(statePiece, newValue){
-        console.log(statePiece, newValue);
-        this.setState({[statePiece]: newValue}, () => console.log(this.state));
-    }
-
     render() {
       return (
         <div id='create'>
@@ -72,7 +78,8 @@ class Create extends Component {
           <CreateDescription updateRecipe={this.updateRecipe} />
           <CreateIngredients 
             ingredients={this.state.ingredients}
-            addIngredient={this.addIngredient}
+            addNewIngredient={this.addNewIngredient}
+            saveIngredient={this.saveIngredient}
           />
         </div>
       )

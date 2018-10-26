@@ -9,24 +9,24 @@ class CreateTitle extends Component {
         }
       this.updateTitle = this.updateTitle.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
-      this.toggleInput = this.toggleInput.bind(this);
+      this.toggleSaved = this.toggleSaved.bind(this);
     }
 
     updateTitle(event){
       this.setState({title: event.target.value});
     }
 
-    toggleInput(){
+    toggleSaved(){
         this.setState(prevState => ({isSaved: !prevState.isSaved}));
     }
 
     handleSubmit(event){
       event.preventDefault();
       if (this.state.isSaved) {
-        this.toggleInput();
+        this.toggleSaved();
       } else {
         if(this.state.title) {
-          this.toggleInput();
+          this.toggleSaved();
           this.props.updateRecipe('title', this.state.title);
         }
       }

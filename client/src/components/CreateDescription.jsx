@@ -5,28 +5,28 @@ class CreateDescription extends Component {
         super(props);
         this.state = {
           description: null,
-          saved: false
+          isSaved: false
         }
       this.updateDescription = this.updateDescription.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
-      this.toggleInput = this.toggleInput.bind(this);
+      this.toggleSaved = this.toggleSaved.bind(this);
     }
 
     updateDescription(event){
       this.setState({description: event.target.value});
     }
 
-    toggleInput(){
-        this.setState(prevState => ({saved: !prevState.saved}));
+    toggleSaved(){
+        this.setState(prevState => ({isSaved: !prevState.isSaved}));
     }
 
     handleSubmit(event){
       event.preventDefault();
-      if (this.state.saved) {
-        this.toggleInput();
+      if (this.state.isSaved) {
+        this.toggleSaved();
       } else {
         if(this.state.description) {
-          this.toggleInput();
+          this.toggleSaved();
           this.props.updateRecipe('description', this.state.description);
         }
       }
@@ -37,9 +37,9 @@ class CreateDescription extends Component {
           <form id='create-description' onSubmit={this.handleSubmit}>
             <label>
               Recipe description:
-              <textarea placeholder='recipe description here' onChange={this.updateDescription} disabled={this.state.saved}/>
+              <textarea placeholder='recipe description here' onChange={this.updateDescription} disabled={this.state.isSaved}/>
             </label>
-            <input className = 'button' type='submit' value={this.state.saved ? 'Edit' : 'Save'} />
+            <input className = 'button' type='submit' value={this.state.isSaved ? 'Edit' : 'Save'} />
           </form>)
     }
 }
