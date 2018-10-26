@@ -3,6 +3,10 @@ import CreateTitle from './CreateTitle.jsx';
 import CreateDescription from './CreateDescription.jsx';
 import CreateIngredients from './CreateIngredients.jsx';
 
+// keep state.ingredients as single source of truth
+// when ingredient is added, push a blank object {name, quantity}
+// use index+name+quantity for key
+
 class Create extends Component {
     constructor () {
         super ();
@@ -10,18 +14,28 @@ class Create extends Component {
             title: null,
             description: null,
             ingredients: [],
-            instructions: [{text: ''}]
+            //instructions: [{text: ''}]
         }
-        this.ingredientCounter = 0;
+        this.sampleIngredient = {
+            name: '',
+            nbdno: '',
+            quantity: '',
+            isSaved: false,
+            nutrition: {}
+        }
         this.updateRecipe = this.updateRecipe.bind(this);
         this.addNewIngredient = this.addNewIngredient.bind(this);
-        this.saveIngredient = this.saveIngredient.bind(this);
-        this.deleteIngredient = this.deleteIngredient.bind(this);
+        // this.saveIngredient = this.saveIngredient.bind(this);
+        // this.deleteIngredient = this.deleteIngredient.bind(this);
     }
 
     updateRecipe(statePiece, newValue) {
-      console.log(statePiece, newValue);
+      console.log(statePiece, newValue)
       this.setState({[statePiece]: newValue}, () => console.log(this.state));
+    }
+
+    addNewIngredient(){
+      this.setState(prevState => ({ingredients: prevState.ingredients.concat([this.sampleIngredient])}), () => {console.log(this.state)});
     }
 
     postRecipe(){
@@ -29,12 +43,6 @@ class Create extends Component {
       // ensure that title and description are not null
       // filter ingredients and instructions for saved items (not the dummy starter objects)?
       // axios call to server to post recipe to database
-    }
-
-
-
-    addNewIngredient(event){
-      this.setState(prevState => ({ingredients: prevState.ingredients.concat([this.ingredientCounter])}), () => {this.ingredientCounter++; console.log(this.state)});
     }
 
     saveIngredient(index, ingredient){
@@ -49,8 +57,6 @@ class Create extends Component {
       let updatedIngredients = this.state.ingredients;
       updatedIngredients.splice(index, 1);
       this.setState({ingredients: updatedIngredients}, () => console.log(this.state));
-      // not really necessary
-      this.ingredientCounter--;
     }
 
     editIngredient(){
@@ -67,6 +73,7 @@ class Create extends Component {
     //     this.setState({ shareholders: newShareholders });
     //   }
 
+
     render() {
       return (
         <div id='create'>
@@ -75,8 +82,8 @@ class Create extends Component {
           <CreateIngredients 
             ingredients={this.state.ingredients}
             addNewIngredient={this.addNewIngredient}
-            saveIngredient={this.saveIngredient}
-            deleteIngredient={this.deleteIngredient}
+            // saveIngredient={this.saveIngredient}
+            // deleteIngredient={this.deleteIngredient}
           />
         </div>
       )

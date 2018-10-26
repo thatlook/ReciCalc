@@ -10,16 +10,16 @@ class IngredientInput extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          ingredient: {}, 
+          unmatchedInput: null,
+          //track unmatched input here or in parent component
+          nameMatches: [],
+        }
+
+        //ingredient in props:
             // starts blank, set in didMount ({name: ''})
             // will add information from matched ingredient once validated -> name, NDBNO
             // will add quantity once entered
             // will add isSaved once saved
-          unmatchedInput: null,
-          nameMatches: [],
-          isValidated: false,
-          isSaved: false
-        }
         this.updateUnmatched = this.updateUnmatched.bind(this);
         this.updateQuantity = this.updateQuantity.bind(this);
         this.validate = this.validate.bind(this);
@@ -27,10 +27,6 @@ class IngredientInput extends Component {
     }
 
     componentDidMount(){
-    //   console.log(`mounting ingredient: received prop index: ${this.props.index} and ingredient ${this.props.ingredient}`)
-      //this.setState({ingredient: this.props.ingredient}, () => console.log(`new ingredient state: ${JSON.stringify(this.state)}`));
-      // if ingredient has already been saved and is being re-rendered after a addition/deletion of other ingredient, 
-      // need to se isValidated to true and isSaved to true
     }
 
     toggleSaved(){
@@ -47,10 +43,10 @@ class IngredientInput extends Component {
     }
 
     validate(name = this.state.unmatchedInput, nbdno = this.props.index) {
-    // have select element automatically render when there is unmatched input and just use validate button to validate?
-    //   let oldIngredient = this.state.ingredient;
-    //   this.setState({ingredient: {...oldIngredient, name, nbdno}, unmatchedInput: null, isValidated: true}, () => console.log(this.state));
-    //   // this is for testing purposes, see below for real logic of validation
+    //  have select element automatically render when there is unmatched input and just use validate button to validate?
+    //  let oldIngredient = this.state.ingredient;
+    //  this.setState({ingredient: {...oldIngredient, name, nbdno}, unmatchedInput: null, isValidated: true}, () => console.log(this.state));
+    //  this is for testing purposes, see below for real logic of validation
     }
 
     // when validate button is pressed:
@@ -89,29 +85,31 @@ class IngredientInput extends Component {
     }
 
     render(){
-
-        console.log(`rendering ${this.props.ingredient} at position ${this.props.index}`);
+      const {ingredient, ...rest} = this.props;
 
       return (
         <div className='ingredient-input'>
           <div className='ingredient-info' >
-            <input className='name' type='text' placeholder='Ingredient name' onChange={this.updateUnmatched} disabled={this.state.isSaved}/>
-            <input className='quantity' type='number' placeholder='Quantity' onChange={this.updateQuantity} disabled={this.state.isSaved}/>
+            <input className='name' type='text' placeholder='Ingredient name' onChange={this.updateUnmatched} value={ingredient.name} disabled={ingredient.isSaved}/>
+            <input className='quantity' type='number' placeholder='Quantity' onChange={this.updateQuantity} value={ingredient.quantity} disabled={ingredient.isSaved}/>
             <span>grams</span>
             <input className='button' type='submit' value={this.state.isSaved ? 'Edit' : 'Save'} onClick={this.handleSave}/>
-            <input className='button' type='button' value='Delete' onClick={() => this.props.deleteIngredient(this.props.index)}/>
+            <input className='button' type='button' value='Delete' />
           </div>
           <div className='validate' hidden={!this.state.unmatchedInput}>
             <input className='button' type='button' value='Validate' onClick={() => this.validate()}/>
             Validation match possibilities will go here
             {/* <select name="" id="">
-               namematches.map..
-               onChange - 
+               namematches.map to options
+               click
 
             </select> */}
           </div>
         </div>)
     }
 }
+
+
+//onClick={() => this.props.deleteIngredient(this.props.index)
 
 export default IngredientInput;

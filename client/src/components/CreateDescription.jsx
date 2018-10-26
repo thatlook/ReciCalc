@@ -27,19 +27,19 @@ class CreateDescription extends Component {
       } else {
         if(this.state.description) {
           this.toggleSaved();
-          this.props.updateRecipe('description', this.state.description);
+          this.props.updateRecipe(event.target.name, this.state.description);
         }
       }
     }
 
     render () {
         return (
-          <form id='create-description' onSubmit={this.handleSubmit}>
+          <form id='create-description' name='description' onSubmit={this.handleSubmit}>
             <label>
               Recipe description:
               <textarea placeholder='recipe description here' onChange={this.updateDescription} disabled={this.state.isSaved}/>
             </label>
-            <input className = 'button' type='submit' value={this.state.isSaved ? 'Edit' : 'Save'} />
+            <input className='button' type='submit' value={this.state.isSaved ? 'Edit' : 'Save'} />
           </form>)
     }
 }
