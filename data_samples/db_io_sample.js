@@ -43,4 +43,23 @@ databaseRecipeOutput = [
       proteinPer: null 
     } 
   ] 
-]
+];
+
+databaseIngredientsOutput = [ 
+  { 
+    ndbno: 7028,
+    name: 'Ham, sliced, pre-packaged, deli meat (96%fat free, water added)',
+    std_amount: '100.00',
+    std_measure: 'g',
+    kcal_per: '107.00',
+    fat_per: '4.04',
+    sat_fat_per: '1.23',
+    fiber_per: '0.00',
+    cholesterol_per: '41.00',
+    sodium_per: '945.00',
+    carbs_per: '0.70',
+    sugar_per: null,
+    protein_per: '16.85' 
+  }
+  //there could be more objects down here, it's an array 
+];
