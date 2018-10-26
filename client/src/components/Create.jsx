@@ -49,16 +49,9 @@ class Create extends Component {
       let updatedIngredients = this.state.ingredients;
       updatedIngredients.splice(index, 1);
       this.setState({ingredients: updatedIngredients}, () => console.log(this.state));
+      // not really necessary
       this.ingredientCounter--;
     }
-
-   // reference below
-    // handleRemoveShareholder = (idx) => () => {
-    //     this.setState({
-    //       shareholders: this.state.shareholders.filter((s, sidx) => idx !== sidx)
-    //     });
-    //   }
-
 
     editIngredient(){
 

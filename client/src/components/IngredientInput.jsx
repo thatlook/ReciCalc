@@ -27,7 +27,7 @@ class IngredientInput extends Component {
     }
 
     componentDidMount(){
-      console.log(`mounting ingredient: received prop index: ${this.props.index} and ingredient ${this.props.ingredient}`)
+    //   console.log(`mounting ingredient: received prop index: ${this.props.index} and ingredient ${this.props.ingredient}`)
       //this.setState({ingredient: this.props.ingredient}, () => console.log(`new ingredient state: ${JSON.stringify(this.state)}`));
       // if ingredient has already been saved and is being re-rendered after a addition/deletion of other ingredient, 
       // need to se isValidated to true and isSaved to true
@@ -47,9 +47,10 @@ class IngredientInput extends Component {
     }
 
     validate(name = this.state.unmatchedInput, nbdno = this.props.index) {
-      let oldIngredient = this.state.ingredient;
-      this.setState({ingredient: {...oldIngredient, name, nbdno}, unmatchedInput: null, isValidated: true}, () => console.log(this.state));
-      // this is for testing purposes, see below for real logic of validation
+    // have select element automatically render when there is unmatched input and just use validate button to validate?
+    //   let oldIngredient = this.state.ingredient;
+    //   this.setState({ingredient: {...oldIngredient, name, nbdno}, unmatchedInput: null, isValidated: true}, () => console.log(this.state));
+    //   // this is for testing purposes, see below for real logic of validation
     }
 
     // when validate button is pressed:
@@ -89,7 +90,7 @@ class IngredientInput extends Component {
 
     render(){
 
-        console.log(`rendering ${this.props.ingredient}`);
+        console.log(`rendering ${this.props.ingredient} at position ${this.props.index}`);
 
       return (
         <div className='ingredient-input'>
@@ -103,6 +104,11 @@ class IngredientInput extends Component {
           <div className='validate' hidden={!this.state.unmatchedInput}>
             <input className='button' type='button' value='Validate' onClick={() => this.validate()}/>
             Validation match possibilities will go here
+            {/* <select name="" id="">
+               namematches.map..
+               onChange - 
+
+            </select> */}
           </div>
         </div>)
     }
