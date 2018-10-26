@@ -2,16 +2,16 @@ import React, {Component} from 'react';
 import IngredientInput from './IngredientInput.jsx';
 
 
-const CreateIngredients = ({ingredients}) => (
-        <form>
+const CreateIngredients = ({ingredients, addIngredient}) => (
+        <div>
             <h3>Ingredients:</h3>
+            <input className='button' type='button' value='Add Ingredient' onClick={addIngredient} />
             {ingredients.map((ingredient, index) => <IngredientInput
                 key={index}
                 index={index}
                 ingredient={ingredient}
             />)}
-            <input className = 'button' type='submit' value='Add ingredient'/>
-        </form>
+        </div>
 )
     
 

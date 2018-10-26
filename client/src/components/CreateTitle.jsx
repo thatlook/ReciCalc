@@ -5,7 +5,7 @@ class CreateTitle extends Component {
         super(props);
         this.state = {
           title: null,
-          saved: false
+          isSaved: false
         }
       this.updateTitle = this.updateTitle.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
@@ -17,16 +17,18 @@ class CreateTitle extends Component {
     }
 
     toggleInput(){
-        this.setState(prevState => ({saved: !prevState.saved}));
+        this.setState(prevState => ({isSaved: !prevState.isSaved}));
     }
 
     handleSubmit(event){
       event.preventDefault();
-      if (this.state.saved) {
+      if (this.state.isSaved) {
         this.toggleInput();
       } else {
-        this.toggleInput();
-        this.props.updateRecipe('title', this.state.title);
+        if(this.state.title) {
+          this.toggleInput();
+          this.props.updateRecipe('title', this.state.title);
+        }
       }
     }
 
@@ -35,9 +37,9 @@ class CreateTitle extends Component {
           <form id='create-title' onSubmit={this.handleSubmit}>
             <label>
               Recipe title:
-              <input type='text' placeholder='recipe title here' onChange={this.updateTitle} disabled={this.state.saved}/>
+              <input type='text' placeholder='recipe title here' onChange={this.updateTitle} disabled={this.state.isSaved}/>
             </label>
-            <input className = 'button' type='submit' value={this.state.saved ? 'Edit' : 'Save'} />
+            <input className = 'button' type='submit' value={this.state.isSaved ? 'Edit' : 'Save'} />
           </form>)
     }
 }

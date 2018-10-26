@@ -25,8 +25,10 @@ class CreateDescription extends Component {
       if (this.state.saved) {
         this.toggleInput();
       } else {
-        this.toggleInput();
-        this.props.updateRecipe('description', this.state.description);
+        if(this.state.description) {
+          this.toggleInput();
+          this.props.updateRecipe('description', this.state.description);
+        }
       }
     }
 
