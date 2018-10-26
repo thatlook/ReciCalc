@@ -1,60 +1,24 @@
 import React, {Component} from 'react';
 
-// key
-// index
-// ingredient
-// saveIngredient
-// deleteIngredient
-
 class IngredientInput extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          unmatchedInput: null,
-          //track unmatched input here or in parent component
           nameMatches: [],
         }
-
-        //ingredient in props:
-            // starts blank, set in didMount ({name: ''})
-            // will add information from matched ingredient once validated -> name, NDBNO
-            // will add quantity once entered
-            // will add isSaved once saved
-        this.updateUnmatched = this.updateUnmatched.bind(this);
-        this.updateQuantity = this.updateQuantity.bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.validate = this.validate.bind(this);
         this.handleSave = this.handleSave.bind(this);
     }
 
-    componentDidMount(){
+    handleChange(event){
+      const {updateRecipe, index, ...rest} = this.props;
+      updateRecipe(['ingredients', event.target.name], event.target.value, index);
     }
 
-    toggleSaved(){
-      this.setState(prevState => ({isSaved: !prevState.isSaved}));
-    }
-
-    updateUnmatched(event){
-      this.setState({unmatchedInput: event.target.value, isValidated: false}, () => console.log(this.state));
-    }
-
-    updateQuantity(event) {
-      let oldIngredient = this.state.ingredient;
-      this.setState({ingredient: {...oldIngredient, quantity: event.target.value}}, () => console.log(this.state));
-    }
-
-    validate(name = this.state.unmatchedInput, nbdno = this.props.index) {
-    //  have select element automatically render when there is unmatched input and just use validate button to validate?
-    //  let oldIngredient = this.state.ingredient;
-    //  this.setState({ingredient: {...oldIngredient, name, nbdno}, unmatchedInput: null, isValidated: true}, () => console.log(this.state));
-    //  this is for testing purposes, see below for real logic of validation
-    }
-
-    // when validate button is pressed:
-    //   DO WE PROVIDE OPTION TO NOT VALIDATE? like for spices, etc.
-    //   WHAT WOULD THAT LOOK LIKE IN THE DATABASE??
-    //   SINCE WE USE THE NDBNO for the id, these ingredients could not exist in rec/ingred junciton table
-    //   do we make a different table for unvalidated ingredients???
-    //
+    validate(userInputtedFoodWord) {
+      const {updateRecipe, index, ...rest} = this.props;
+    //   Will we provide use an option in the select menu
     //   1)check database for possible nameMatches -> update state nameMatches
     //     if user chooses one of these matches:
     //       update state -> ingredient name and NDBNO
@@ -67,36 +31,43 @@ class IngredientInput extends Component {
     //                      -> isValidate to true (will change validate button to read 'edit')
     //         make call to API to get nutritional info of ingredient with given NDBNO and add to database
     //   3)repeat step 2 as needed until match is found
-
+      
+      // change below hardcoded values to correct ndbno and nutritionObject
+      updateRecipe(['ingredients', 'ndbno'], '82930', index, () => 
+        updateRecipe(['ingredients', 'nutrition'], {'thisIs': 'nutritionObject'}, index, () => 
+          updateRecipe(['ingredients', 'isValidated'], true, index)));
+    }
 
     handleSave(){
-      if (this.state.isSaved === false) {
-        if (!this.state.isValidated) {
-          alert('please validate ingredient before saving');
-        } else if (!this.state.ingredient.quantity) {
-          alert('quantity must be a number');
-        } else {
-          this.setState(prevState => ({...prevState, ingredient: {...prevState.ingredient, isSaved: true}}), () => console.log(this.state))
-          this.toggleSaved();
-          this.props.saveIngredient(this.props.index, this.state.ingredient);
-        }
+      const {ingredient, updateRecipe, index, ...rest} = this.props;
+      if (ingredient.quantity && ingredient.isValidated) {
+        updateRecipe(['ingredients', 'isSaved'], true, index);
+      } else {
+        alert('please ensure that ingredient is validated and quantity is entered');
       }
-      // else we are trying to edit an existing ingredient
     }
 
     render(){
-      const {ingredient, ...rest} = this.props;
+      const {ingredient, index, deleteIngredient, ...rest} = this.props;
 
       return (
         <div className='ingredient-input'>
-          <div className='ingredient-info' >
-            <input className='name' type='text' placeholder='Ingredient name' onChange={this.updateUnmatched} value={ingredient.name} disabled={ingredient.isSaved}/>
-            <input className='quantity' type='number' placeholder='Quantity' onChange={this.updateQuantity} value={ingredient.quantity} disabled={ingredient.isSaved}/>
+          <div className='ingredient-info'>
+            <input className='name' type='text' name='name' placeholder='Ingredient name' 
+              onChange={this.handleChange} 
+              value={ingredient.name} 
+              disabled={ingredient.isValidated}
+            />
+            <input className='quantity' type='number' name='quantity' placeholder='Quantity' 
+              onChange={this.handleChange} 
+              value={ingredient.quantity} 
+              disabled={ingredient.isSaved}
+            />
             <span>grams</span>
-            <input className='button' type='submit' value={this.state.isSaved ? 'Edit' : 'Save'} onClick={this.handleSave}/>
-            <input className='button' type='button' value='Delete' />
+            <input className='button' type='submit' value='Save' disabled={ingredient.isSaved} onClick={this.handleSave}/>
+            <input className='button' type='button' value='Delete' onClick={() => deleteIngredient(index)}/>
           </div>
-          <div className='validate' hidden={!this.state.unmatchedInput}>
+          <div className='validate' hidden={ingredient.isValidated}>
             <input className='button' type='button' value='Validate' onClick={() => this.validate()}/>
             Validation match possibilities will go here
             {/* <select name="" id="">
@@ -108,8 +79,5 @@ class IngredientInput extends Component {
         </div>)
     }
 }
-
-
-//onClick={() => this.props.deleteIngredient(this.props.index)
 
 export default IngredientInput;
