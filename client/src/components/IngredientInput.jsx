@@ -10,7 +10,7 @@ class IngredientInput extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          ingredient: null, 
+          ingredient: {}, 
             // starts blank, set in didMount ({name: ''})
             // will add information from matched ingredient once validated -> name, NDBNO
             // will add quantity once entered
@@ -27,7 +27,8 @@ class IngredientInput extends Component {
     }
 
     componentDidMount(){
-      this.setState({ingredient: this.props.ingredient}, () => console.log(`new ingredient state: ${JSON.stringify(this.state)}`));
+      console.log(`mounting ingredient: received prop index: ${this.props.index} and ingredient ${this.props.ingredient}`)
+      //this.setState({ingredient: this.props.ingredient}, () => console.log(`new ingredient state: ${JSON.stringify(this.state)}`));
       // if ingredient has already been saved and is being re-rendered after a addition/deletion of other ingredient, 
       // need to se isValidated to true and isSaved to true
     }
@@ -72,7 +73,6 @@ class IngredientInput extends Component {
 
 
     handleSave(){
-      console.log('submit called');
       if (this.state.isSaved === false) {
         if (!this.state.isValidated) {
           alert('please validate ingredient before saving');
@@ -88,6 +88,9 @@ class IngredientInput extends Component {
     }
 
     render(){
+
+        console.log(`rendering ${this.props.ingredient}`);
+
       return (
         <div className='ingredient-input'>
           <div className='ingredient-info' >

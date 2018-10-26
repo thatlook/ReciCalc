@@ -9,12 +9,14 @@ class Create extends Component {
         this.state = {
             title: null,
             description: null,
-            ingredients: [{name: ''}],
+            ingredients: [],
             instructions: [{text: ''}]
         }
+        this.ingredientCounter = 0;
         this.updateRecipe = this.updateRecipe.bind(this);
         this.addNewIngredient = this.addNewIngredient.bind(this);
         this.saveIngredient = this.saveIngredient.bind(this);
+        this.deleteIngredient = this.deleteIngredient.bind(this);
     }
 
     updateRecipe(statePiece, newValue) {
@@ -32,7 +34,7 @@ class Create extends Component {
 
 
     addNewIngredient(event){
-      this.setState(prevState => ({ingredients: prevState.ingredients.concat([{name: ''}])}), () => console.log(this.state));
+      this.setState(prevState => ({ingredients: prevState.ingredients.concat([this.ingredientCounter])}), () => {this.ingredientCounter++; console.log(this.state)});
     }
 
     saveIngredient(index, ingredient){
@@ -45,8 +47,9 @@ class Create extends Component {
     deleteIngredient(index){
       console.log(`deleteIngredient called with index ${index}`);
       let updatedIngredients = this.state.ingredients;
-      updatedIngredients.splice(i, 1);
+      updatedIngredients.splice(index, 1);
       this.setState({ingredients: updatedIngredients}, () => console.log(this.state));
+      this.ingredientCounter--;
     }
 
    // reference below
@@ -80,6 +83,7 @@ class Create extends Component {
             ingredients={this.state.ingredients}
             addNewIngredient={this.addNewIngredient}
             saveIngredient={this.saveIngredient}
+            deleteIngredient={this.deleteIngredient}
           />
         </div>
       )
