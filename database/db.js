@@ -23,7 +23,7 @@ module.exports.fetchRecipeList = function() {
 module.exports.fetchRecipeById = function(recipeId) {
   //return the recipe and all relevant accompanying information
   
-  const dataNeeded = [
+  const queriesNeeded = [
     knex.select('*').from('recipes').where({id: recipeId}),
     knex.select({
       quantity: 'recipe_ingredients.quantity',
@@ -45,11 +45,12 @@ module.exports.fetchRecipeById = function(recipeId) {
     .join('ingredients', 'recipe_ingredients.food_no', '=', 'ingredients.ndbno')
     .where({'recipe_ingredients.recipe_id': recipeId})
   ]; 
-  return Promise.all(dataNeeded)
+  return Promise.all(queriesNeeded)
 };
 
 module.exports.searchIngredientByName = function(searchString) {
   //look for ingredients that might be the target and return them
+  return knex.select('*').from('ingredients').where('name', 'ilike', '%'+searchString+'%');
 };
 
 module.exports.addIngredient = function(ingredient) {
