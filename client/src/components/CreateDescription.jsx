@@ -9,6 +9,7 @@ class CreateDescription extends Component {
         }
       this.updateDescription = this.updateDescription.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
+      this.toggleInput = this.toggleInput.bind(this);
     }
 
     updateDescription(event){

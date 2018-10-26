@@ -9,6 +9,7 @@ class CreateTitle extends Component {
         }
       this.updateTitle = this.updateTitle.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
+      this.toggleInput = this.toggleInput.bind(this);
     }
 
     updateTitle(event){

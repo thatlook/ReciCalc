@@ -10,7 +10,7 @@ class RecipeList extends Component {
     }
 
   componentDidMount(){
-    // make a call to database to get @ api/recipes to retrieve all recipes
+    // make a get call to database @ api/recipes to retrieve all user recipes
     this.setState({allRecipes: [
         {
           id: 1,
