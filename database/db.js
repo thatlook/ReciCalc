@@ -48,7 +48,13 @@ module.exports.fetchRecipeById = function(recipeId) {
   ]; 
   return Promise
     .all(queriesNeeded)
-    .then(data => parse.databaseFullRecipeToClient(data));
+    .then(data => {
+      if(data[0][0]) {
+        return parse.databaseFullRecipeToClient(data)
+      } else {
+        return {status: 'No Such Recipe'};
+      }
+    });
 };
 
 module.exports.searchIngredientByName = function(searchString) {
@@ -60,7 +66,7 @@ module.exports.searchIngredientByName = function(searchString) {
 
 module.exports.addIngredient = function(usdaIngredient) {
   //takes an ingredient object and stores it to the ingredients table
-  //Assuming object is the 'usdaReturnObject.report.foods[0]'
+  //Assuming object is the usda return object's report.foods[0]'
   let dbIngredient = parse.usdaIngredientToDatabase(usdaIngredient);
   return knex('ingredients').insert(dbIngredient);
 }
@@ -70,8 +76,7 @@ module.exports.addRecipeIngredient = function(recipeIngredient) {
 }
 
 module.exports.addRecipe = function(clientRecipe) {
-  //takes a recipe object, adds the basic data to the db, then calls addRecipeIngredient on each 
-  //ingredient entry to store the necessary information
+  //takes a recipe object, adds the basic data to the db, then adds recipe ingredients 
   return knex.transaction(trx => {
     const dbRecipe = {
       name: clientRecipe.title,

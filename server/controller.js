@@ -4,12 +4,36 @@ const db = require('../database/db.js');
 module.exports.recipes = {
   getList: (req, res) => {
     //query datbase for a list of short recipe descriptions and return them
-    res.status(200).send('Under construction! List of recipes to come.');
+    db.fetchRecipeList()
+      .then(data => {
+        res.status(200).json(data);
+      })
+      .catch(err => {
+        console.log('ERROR ACCESSING DATABASE: ', err);
+        res.status(500).send()
+      });
   },
   getOne: (req, res) => {
     //endpoint: /api/recipes/:recipeId
     //query databse for detailed information on the given recipe and return it
-    res.status(200).send(`Under construction! Information on recipe ${req.params.recipeId} to come.`);
+    let recipeId = parseInt(req.params.recipeId);
+    if(isNaN(recipeId)) {
+      res.status(303).send('Malformed recipe id');
+    } else {
+      db.fetchRecipeById(recipeId)
+        .then(recipe => {
+          if(recipe.status === 'No Such Recipe') {
+            res.status(404).send(recipe);
+          }
+          else {
+            res.status(200).json(recipe);
+          }
+        })
+        .catch(err => {
+          console.log('Error. What kind is this?', err)
+          res.status(500).send(err);
+        })
+    }
   },
   post: (req, res) => {
     //Store recipe in database
