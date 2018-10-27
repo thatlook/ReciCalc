@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import CreateTitle from './CreateTitle.jsx';
 import CreateDescription from './CreateDescription.jsx';
 import CreateIngredients from './CreateIngredients.jsx';
+import CreateInstructions from './CreateInstructions.jsx';
 
 class Create extends Component {
     constructor () {
@@ -23,7 +24,8 @@ class Create extends Component {
         }
         this.updateRecipe = this.updateRecipe.bind(this);
         this.addNewIngredient = this.addNewIngredient.bind(this);
-        this.deleteIngredient = this.deleteIngredient.bind(this);
+        this.addNewInstruction = this.addNewInstruction.bind(this);
+        this.deleteItem = this.deleteItem.bind(this);
     }
 
 
@@ -45,14 +47,25 @@ class Create extends Component {
     }
 
     addNewIngredient(){
-      let newIngredient = {...this.sampleIngredient, counter: this.counter};
-      this.setState(prevState => ({ingredients: prevState.ingredients.concat([newIngredient])}), () => {this.counter++;console.log(this.state)});
+      if (this.state.ingredients.every(ingredient => ingredient.isSaved)) {
+        let newIngredient = {...this.sampleIngredient, counter: this.counter};
+        this.setState(prevState => ({ingredients: prevState.ingredients.concat([newIngredient])}), () => 
+          {this.counter++;console.log(this.state)});
+      }
     }
 
-    deleteIngredient(index){
+    addNewInstruction(){
+        if (this.state.instructions.every(instruction => instruction.isSaved)) {
+          this.setState(prevState => ({instructions: prevState.instructions.concat([{
+              counter: this.counter, text: '', isSaved: false
+            }])}), () => {this.counter++;console.log(this.state)});
+        }
+      }
+
+    deleteItem(stateArray, index){
       this.setState(prevState => ({
-        ingredients: prevState.ingredients.filter((ingredient, ingredientIndex) => {
-          return ingredientIndex !== index;
+        [stateArray]: prevState[stateArray].filter((item, itemIndex) => {
+          return itemIndex !== index;
         })}), () => console.log(this.state));
     }
 
@@ -71,7 +84,13 @@ class Create extends Component {
             ingredients={this.state.ingredients}
             addNewIngredient={this.addNewIngredient}
             updateRecipe={this.updateRecipe}
-            deleteIngredient={this.deleteIngredient}
+            deleteItem={this.deleteItem}
+          />
+          <CreateInstructions
+            instructions={this.state.instructions}
+            addNewInstruction={this.addNewInstruction}
+            updateRecipe={this.updateRecipe}
+            deleteItem={this.deleteItem}
           />
         </div>
       )
