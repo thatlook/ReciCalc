@@ -1,17 +1,20 @@
 import React, {Component} from 'react';
-
+const axios = require('axios')
 class IngredientInput extends Component {
     constructor(props) {
         super(props);
         this.state = {
           nameMatches: [],
           isValidating: false,
-          currentOffset: 0
+          currentOffset: 0,
+          currentSelection: '',
+          //from database: false
         }
         this.handleChange = this.handleChange.bind(this);
         this.validate = this.validate.bind(this);
         this.handleSave = this.handleSave.bind(this);
         this.getNdbno = this.getNdbno.bind(this);
+        this.updateSelection = this.updateSelection.bind(this);
     }
 
     handleChange(event){
@@ -19,66 +22,57 @@ class IngredientInput extends Component {
       updateRecipe(['ingredients', event.target.name], event.target.value, index);
     }
 
+    updateSelection(event){
+      let updateObject = this.state.nameMatches.filter(nameMatch => nameMatch.name === event.target.value)[0];
+      this.setState({currentSelection: updateObject}, () => console.log(this.state));
+    }
+
     getNdbno(query){
       axios.get('api/ingredients/usda', {
         params: {
           searchTerm: `${query}`,
-          offset: this.state.currentOffset
+          page: this.state.currentOffset
         }
       })
       .then((data) => {
         const list = data.data.map((item, i) => {
-          return {name : item.name, number: item.ndbno}; 
-          //(obj);
+          return {name : item.name, ndbno: item.ndbno}; 
         });
-        this.setState({nameMatches: list});
+        this.setState({nameMatches: list}); // adjust this to update current offset
         //console.log(`${data.config.params.query} successfully searched: `,list);
-        //console.log('props: ',this.props)
-        console.log('state: ',this.state)
         console.log('name matches: ',this.state.nameMatches);
-        //return list;
-        //console.log('hello');
       })
       .catch(error => {
         throw(error)
       });    
     }
 
-    validate(userInputtedFoodWord) {
-      const {updateRecipe, index, ...rest} = this.props;
+    validate() {
+      const {ingredient, updateRecipe, index, ...rest} = this.props;
       if (!this.state.isValidating) {
-          this.setState({nameMatches: ['ham', 'more ham', 'extra extra ham']})
-          this.setState({isValidating: true})
-          // above call is hardcoded, obviously
-          // make call to database
-            // call to database should come from a helper function that lives on this component
-            // objects will contain the name, the ndbno, and the nutritional content
-            // set nameMatches to (objects right) representing the possible matches, is Validating to true 
-              // if array returned from database call is empty, need to make call to API
-                // this call should come from another helper function that lives on the component?
-                // set state with possible matches, change is Validating to true
+        this.setState({isValidating: true})
+          // make database call first. (use helper function)
+            // if database returns items, set state to those items
+            // if database does not return items (Returns an empty array)
+              this.getNdbno(ingredient.name);
       } else {
-       // make this its own helper function to update ingredient object with ingredient information
-       // change below hardcoded values to correct ndbno and nutritionObject
-      updateRecipe(['ingredients', 'ndbno'], '82930', index, () => 
-        updateRecipe(['ingredients', 'nutrition'], {'thisIs': 'nutritionObject'}, index, () => 
-          updateRecipe(['ingredients', 'isValidated'], true, index)));
-        // check confirmation call
-          // if confirmation call reads 'none of the above', make call to api to get searches from ndb at current offset
-          // update current offset by whatever amount
-        // else if confirmation call reads a name
-          // call helper function to make api call to get nutrient information
-          // put that nutrient information in database
-          // update state of ingredient object with ingredient information
+        if (!(this.state.currentSelection === 'none of the above' || this.state.currentSelection === '')) {
+          let selection = this.state.currentSelection
+          this.finalValidation(selection.ndbno, selection.name);
+          // make call to server to fetch nutrition information for given ndbno of currentSelection and add to database
+        } else if (this.state.currentSelection === 'none of the above') {
+          this.getNdbno(ingredient.name); //with updated offset...
+        }
       }
 
     }
 
-    // make this its own helper function to update ingredient object with ingredient information
-    // change below hardcoded values to correct ndbno and nutritionObject
-    //   updateRecipe(['ingredients', 'ndbno'], '82930', index, () => 
-    //     updateRecipe(['ingredients', 'nutrition'], {'thisIs': 'nutritionObject'}, index, () => 
-    //       updateRecipe(['ingredients', 'isValidated'], true, index)));
+    finalValidation(ndbno = 99999, name = 'hot ham'){
+      const {updateRecipe, index, ...rest} = this.props;
+      updateRecipe(['ingredients', 'name'], name, index, () => 
+        updateRecipe(['ingredients', 'ndbno'], ndbno, index, () => 
+            updateRecipe(['ingredients', 'isValidated'], true, index)));
+    }
 
     handleSave(){
       const {ingredient, updateRecipe, index, ...rest} = this.props;
@@ -90,7 +84,7 @@ class IngredientInput extends Component {
     }
 
     render(){
-      const {ingredient, index, deleteItem, ...rest} = this.props;
+      const {ingredient, index, deleteIngredient, ...rest} = this.props;
 
       return (
         <div className='ingredient-input'>
@@ -111,7 +105,7 @@ class IngredientInput extends Component {
               onClick={this.handleSave}
             />
             <input className='button' type='button' value='Delete' 
-              onClick={() => deleteItem('ingredients', index)}
+              onClick={() => deleteIngredient(index)}
             />
           </div>
           <div className='ingredient-validate' hidden={ingredient.isValidated}>
@@ -119,14 +113,13 @@ class IngredientInput extends Component {
               value={this.state.isValidating ? 'Confirm' : 'Validate'} 
               onClick={() => this.validate()}
             />
-            <select className='select'>
+            <select name="select" className='select' onChange={this.updateSelection}>
               <option value=''>--Please choose an item to validate--</option>
-                {this.state.nameMatches.map(nameMatch => <option value={nameMatch} key={nameMatch}>{nameMatch}</option>)}
-              <option value='None of the above'>--None of the above--</option>
+                {this.state.nameMatches.map((nameMatch, i) => <option object={nameMatch} value={nameMatch.name} key={i}>{nameMatch.name}</option>)}
+              <option value='none of the above'>--None of the above--</option>
             </select>
           </div>
         </div>)
     }
 }
-
 export default IngredientInput;
