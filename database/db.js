@@ -77,6 +77,7 @@ module.exports.addRecipeIngredient = function(recipeIngredient) {
 
 module.exports.addRecipe = function(clientRecipe) {
   //takes a recipe object, adds the basic data to the db, then adds recipe ingredients 
+  let outerRecipeId = '';
   return knex.transaction(trx => {
     const dbRecipe = {
       name: clientRecipe.title,
@@ -98,6 +99,7 @@ module.exports.addRecipe = function(clientRecipe) {
       .into('recipes')
       .returning('id')
       .then(recipeId => {
+        outerRecipeId = recipeId;
         console.log('recipe ID: ', recipeId)
         return dbIngredientJunction.map(entry => {
           entry.recipe_id = recipeId[0];
@@ -106,6 +108,7 @@ module.exports.addRecipe = function(clientRecipe) {
             .into('recipe_ingredients');
         })
       })
-      .all();
+      .all()
+      .then(() => outerRecipeId);
   })
 }

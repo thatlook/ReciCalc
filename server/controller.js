@@ -39,7 +39,19 @@ module.exports.recipes = {
   },
   post: (req, res) => {
     //Store recipe in database
-    res.status(404).send('Under construction! We are not currently able to store data.');
+    let recipe = req.body.recipe;
+    if(format.isValidRecipe(recipe) === false) {
+      res.status(400).send('Malformed recipe');
+    } else {
+      db.addRecipe(recipe)
+        .then(data => {
+          res.status(201).json({newRecipeId: data});
+        })
+        .catch(err => {
+          console.log('ERROR STORING RECIPE TO DATABASE:', err);
+          res.status(500).send();
+        })
+    }
   }
 };
 
