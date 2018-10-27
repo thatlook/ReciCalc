@@ -128,7 +128,7 @@ module.exports.ingredients = {
     if (format.isValidNdbno(req.params.ndbno) === false) {
       res.status(400).send('Malformed NDB number');
     }
-    console.log('looking for nutrients by NDB no: ', req.params.ndbno);
+    //console.log('looking for nutrients by NDB no: ', req.params.ndbno);
     axios.get('https://api.nal.usda.gov/ndb/nutrients/?', {
       params: {
         format: 'JSON',
@@ -144,10 +144,14 @@ module.exports.ingredients = {
         if(data.data.errors) {
           res.status(500).send(data.data.errors.error);
         } else {
-          res.status(200).send(data.data.report.foods);
+          db.addIngredient(data.data.report.foods[0])
+            .then(() => res.status(200).send(data.data.report.foods[0]))
+            .catch(() => res.status(500).send('Data fetched, but not stored to database. Try again.'))
+          
         }
       })
       .catch(error => {
+        console.log('ERROR IN INGREDIENT FIND: ', error);
         res.status(500).send();
       });
   },
