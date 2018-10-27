@@ -15,6 +15,7 @@ class IngredientInput extends Component {
         this.handleSave = this.handleSave.bind(this);
         this.getNdbno = this.getNdbno.bind(this);
         this.updateSelection = this.updateSelection.bind(this);
+        this.getFromDB = this.getFromDB.bind(this);
     }
 
     handleChange(event){
@@ -47,14 +48,33 @@ class IngredientInput extends Component {
       });    
     }
 
+    getFromDB(query){
+      axios.get('api/ingredients', {
+        params: {
+          searchTerm : `${query}`
+        }
+      })
+        .then(data => {
+          const list = data.data.map((item, i) => {
+            return {name : item.name, ndbno: item.ndbno}; 
+          });
+          this.setState({nameMatches: list});
+          console.log('name matches from database: ',this.state.nameMatches);
+        })
+        .catch(error => {
+          console.log('error: error while searching in database', error)
+        })
+    }
+
     validate() {
       const {ingredient, updateRecipe, index, ...rest} = this.props;
+      //console.log(this.props);
       if (!this.state.isValidating) {
         this.setState({isValidating: true})
-          // make database call first. (use helper function)
-            // if database returns items, set state to those items
-            // if database does not return items (Returns an empty array)
-              this.getNdbno(ingredient.name);
+        this.getFromDB(ingredient.name);
+        if(this.state.nameMatches.length === 0) {
+          this.getNdbno(ingredient.name);
+        }
       } else {
         if (!(this.state.currentSelection === 'none of the above' || this.state.currentSelection === '')) {
           let selection = this.state.currentSelection
