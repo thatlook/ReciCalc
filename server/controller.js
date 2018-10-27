@@ -39,7 +39,9 @@ module.exports.recipes = {
   },
   post: (req, res) => {
     //Store recipe in database
+    //console.log('Incoming recipe request. Recipe:');
     let recipe = req.body.recipe;
+    //console.log(recipe);
     if(format.isValidRecipe(recipe) === false) {
       res.status(400).send('Malformed recipe');
     } else {
