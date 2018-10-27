@@ -16,6 +16,18 @@ isValidNdbno = (item) => {
   return true;
 };
 
+isValidIngredientList = (ingredients) => {
+  return ingredients.every(ing => {
+    if(isValidNdbno(ing.ndbno) === false) {
+      return false;
+    }
+    if(typeof ing.quantity !== 'number') {
+      return false;
+    }
+    return true;
+  });
+} 
+
 module.exports.isValidRecipe = (recipe) => {
   if (typeof recipe !== 'object') {
     return false;
@@ -29,15 +41,7 @@ module.exports.isValidRecipe = (recipe) => {
   if (Array.isArray(recipe.ingredients) === false) {
     return false;
   }
-  if (recipe.ingredients.every(ing => {
-      if(isValidNdbno(ing.ndbno) === false) {
-        return false;
-      }
-      if(typeof ing.quantity !== 'number') {
-        return false;
-      }
-      return true;
-    }) === false) {
+  if (isValidIngredientList(recipe.ingredients) === false) {
       return false;
   }
   return true;
