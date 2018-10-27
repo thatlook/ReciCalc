@@ -48,10 +48,16 @@ module.exports.fetchRecipeById = function(recipeId) {
   ]; 
   return Promise
     .all(queriesNeeded)
-    .then(data => parse.databaseFullRecipeToClient(data));
+    .then(data => {
+      if(data[0][0]) {
+        return parse.databaseFullRecipeToClient(data)
+      } else {
+        return {status: 'No Such Recipe'};
+      }
+    });
 };
 
-module.exports.searchIngredientByName = function(searchString) {
+module.exports.searchIngredientsByName = function(searchString) {
   //look for ingredients that might be the target and return them
   return knex.select('*')
     .from('ingredients')
@@ -60,7 +66,7 @@ module.exports.searchIngredientByName = function(searchString) {
 
 module.exports.addIngredient = function(usdaIngredient) {
   //takes an ingredient object and stores it to the ingredients table
-  //Assuming object is the 'usdaReturnObject.report.foods[0]'
+  //Assuming object is the usda return object's report.foods[0]'
   let dbIngredient = parse.usdaIngredientToDatabase(usdaIngredient);
   return knex('ingredients').insert(dbIngredient);
 }
@@ -70,8 +76,8 @@ module.exports.addRecipeIngredient = function(recipeIngredient) {
 }
 
 module.exports.addRecipe = function(clientRecipe) {
-  //takes a recipe object, adds the basic data to the db, then calls addRecipeIngredient on each 
-  //ingredient entry to store the necessary information
+  //takes a recipe object, adds the basic data to the db, then adds recipe ingredients 
+  let outerRecipeId = '';
   return knex.transaction(trx => {
     const dbRecipe = {
       name: clientRecipe.title,
@@ -81,7 +87,7 @@ module.exports.addRecipe = function(clientRecipe) {
     };
     const dbIngredientJunction = clientRecipe.ingredients.map((ing, index) =>  {
       return {
-        food_no: ing.ndbno,
+        food_no: parseInt(ing.ndbno),
         quantity: ing.quantity,
         quantity_measure: 'g',
         list_position: index
@@ -93,6 +99,7 @@ module.exports.addRecipe = function(clientRecipe) {
       .into('recipes')
       .returning('id')
       .then(recipeId => {
+        outerRecipeId = recipeId;
         console.log('recipe ID: ', recipeId)
         return dbIngredientJunction.map(entry => {
           entry.recipe_id = recipeId[0];
@@ -101,6 +108,7 @@ module.exports.addRecipe = function(clientRecipe) {
             .into('recipe_ingredients');
         })
       })
-      .all();
+      .all()
+      .then(() => outerRecipeId);
   })
 }
