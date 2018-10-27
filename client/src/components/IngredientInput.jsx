@@ -11,11 +11,37 @@ class IngredientInput extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.validate = this.validate.bind(this);
         this.handleSave = this.handleSave.bind(this);
+        this.getNdbno = this.getNdbno.bind(this);
     }
 
     handleChange(event){
       const {updateRecipe, index, ...rest} = this.props;
       updateRecipe(['ingredients', event.target.name], event.target.value, index);
+    }
+
+    getNdbno(query){
+      axios.get('api/ingredients/usda', {
+        params: {
+          searchTerm: `${query}`,
+          offset: this.state.currentOffset
+        }
+      })
+      .then((data) => {
+        const list = data.data.map((item, i) => {
+          return {name : item.name, number: item.ndbno}; 
+          //(obj);
+        });
+        this.setState({nameMatches: list});
+        //console.log(`${data.config.params.query} successfully searched: `,list);
+        //console.log('props: ',this.props)
+        console.log('state: ',this.state)
+        console.log('name matches: ',this.state.nameMatches);
+        //return list;
+        //console.log('hello');
+      })
+      .catch(error => {
+        throw(error)
+      });    
     }
 
     validate(userInputtedFoodWord) {
