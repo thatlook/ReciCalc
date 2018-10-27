@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
+import React from 'react';
 import IngredientInput from './IngredientInput.jsx';
 
 
-const CreateIngredients = ({ingredients, addNewIngredient, updateRecipe, deleteIngredient}) => (
+const CreateIngredients = ({ingredients, addNewIngredient, updateRecipe, deleteItem}) => (
         <div>
             <h3>Ingredients:</h3>
             <input className='button' type='button' value='Add Ingredient' onClick={addNewIngredient} />
@@ -11,7 +11,7 @@ const CreateIngredients = ({ingredients, addNewIngredient, updateRecipe, deleteI
                 index={index}
                 ingredient={ingredient}
                 updateRecipe={updateRecipe}
-                deleteIngredient={deleteIngredient}
+                deleteItem={deleteItem}
             />)}
         </div>
 )
