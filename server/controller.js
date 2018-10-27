@@ -1,4 +1,4 @@
-const API_KEY = require('../config.example.js').API_KEY;
+const API_KEY = require('../config.js').API_KEY;
 const db = require('../database/db.js');
 const axios = require('axios');
 module.exports.recipes = {
@@ -81,16 +81,18 @@ module.exports.ingredients = {
 
 
     //Query USDA NDB API for ingredients matching a particular search string, and present them
-    //expect req.params to have 'q' or 'searchTerm' or something
-    console.log('looking for ndbno')
-    //console.log(req);
+
+    //expect req.params to have 'searchTerm'
+    //also expect it may have 'page'
+    console.log('looking for USDA ingredients by name: ' + req.query.searchTerm)
+    let offset = req.query.page ? req.query.page * 8 : 0;
     axios.get(`https://api.nal.usda.gov/ndb/search/?`, {
       params: {
         format: 'JSON',
-        q: req.query.serchTerm,
+        q: req.query.searchTerm,
         sort: 'r',
         max: 8,
-        offset: 0,
+        offset: offset,
         ds: 'Standard Reference',
         api_key: `${API_KEY}`
       },
