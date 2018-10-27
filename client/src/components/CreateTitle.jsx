@@ -35,10 +35,8 @@ class CreateTitle extends Component {
     render () {
         return (
           <form id='create-title' name='title' onSubmit={this.handleSubmit}>
-            <label>
-              Recipe title:
-              <input type='text' placeholder='recipe title here' onChange={this.updateTitle} disabled={this.state.isSaved}/>
-            </label>
+            <h3>Recipe Title:</h3>
+            <input type='text' placeholder='recipe title here' onChange={this.updateTitle} disabled={this.state.isSaved}/>
             <input className='button' type='submit' value={this.state.isSaved ? 'Edit' : 'Save'} />
           </form>)
     }

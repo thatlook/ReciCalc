@@ -50,7 +50,7 @@ class Create extends Component {
       if (this.state.ingredients.every(ingredient => ingredient.isSaved)) {
         let newIngredient = {...this.sampleIngredient, counter: this.counter};
         this.setState(prevState => ({ingredients: prevState.ingredients.concat([newIngredient])}), () => 
-          {this.counter++;console.log(this.state)});
+          {this.counter++});
       }
     }
 
@@ -58,7 +58,7 @@ class Create extends Component {
         if (this.state.instructions.every(instruction => instruction.isSaved)) {
           this.setState(prevState => ({instructions: prevState.instructions.concat([{
               counter: this.counter, text: '', isSaved: false
-            }])}), () => {this.counter++;console.log(this.state)});
+            }])}), () => {this.counter++});
         }
       }
 
@@ -66,7 +66,7 @@ class Create extends Component {
       this.setState(prevState => ({
         [stateArray]: prevState[stateArray].filter((item, itemIndex) => {
           return itemIndex !== index;
-        })}), () => console.log(this.state));
+        })}));
     }
 
     postRecipe(){
@@ -78,6 +78,7 @@ class Create extends Component {
     render() {
       return (
         <div id='create'>
+          <h2>Create a new recipe:</h2>
           <CreateTitle updateRecipe={this.updateRecipe} />
           <CreateDescription updateRecipe={this.updateRecipe} />
           <CreateIngredients 

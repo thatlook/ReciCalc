@@ -35,10 +35,8 @@ class CreateDescription extends Component {
     render () {
         return (
           <form id='create-description' name='description' onSubmit={this.handleSubmit}>
-            <label>
-              Recipe description:
-              <textarea placeholder='recipe description here' onChange={this.updateDescription} disabled={this.state.isSaved}/>
-            </label>
+            <h3>Recipe Description:</h3>
+            <textarea placeholder='recipe description here' onChange={this.updateDescription} disabled={this.state.isSaved}/>
             <input className='button' type='submit' value={this.state.isSaved ? 'Edit' : 'Save'} />
           </form>)
     }

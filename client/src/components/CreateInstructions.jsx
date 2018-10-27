@@ -3,7 +3,7 @@ import InstructionInput from './InstructionInput.jsx';
 
 
 const CreateInstructions = ({instructions, addNewInstruction, updateRecipe, deleteItem}) => (
-        <div>
+        <div className='create-instructions'>
             <h3>Instructions:</h3>
             <input className='button' type='button' value='Add Instruction' onClick={addNewInstruction} />
             {instructions.map((instruction, index) => <InstructionInput
