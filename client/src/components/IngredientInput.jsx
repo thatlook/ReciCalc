@@ -38,10 +38,12 @@ class IngredientInput extends Component {
         updateRecipe(['ingredients', 'nutrition'], {'thisIs': 'nutritionObject'}, index, () => 
           updateRecipe(['ingredients', 'isValidated'], true, index)));
         // check confirmation call
-          // if confirmation call reads 'none of the above', make call to api to get searches from ndb
+          // if confirmation call reads 'none of the above', make call to api to get searches from ndb at current offset
           // update current offset by whatever amount
         // else if confirmation call reads a name
-          // call helper function to update state of ingredient object with ingredient information
+          // call helper function to make api call to get nutrient information
+          // put that nutrient information in database
+          // update state of ingredient object with ingredient information
       }
 
     }
