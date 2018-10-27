@@ -27,6 +27,7 @@ class Create extends Component {
         this.addNewIngredient = this.addNewIngredient.bind(this);
         this.addNewInstruction = this.addNewInstruction.bind(this);
         this.deleteItem = this.deleteItem.bind(this);
+        this.postRecipe = this.postRecipe.bind(this);
     }
 
 
@@ -76,7 +77,12 @@ class Create extends Component {
         isValidRecipe = false;
       }
       this.state.ingredients.forEach(ing => {
-        if (ing.isValidated === false || ing.isSaved === false) {
+        if (ing.isSaved === false) {
+          isValidRecipe = false;
+        }
+      });
+      this.state.instructions.forEach(inst => {
+        if (inst.isSaved === false) {
           isValidRecipe = false;
         }
       });
@@ -91,10 +97,9 @@ class Create extends Component {
           .catch(err => {
             console.error(err);
           })
+      } else {
+        alert('Please make sure all ingredients and instructions are saved and title exists')
       }
-      // pull needed items from state
-      // ensure that each ingredient isValidated, isSaved, and has a title and description
-      // axios call to server to post recipe to database
     }
 
     render() {
@@ -115,6 +120,7 @@ class Create extends Component {
             updateRecipe={this.updateRecipe}
             deleteItem={this.deleteItem}
           />
+          <span id='recipe-submit' className='button' onClick={this.postRecipe}>SAVE RECIPE</span>
         </div>
       )
     }
