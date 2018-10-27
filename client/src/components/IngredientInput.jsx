@@ -94,7 +94,9 @@ class IngredientInput extends Component {
           this.postToDatabase(selection);
           // make call to server to fetch nutrition information for given ndbno of currentSelection and add to database
         } else if (this.state.currentSelection === 'none of the above') {
-          this.getNdbno(ingredient.name); //with updated offset...
+          this.setState({currentOffset: currentOffset + 1},()=> {
+            this.getNdbno(ingredient.name); //with updated offset...
+          })
         }
       }
 
