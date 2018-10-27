@@ -68,7 +68,16 @@ module.exports.addIngredient = function(usdaIngredient) {
   //takes an ingredient object and stores it to the ingredients table
   //Assuming object is the usda return object's report.foods[0]'
   let dbIngredient = parse.usdaIngredientToDatabase(usdaIngredient);
-  return knex('ingredients').insert(dbIngredient);
+  return knex('ingredients')
+    .insert(dbIngredient)
+    .catch(err => {
+      if(err.code === '23505') {
+        //duplicate item, not an issue
+        return;
+      } else {
+        throw err;
+      }
+    });
 }
 
 module.exports.addRecipeIngredient = function(recipeIngredient) {

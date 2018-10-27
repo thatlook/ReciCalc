@@ -164,7 +164,10 @@ module.exports.ingredients = {
         } else {
           db.addIngredient(data.data.report.foods[0])
             .then(() => res.status(200).send(data.data.report.foods[0]))
-            .catch(() => res.status(500).send('Data fetched, but not stored to database. Try again.'))
+            .catch((err) => {
+              console.log('ERROR: ', err);
+              res.status(500).send('Data fetched, but not stored to database. Try again.')
+            })
           
         }
       })
