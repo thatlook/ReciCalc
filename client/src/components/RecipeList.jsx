@@ -10,25 +10,28 @@ class RecipeList extends Component {
     }
 
   componentDidMount(){
-    // make a get call to database @ api/recipes to retrieve all user recipes
+    // make a get call to database @ api/recipes to retrieve all user recipes and setState
+    // placeholder below
     this.setState({allRecipes: [
         {
           id: 1,
-          title: 'Hot Juicy Burger',
-          description: 'this is the hottest juciest burger you ever did see'
+          name: 'Hot Juicy Burger',
+          description: 'this is the hottest juciest burger you ever did see',
+          top_ingredients: 'ground beef, bun, mayonnaise'
         },
         {
           id: 2,
-          title: 'Big plate of french fries',
-          description: 'this is how to make a big plate of french fries'
+          name: 'Big plate of french fries',
+          description: 'this is how to make a big plate of french fries',
+          top_ingredients: 'potatoes, vegetable oil, salt'
         }
     ]});
   }
 
   render() {
     return (
-      <div>
-        <span>HERE ARE ALL YOUR DELICIOUS RECIPES</span>
+      <div id='recipe-list'>
+        <h2>HERE ARE ALL YOUR DELICIOUS RECIPES: </h2>
         <ul>
           {this.state.allRecipes.map(recipe => <RecipeListItem key={recipe.id} recipe={recipe} />)}
         </ul>

@@ -10,3 +10,8 @@
 .button:hover {
     cursor: pointer;
 }
+
+.link {
+    text-decoration: none;
+    margin: 0 10px;
+}
