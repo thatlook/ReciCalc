@@ -21,7 +21,7 @@ isValidIngredientList = (ingredients) => {
     if(isValidNdbno(ing.ndbno) === false) {
       return false;
     }
-    if(typeof ing.quantity !== 'number') {
+    if(isNaN(ing.quantity)) {
       return false;
     }
     return true;

@@ -39,7 +39,7 @@ module.exports.databaseFullRecipeToClient = function(dbOutput) {
     const ingredient = {
       name: dbIng.name,
       ndbno: dbIng.ndbno,
-      quantity: dbIng.quantity,
+      quantity: parseFloat(dbIng.quantity),
       position: dbIng.position,
       nutrition: {
         kcalPer: dbIng.kcalPer,

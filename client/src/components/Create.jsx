@@ -3,6 +3,7 @@ import CreateTitle from './CreateTitle.jsx';
 import CreateDescription from './CreateDescription.jsx';
 import CreateIngredients from './CreateIngredients.jsx';
 import CreateInstructions from './CreateInstructions.jsx';
+import axios from 'axios';
 
 class Create extends Component {
     constructor () {
@@ -70,6 +71,27 @@ class Create extends Component {
     }
 
     postRecipe(){
+      let isValidRecipe = true;
+      if(typeof this.state.title !== 'string' || this.state.title.trim().length === 0) {
+        isValidRecipe = false;
+      }
+      this.state.ingredients.forEach(ing => {
+        if (ing.isValidated === false || ing.isSaved === false) {
+          isValidRecipe = false;
+        }
+      });
+      if (isValidRecipe) {
+        const recipe = Object.assign({}, this.state);
+        recipe.instructions = this.state.instructions.map(obj => obj.text);
+        console.log(recipe);
+        axios.post('api/recipes', {recipe})
+          .then(response => {
+            console.log(response);
+          })
+          .catch(err => {
+            console.error(err);
+          })
+      }
       // pull needed items from state
       // ensure that each ingredient isValidated, isSaved, and has a title and description
       // axios call to server to post recipe to database
