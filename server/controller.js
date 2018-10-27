@@ -1,6 +1,8 @@
 const API_KEY = require('../config.js').API_KEY;
 const db = require('../database/db.js');
 const axios = require('axios');
+const qs = require('qs');
+const format = require('../helpers/formatCheckers.js');
 module.exports.recipes = {
   getList: (req, res) => {
     //query datbase for a list of short recipe descriptions and return them
@@ -123,23 +125,30 @@ module.exports.ingredients = {
 
     //expect req.params.ndbno 
     //Query USDA API for nutritional data about the provided item number
-    console.log('looking for nutrients')
+    if (format.isValidNdbno(req.params.ndbno) === false) {
+      res.status(400).send('Malformed NDB number');
+    }
+    console.log('looking for nutrients by NDB no: ', req.params.ndbno);
     axios.get('https://api.nal.usda.gov/ndb/nutrients/?', {
       params: {
         format: 'JSON',
         api_key: `${API_KEY}`,
         nutrients: ['208', '204', '606', '291', '203', '307', '601', '269', '205'],
-        ndbno: req.query.ndbno
+        ndbno: req.params.ndbno
       },
       paramsSerializer: function(params) {
         return qs.stringify(params, {indices: false})
       },
     })
       .then(data => {
-        res.status(200).send(data.data.report.foods)
+        if(data.data.errors) {
+          res.status(500).send(data.data.errors.error);
+        } else {
+          res.status(200).send(data.data.report.foods);
+        }
       })
       .catch(error => {
-        throw(error)
+        res.status(500).send();
       });
   },
   post: (req, res) => {
