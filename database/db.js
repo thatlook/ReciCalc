@@ -57,7 +57,7 @@ module.exports.fetchRecipeById = function(recipeId) {
     });
 };
 
-module.exports.searchIngredientByName = function(searchString) {
+module.exports.searchIngredientsByName = function(searchString) {
   //look for ingredients that might be the target and return them
   return knex.select('*')
     .from('ingredients')

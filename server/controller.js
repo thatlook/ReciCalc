@@ -9,7 +9,7 @@ module.exports.recipes = {
         res.status(200).json(data);
       })
       .catch(err => {
-        console.log('ERROR ACCESSING DATABASE: ', err);
+        console.log('ERROR FETCHING RECIPE LIST FROM DB: ', err);
         res.status(500).send()
       });
   },
@@ -30,7 +30,7 @@ module.exports.recipes = {
           }
         })
         .catch(err => {
-          console.log('Error. What kind is this?', err)
+          console.log('ERROR FETCHING FULL RECIPE FROM DB:', err)
           res.status(500).send(err);
         })
     }
@@ -43,9 +43,20 @@ module.exports.recipes = {
 
 module.exports.ingredients = {
   getDbByName: (req, res) => {
-    //expect req.params to have 'q' or 'searchTerm' or something
+    //expect req.query to have 'searchTerm'
     //Query database for ingredients matching a particular search string, and present them
-    res.status(200).send('Under construction! Possible ingredient matches to come.');
+    if(req.query.searchTerm === undefined) {
+      res.status(400).send('Malformed search request');
+    } else {
+      db.searchIngredientsByName(req.query.searchTerm)
+        .then(ingredients => {
+          res.status(200).json(ingredients);
+        })
+        .catch(err => {
+          console.log('ERROR SEARCHING FOR INGREDIENT: ', err);
+          res.status(500).send();
+        })
+    }
   },
   getUsdaByName: (req, res) => {
     //Client-side example get function ------------->
