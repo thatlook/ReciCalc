@@ -16,6 +16,7 @@ class IngredientInput extends Component {
         this.getNdbno = this.getNdbno.bind(this);
         this.updateSelection = this.updateSelection.bind(this);
         this.getFromDB = this.getFromDB.bind(this);
+        this.postToDatabase = this.postToDatabase.bind(this);
     }
 
     handleChange(event){
@@ -41,7 +42,7 @@ class IngredientInput extends Component {
         });
         this.setState({nameMatches: list}); // adjust this to update current offset
         //console.log(`${data.config.params.query} successfully searched: `,list);
-        console.log('name matches: ',this.state.nameMatches);
+        //console.log('name matches: ',this.state.nameMatches);
       })
       .catch(error => {
         throw(error)
@@ -66,9 +67,20 @@ class IngredientInput extends Component {
         })
     }
 
+    postToDatabase(selection){
+      console.log(selection.ndbno)
+      axios.get(`api/ingredients/usda/${selection.ndbno}`, {
+      })
+        .then(data => {
+          console.log('success');
+        })
+        .catch(error => {
+          console.log(error);
+        })
+    }
+
     validate() {
       const {ingredient, updateRecipe, index, ...rest} = this.props;
-      //console.log(this.props);
       if (!this.state.isValidating) {
         this.setState({isValidating: true})
         this.getFromDB(ingredient.name);
@@ -77,8 +89,10 @@ class IngredientInput extends Component {
         }
       } else {
         if (!(this.state.currentSelection === 'none of the above' || this.state.currentSelection === '')) {
-          let selection = this.state.currentSelection
+          let selection = this.state.currentSelection;
           this.finalValidation(selection.ndbno, selection.name);
+          //console.log(selection);
+          this.postToDatabase(selection);
           // make call to server to fetch nutrition information for given ndbno of currentSelection and add to database
         } else if (this.state.currentSelection === 'none of the above') {
           this.getNdbno(ingredient.name); //with updated offset...
