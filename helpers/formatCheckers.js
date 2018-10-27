@@ -39,7 +39,7 @@ module.exports.isValidRecipe = (recipe) => {
       return true;
     }) === false) {
       return false;
-    }
+  }
   return true;
 };
 

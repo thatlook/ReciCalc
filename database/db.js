@@ -87,7 +87,7 @@ module.exports.addRecipe = function(clientRecipe) {
     };
     const dbIngredientJunction = clientRecipe.ingredients.map((ing, index) =>  {
       return {
-        food_no: ing.ndbno,
+        food_no: parseInt(ing.ndbno),
         quantity: ing.quantity,
         quantity_measure: 'g',
         list_position: index
