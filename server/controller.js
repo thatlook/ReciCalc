@@ -18,7 +18,7 @@ module.exports.recipes = {
     //query databse for detailed information on the given recipe and return it
     let recipeId = parseInt(req.params.recipeId);
     if(isNaN(recipeId)) {
-      res.status(303).send('Malformed recipe id');
+      res.status(400).send('Malformed recipe ID');
     } else {
       db.fetchRecipeById(recipeId)
         .then(recipe => {
