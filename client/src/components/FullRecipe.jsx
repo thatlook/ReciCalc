@@ -7,27 +7,9 @@ class FullRecipe extends Component {
       }
   }
 
-  // *   ndbno INT PRIMARY KEY,
-  // *   name TEXT NOT NULL,
-  // *   std_amount NUMERIC NOT NULL,
-  // *   std_measure TEXT NOT NULL,
-  // *   kcal_per NUMERIC,
-  // *   fat_per NUMERIC,
-  // *   sat_fat_per NUMERIC,
-  // *   fiber_per NUMERIC,
-  // *   cholesterol_per NUMERIC,
-  // *   sodium_per NUMERIC,
-  // *   carbs_per NUMERIC,
-  // *   sugar_per NUMERIC,
-  // *   protein_per NUMERIC
-  // * 
-  // *   //NOTE: cholesterol and sodium stored in mg
-  // *   // rest are in g (except kcal)
-
   componentDidMount() {
     // make call to database for particular recipe referencing {this.props.match.params.id} to retrieve recipe by id number
     // recipe object returned in format below. hardcoding example for testing
-    // state is also hardcoded to a dummy recipe because setState is asynchronous and without 
     this.setState({
       recipe: {
         title: 'Recipe One Name',
@@ -40,7 +22,15 @@ class FullRecipe extends Component {
             ndbno: 101,
             quantity: 100,
             nutrition: {
-              /*probably all the database stored nutrients in format 'nutnamePer: number'*/
+              kcalPer: 1,
+              fatPer: 2,
+              satFatPer: 3,
+              fiberPer: 4,
+              cholesterolPer: 5,
+              sodiumPer: 6,
+              carbsPer: 7,
+              sugarPer: 8,
+              proteinPer: 9
            }
           },
           {
@@ -48,8 +38,16 @@ class FullRecipe extends Component {
             ndbno: 1128,
             quantity: 9,
             nutrition: {
-              /*more nutrition info*/
-            }
+              kcalPer: 1,
+              fatPer: 2,
+              satFatPer: 3,
+              fiberPer: 4,
+              cholesterolPer: 5,
+              sodiumPer: null,
+              carbsPer: null,
+              sugarPer: null,
+              proteinPer: null
+           }
           }
         ],
         instructions: ['instruction 1', 'instruction 2']
@@ -58,7 +56,18 @@ class FullRecipe extends Component {
   }
 
   calculateNutrition(){
-    // does this helper function exist?
+    const {recipe} = this.state
+    let totalNutrition = {};
+    for (let ingredient of recipe.ingredients) {
+      for (let nutrient in ingredient.nutrition) {
+        if (typeof ingredient.nutrition[nutrient] === 'number') {
+          let ingredientNutrientContribution = ingredient.nutrition[nutrient]*(ingredient.quantity/100)
+          totalNutrition[nutrient] = totalNutrition[nutrient] + ingredientNutrientContribution  || ingredientNutrientContribution; 
+        }
+      }
+    }
+    console.log(totalNutrition);
+    return totalNutrition;
   }
 
   render () {
@@ -66,6 +75,7 @@ class FullRecipe extends Component {
     if (recipe === undefined) {
       return(<div>ERROR: RECIPE DOES NOT EXIST</div>)
     } else {
+      let nutritionObject = this.calculateNutrition();
       return (
         <div id='full-recipe'>
           <h2>WILL RENDER FULL RECIPE FOR RECIPE WITH ID NUMBER : {this.props.match.params.id}</h2>
@@ -83,7 +93,18 @@ class FullRecipe extends Component {
             )}
           </ol>
           <div id='nutrition'>
-            {/* map out nutrition totals */}
+            <h4>Nutrition Information</h4>
+            <ul id='nutrient-list'>
+              <li className='nutrient'>Calories: {nutritionObject.kcalPer} cals</li>
+              <li className='nutrient'>Total Fat: {nutritionObject.fatPer} g</li>
+              <li className='nutrient'>Saturated Fat: {nutritionObject.satFatPer} g</li>
+              <li className='nutrient'>Cholesterol: {nutritionObject.cholesterolPer} mg</li>
+              <li className='nutrient'>Sodium: {nutritionObject.sodiumPer} mg</li>
+              <li className='nutrient'>Total Carbohydrates: {nutritionObject.carbsPer} g</li>
+              <li className='nutrient'>Sugar: {nutritionObject.sugarPer} g</li>
+              <li className='nutrient'>Fiber: {nutritionObject.fiberPer} g</li>
+              <li className='nutrient'>Protein: {nutritionObject.proteinPer} g</li>
+            </ul>
           </div>
         </div>
       )
