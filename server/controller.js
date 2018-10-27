@@ -50,8 +50,12 @@ module.exports.recipes = {
           res.status(201).json({newRecipeId: data});
         })
         .catch(err => {
-          console.log('ERROR STORING RECIPE TO DATABASE:', err);
-          res.status(500).send();
+          if (err.detail === 'A field with precision 8, scale 2 must round to an absolute value less than 10^6.') {
+            res.status(400).send('Ingredient quantity too large: maximum value 999,999.99');
+          } else {
+            console.log('ERROR STORING RECIPE TO DATABASE:', err);
+            res.status(500).send();
+          }
         })
     }
   }
