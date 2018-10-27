@@ -8,7 +8,6 @@ class IngredientInput extends Component {
           isValidating: false,
           currentOffset: 0,
           currentSelection: '',
-          //from database: false
         }
         this.handleChange = this.handleChange.bind(this);
         this.validate = this.validate.bind(this);
