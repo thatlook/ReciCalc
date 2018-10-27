@@ -5,6 +5,8 @@ class IngredientInput extends Component {
         super(props);
         this.state = {
           nameMatches: [],
+          isValidating: false,
+          currentOffset: 0
         }
         this.handleChange = this.handleChange.bind(this);
         this.validate = this.validate.bind(this);
@@ -18,25 +20,37 @@ class IngredientInput extends Component {
 
     validate(userInputtedFoodWord) {
       const {updateRecipe, index, ...rest} = this.props;
-    //   Will we provide use an option in the select menu
-    //   1)check database for possible nameMatches -> update state nameMatches
-    //     if user chooses one of these matches:
-    //       update state -> ingredient name and NDBNO
-    //                    -> reset unmatchedInput to null
-    //                    -> isValidate to true (will change validate button to read 'edit')
-    //   2)if none match, make call to API and update state nameMatches with new items from API call (limit?)
-    //     if user chooses one of these matches:
-    //         update state -> ingredient name and NDBNO
-    //                      -> reset unmatchedInput to null
-    //                      -> isValidate to true (will change validate button to read 'edit')
-    //         make call to API to get nutritional info of ingredient with given NDBNO and add to database
-    //   3)repeat step 2 as needed until match is found
-      
-      // change below hardcoded values to correct ndbno and nutritionObject
+      if (!this.state.isValidating) {
+          this.setState({nameMatches: ['ham', 'more ham', 'extra extra ham']})
+          this.setState({isValidating: true})
+          // above call is hardcoded, obviously
+          // make call to database
+            // call to database should come from a helper function that lives on this component
+            // objects will contain the name, the ndbno, and the nutritional content
+            // set nameMatches to (objects right) representing the possible matches, is Validating to true 
+              // if array returned from database call is empty, need to make call to API
+                // this call should come from another helper function that lives on the component?
+                // set state with possible matches, change is Validating to true
+      } else {
+       // make this its own helper function to update ingredient object with ingredient information
+       // change below hardcoded values to correct ndbno and nutritionObject
       updateRecipe(['ingredients', 'ndbno'], '82930', index, () => 
         updateRecipe(['ingredients', 'nutrition'], {'thisIs': 'nutritionObject'}, index, () => 
           updateRecipe(['ingredients', 'isValidated'], true, index)));
+        // check confirmation call
+          // if confirmation call reads 'none of the above', make call to api to get searches from ndb
+          // update current offset by whatever amount
+        // else if confirmation call reads a name
+          // call helper function to update state of ingredient object with ingredient information
+      }
+
     }
+
+    // make this its own helper function to update ingredient object with ingredient information
+    // change below hardcoded values to correct ndbno and nutritionObject
+    //   updateRecipe(['ingredients', 'ndbno'], '82930', index, () => 
+    //     updateRecipe(['ingredients', 'nutrition'], {'thisIs': 'nutritionObject'}, index, () => 
+    //       updateRecipe(['ingredients', 'isValidated'], true, index)));
 
     handleSave(){
       const {ingredient, updateRecipe, index, ...rest} = this.props;
@@ -64,17 +78,24 @@ class IngredientInput extends Component {
               disabled={ingredient.isSaved}
             />
             <span>grams</span>
-            <input className='button' type='submit' value='Save' disabled={ingredient.isSaved} onClick={this.handleSave}/>
-            <input className='button' type='button' value='Delete' onClick={() => deleteIngredient(index)}/>
+            <input className='button' type='submit' value='Save' 
+              disabled={ingredient.isSaved} 
+              onClick={this.handleSave}
+            />
+            <input className='button' type='button' value='Delete' 
+              onClick={() => deleteIngredient(index)}
+            />
           </div>
-          <div className='validate' hidden={ingredient.isValidated}>
-            <input className='button' type='button' value='Validate' onClick={() => this.validate()}/>
-            Validation match possibilities will go here
-            {/* <select name="" id="">
-               namematches.map to options
-               click
-
-            </select> */}
+          <div className='ingredient-validate' hidden={ingredient.isValidated}>
+            <input className='button' type='button' 
+              value={this.state.isValidating ? 'Confirm' : 'Validate'} 
+              onClick={() => this.validate()}
+            />
+            <select className='select'>
+              <option value=''>--Please choose an item to validate--</option>
+                {this.state.nameMatches.map(nameMatch => <option value={nameMatch} key={nameMatch}>{nameMatch}</option>)}
+              <option value='None of the above'>--None of the above--</option>
+            </select>
           </div>
         </div>)
     }
