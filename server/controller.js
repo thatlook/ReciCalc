@@ -3,6 +3,7 @@ const db = require('../database/db.js');
 const axios = require('axios');
 const qs = require('qs');
 const format = require('../helpers/formatCheckers.js');
+
 module.exports.recipes = {
   getList: (req, res) => {
     //query datbase for a list of short recipe descriptions and return them
@@ -79,32 +80,11 @@ module.exports.ingredients = {
     }
   },
   getUsdaByName: (req, res) => {
-    //Client-side example get function ------------->
-    //Retrieves USDA NDBNO for ingredient that user searches for
-
-    /*axios.get('api/ingredients/usda', {
-      params: {
-        searchTerm: 'deli ham',
-        offset: req.query.offset
-      }
-    })
-      .then((data) => {
-        const list = data.data.map(item => {
-          return [item.name, item.ndbno, item.group]
-        })
-        console.log(`${data.config.params.query} successfully searched: `,list);
-      })
-      .catch(error => {
-        throw(error)
-      });
-      */
-
-
     //Query USDA NDB API for ingredients matching a particular search string, and present them
 
     //expect req.params to have 'searchTerm'
     //also expect it may have 'page'
-    console.log('looking for USDA ingredients by name: ' + req.query.searchTerm)
+    //console.log('looking for USDA ingredients by name: ' + req.query.searchTerm)
     let offset = req.query.page ? req.query.page * 8 : 0;
     axios.get(`https://api.nal.usda.gov/ndb/search/?`, {
       params: {
@@ -125,22 +105,6 @@ module.exports.ingredients = {
       });
   },
   getUsdaIngredientInfo: (req, res) => {
-    //Client-side example get function ------------->
-    //Retrieves nutrients and info using ndbno number from user-selected ingredient
-
-    /*axios.get('api/ingredients/usda/:', {
-      params: {
-        ndbno: '07028'
-      }
-    })
-      .then(data => {
-        console.log('success!', data.data[0], data.data[0].nutrients)
-      })
-      .catch(error => {
-        throw(error.message);
-      })
-      */ 
-
     //expect req.params.ndbno 
     //Query USDA API for nutritional data about the provided item number
     if (format.isValidNdbno(req.params.ndbno) === false) {
@@ -178,7 +142,8 @@ module.exports.ingredients = {
   },
   post: (req, res) => {
     //Store ingredient in database
-    res.status(404).send('Under construction! We are not currently able to store data.');
+    //planned functionality moved elsewhere...
+    res.status(404).send();
   }
 }
 
