@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server/server.js",
+    "dev": "node server/server.js",
+    "heroku-postbuild": "webpack -p",
     "react-dev": "webpack -d --watch",
     "server-dev": "nodemon server/server.js"
   },
