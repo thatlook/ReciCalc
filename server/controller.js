@@ -99,7 +99,7 @@ module.exports.ingredients = {
     })
       .then((data) => {
         if(data.data.list) {
-          res.status(200).send(data['data']['list']['item']);
+          res.status(200).send(data.data.list.item);
         } else {
           res.status(200).send([]);
         }
