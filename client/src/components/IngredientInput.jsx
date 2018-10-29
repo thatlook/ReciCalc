@@ -6,7 +6,7 @@ class IngredientInput extends Component {
         this.state = {
           nameMatches: [],
           isValidating: false,
-          currentOffset: 0,
+          currentOffset: -1,
           currentSelection: '',
         }
         this.handleChange = this.handleChange.bind(this);
@@ -20,6 +20,9 @@ class IngredientInput extends Component {
 
     handleChange(event){
       const {updateRecipe, index, ...rest} = this.props;
+      if (this.state.currentOffset > -1) {
+        this.setState({currentOffset: -1});
+      }
       updateRecipe(['ingredients', event.target.name], event.target.value, index);
     }
 
@@ -58,8 +61,12 @@ class IngredientInput extends Component {
           const list = data.data.map((item, i) => {
             return {name : item.name, ndbno: item.ndbno}; 
           });
-          this.setState({nameMatches: list});
-          console.log('name matches from database: ',this.state.nameMatches);
+          if(list.length === 0) {
+            this.getNdbno(this.props.ingredient.name);
+          } else {
+            this.setState({nameMatches: list});
+            console.log('name matches from database: ',this.state.nameMatches);
+          }
         })
         .catch(error => {
           console.log('error: error while searching in database', error)
@@ -83,18 +90,15 @@ class IngredientInput extends Component {
       if (!this.state.isValidating) {
         this.setState({isValidating: true})
         this.getFromDB(ingredient.name);
-        if(this.state.nameMatches.length === 0) {
-          this.getNdbno(ingredient.name);
-        }
       } else {
-        if (!(this.state.currentSelection === 'none of the above' || this.state.currentSelection === '')) {
+        if (this.state.currentSelection !== undefined && !(this.state.currentSelection === 'none of the above' || this.state.currentSelection === '')) {
           let selection = this.state.currentSelection;
           this.finalValidation(selection.ndbno, selection.name);
           //console.log(selection);
           this.postToDatabase(selection);
           // make call to server to fetch nutrition information for given ndbno of currentSelection and add to database
-        } else if (this.state.currentSelection === 'none of the above') {
-          this.setState({currentOffset: currentOffset + 1},()=> {
+        } else if (this.state.currentSelection === undefined || this.state.currentSelection === 'none of the above') {
+          this.setState({currentOffset: this.state.currentOffset + 1},()=> {
             this.getNdbno(ingredient.name); //with updated offset...
           })
         }
