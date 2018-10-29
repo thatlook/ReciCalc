@@ -51,7 +51,7 @@ class FullRecipe extends Component {
     for (let ingredient of recipe.ingredients) {
       for (let nutrient in ingredient.nutrition) {
         if (!isNaN(ingredient.nutrition[nutrient])) {
-          let ingredientNutrientContribution = Math.round(ingredient.nutrition[nutrient]*ingredient.quantity)/100
+          let ingredientNutrientContribution = parseFloat(ingredient.nutrition[nutrient]*ingredient.quantity/100);
           totalNutrition[nutrient] = totalNutrition[nutrient] + ingredientNutrientContribution  || ingredientNutrientContribution; 
         } else {
           totalNutrition[nutrient] = totalNutrition[nutrient] || 0;
@@ -71,30 +71,30 @@ class FullRecipe extends Component {
       return (
         <div id='full-recipe'>
           <h3>{recipe.title}</h3>
-          <p className='description'>{recipe.description}</p>
-          <ul>
+          <p id='full-description'>{recipe.description}</p>
+          <ul className='full-list'>
             <h4>Ingredients:</h4>
             {recipe.ingredients.map(ingredient => 
               <li key={ingredient.ndbno}>{ingredient.name}  -  {ingredient.quantity} grams</li>)}
           </ul>
-          <ol>
+          <ol className='full-list'>
             <h4>Instructions:</h4>
             {recipe.instructions.map((instruction, index) =>
               <li key={index}>{instruction}</li>  
             )}
           </ol>
           <div id='nutrition'>
-            <h4>Nutrition Information</h4>
-            <ul id='nutrient-list'>
-              <li className='nutrient'>Calories: {nutritionObject.kcalPer} cals</li>
-              <li className='nutrient'>Total Fat: {nutritionObject.fatPer} g</li>
-              <li className='nutrient'>Saturated Fat: {nutritionObject.satFatPer} g</li>
-              <li className='nutrient'>Cholesterol: {nutritionObject.cholesterolPer} mg</li>
-              <li className='nutrient'>Sodium: {nutritionObject.sodiumPer} mg</li>
-              <li className='nutrient'>Total Carbohydrates: {nutritionObject.carbsPer} g</li>
-              <li className='nutrient'>Sugar: {nutritionObject.sugarPer} g</li>
-              <li className='nutrient'>Fiber: {nutritionObject.fiberPer} g</li>
-              <li className='nutrient'>Protein: {nutritionObject.proteinPer} g</li>
+            <h4>Nutrition Information:</h4>
+            <ul id='nutrient-list' className='full-list'>
+              <li className='nutrient'>Calories: {nutritionObject.kcalPer.toFixed(2)} cals</li>
+              <li className='nutrient'>Total Fat: {nutritionObject.fatPer.toFixed(2)} g</li>
+              <li className='nutrient'>Saturated Fat: {nutritionObject.satFatPer.toFixed(2)} g</li>
+              <li className='nutrient'>Cholesterol: {nutritionObject.cholesterolPer.toFixed(2)} mg</li>
+              <li className='nutrient'>Sodium: {nutritionObject.sodiumPer.toFixed(2)} mg</li>
+              <li className='nutrient'>Total Carbohydrates: {nutritionObject.carbsPer.toFixed(2)} g</li>
+              <li className='nutrient'>Sugar: {nutritionObject.sugarPer.toFixed(2)} g</li>
+              <li className='nutrient'>Fiber: {nutritionObject.fiberPer.toFixed(2)} g</li>
+              <li className='nutrient'>Protein: {nutritionObject.proteinPer.toFixed(2)} g</li>
             </ul>
           </div>
         </div>
