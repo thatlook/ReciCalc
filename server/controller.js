@@ -98,10 +98,15 @@ module.exports.ingredients = {
       },
     })
       .then((data) => {
-        res.status(200).send(data['data']['list']['item']);
+        if(data.data.list) {
+          res.status(200).send(data.data.list.item);
+        } else {
+          res.status(200).send([]);
+        }
       })
       .catch(error => {
-        throw(error);
+        console.log('Error searching USDA database: ', error)
+        res.status(500).send();
       });
   },
   getUsdaIngredientInfo: (req, res) => {
