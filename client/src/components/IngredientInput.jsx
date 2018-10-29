@@ -117,7 +117,7 @@ class IngredientInput extends Component {
     }
 
     render(){
-      const {ingredient, index, deleteIngredient, ...rest} = this.props;
+      const {ingredient, index, deleteItem, ...rest} = this.props;
 
       return (
         <div className='ingredient-input'>
@@ -138,7 +138,7 @@ class IngredientInput extends Component {
               onClick={this.handleSave}
             />
             <input className='button' type='button' value='Delete' 
-              onClick={() => deleteIngredient(index)}
+              onClick={() => deleteItem('ingredients', index)}
             />
           </div>
           <div className='ingredient-validate' hidden={ingredient.isValidated}>

@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter as Router} from 'react-router-dom';
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
 // import top-level Route components
-import Header from './components/Header.jsx';
+import Landing from './components/Landing.jsx';
 import Main from './components/Main.jsx';
 
 class App extends Component {
@@ -18,10 +18,10 @@ class App extends Component {
   render () {
     return (
       <Router>
-        <div className='app'>
-          <Header />
-          <Main />
-        </div>
+          <Switch>
+            <Route exact path = '/' component={Landing} />
+            <Route component={Main} />
+          </Switch>
       </Router>);
   }
 }

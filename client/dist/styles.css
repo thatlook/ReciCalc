@@ -1,7 +1,116 @@
-.app {
-    background-color: blanchedalmond;
+/* CSS reset */
+* {
+    margin: 0;
+    padding: 0;
+    border: none;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+body {
+    line-height: 1;
+}
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
 }
 
+*,
+*:before,
+*:after {
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+
+/* Reci-Calc Styles */
+html, body, #app, #app>div {
+    height: 100%
+  }
+  
+#top-parent {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-rows: 150px 1fr;
+}
+
+#header {
+    grid-row: 1 / 2;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr / 3fr / 1fr;
+}
+
+#main {
+    grid-row: 2 / 3;
+    width: 100%;
+    height: 100%;
+}
+
+/* Header styles */
+
+#logo {
+    color:white;
+    font-size: 60px;
+    font-weight: bolder;
+    letter-spacing: 2px;
+    grid-column: 1 / 2;
+    justify-self: start;
+    align-self: center;
+    margin-left: 20px;
+}
+
+#nav-links {
+    grid-column: 3 / 4;
+    display: grid;
+    justify-items: center;
+    margin-bottom: 15px;
+}
+
+.nav {
+    margin: 10px 15px;
+    padding: 6px;
+    display: block;
+    max-width: 150px;
+    background-color: white;
+    color: seagreen;
+    border: 2px solid seagreen;
+    border-radius: 3px;
+}
+
+.nav:hover {
+    background-color: seagreen;
+    color: white;
+    border: 2px solid white;
+}
+
+/* Home styles */
+#home {
+    background-image: url(./veggies.jpg);
+    background-size: cover;
+    height: 100%;
+    width: 100%;
+}
+
+
+/* Buttons */
 .button {
     border: 2px solid black;
     color: seagreen;
@@ -13,5 +122,4 @@
 
 .link {
     text-decoration: none;
-    margin: 0 10px;
 }
