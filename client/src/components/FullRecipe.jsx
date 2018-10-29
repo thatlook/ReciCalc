@@ -54,7 +54,7 @@ class FullRecipe extends Component {
           let ingredientNutrientContribution = Math.round(ingredient.nutrition[nutrient]*ingredient.quantity)/100
           totalNutrition[nutrient] = totalNutrition[nutrient] + ingredientNutrientContribution  || ingredientNutrientContribution; 
         } else {
-          totalNutrition[nutrient] = 0;
+          totalNutrition[nutrient] = totalNutrition[nutrient] || 0;
         }
       }
     }
