@@ -1,2 +1,2 @@
-web: npm run server-dev
+web: npm run dev
 release: npm run heroku-postbuild
