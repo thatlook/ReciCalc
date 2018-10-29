@@ -28,8 +28,10 @@ app.get('/*', (req, res) => {
   })
 })
 
-
-let port = 1128;
+let por = process.env.PORT;
+if(port === null || port === '') {
+  port = 3000;
+}
 app.listen(port, function() {
   console.log(`listening on port ${port}`);
 });
