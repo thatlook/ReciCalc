@@ -1,5 +1,3 @@
-// Postgress init here
-// Schema in separate file?
 const env = require('../db_config.js').environment;
 const options = require('../knexfile')[env];
 const parse = require('../helpers/parsers.js');
@@ -100,13 +98,13 @@ module.exports.searchIngredientsByName = function(searchString) {
 
 module.exports.addIngredient = function(usdaIngredient) {
   //takes an ingredient object and stores it to the ingredients table
-  //Assuming object is the usda return object's report.foods[0]'
+  //Assuming object is the usda return object's report.foods[0]
   let dbIngredient = parse.usdaIngredientToDatabase(usdaIngredient);
   return knex('ingredients')
     .insert(dbIngredient)
     .catch(err => {
       if(err.code === '23505') {
-        //duplicate item, not an issue
+        //duplicate item, not actually a problem
         return;
       } else {
         throw err;
@@ -116,6 +114,7 @@ module.exports.addIngredient = function(usdaIngredient) {
 
 module.exports.addRecipeIngredient = function(recipeIngredient) {
   //takes an ingredient entry on a recipe and adds it to the recipe_ingredient junction table
+  //might be useful for future recipe editing, not used as of right now
 }
 
 module.exports.addRecipe = function(clientRecipe) {
@@ -143,7 +142,7 @@ module.exports.addRecipe = function(clientRecipe) {
       .returning('id')
       .then(recipeId => {
         outerRecipeId = recipeId[0];
-        console.log('recipe ID: ', recipeId)
+        //console.log('recipe ID: ', recipeId)
         dbIngredientJunction.forEach(entry => {
           entry.recipe_id = recipeId[0]
         })

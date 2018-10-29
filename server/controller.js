@@ -86,6 +86,7 @@ module.exports.ingredients = {
     //also expect it may have 'page'
     //console.log('looking for USDA ingredients by name: ' + req.query.searchTerm)
     let offset = req.query.page ? req.query.page * 8 : 0;
+    
     axios.get(`https://api.nal.usda.gov/ndb/search/?`, {
       params: {
         format: 'JSON',
