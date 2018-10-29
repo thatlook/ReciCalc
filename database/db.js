@@ -142,7 +142,7 @@ module.exports.addRecipe = function(clientRecipe) {
       .into('recipes')
       .returning('id')
       .then(recipeId => {
-        outerRecipeId = recipeId;
+        outerRecipeId = recipeId[0];
         console.log('recipe ID: ', recipeId)
         return dbIngredientJunction.map(entry => {
           entry.recipe_id = recipeId[0];
