@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node server/server.js",
+    "start": "node server/server.js",
     "heroku-postbuild": "webpack -p",
     "react-dev": "webpack -d --watch",
     "server-dev": "nodemon server/server.js"
