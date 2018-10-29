@@ -28,15 +28,15 @@ class InstructionInput extends Component {
       return (
         <div className='instruction-input'>
           <div className='instruction-info'>
-            <textarea className='name' name='text' placeholder='instruction input' 
+            <textarea className='user instruction' name='text' placeholder='instruction input' 
               onChange={this.handleChange} 
               value={instruction.text} 
               disabled={instruction.isSaved}
             />
-            <input className='button' type='submit' value={instruction.isSaved ? 'Edit' : 'Save'} 
+            <input className='instruction-button button' type='submit' value={instruction.isSaved ? 'Edit' : 'Save'} 
               onClick={this.handleSave}
             />
-            <input className='button' type='button' value='Delete' 
+            <input className='instruction-button button' type='button' value='Delete' 
               onClick={() => deleteItem('instructions', index)}
             />
           </div>

@@ -71,6 +71,7 @@ class Create extends Component {
         })}));
     }
 
+    // have postRecipe take user to RecipeList view??
     postRecipe(){
       let isValidRecipe = true;
       if(typeof this.state.title !== 'string' || this.state.title.trim().length === 0) {
@@ -105,7 +106,8 @@ class Create extends Component {
     render() {
       return (
         <div id='create'>
-          <h2>Create a new recipe:</h2>
+          <h2>What's cookin'?</h2>
+          <span id='recipe-submit' className='button' onClick={this.postRecipe}>SAVE RECIPE</span>
           <CreateTitle updateRecipe={this.updateRecipe} />
           <CreateDescription updateRecipe={this.updateRecipe} />
           <CreateIngredients 
@@ -120,7 +122,6 @@ class Create extends Component {
             updateRecipe={this.updateRecipe}
             deleteItem={this.deleteItem}
           />
-          <span id='recipe-submit' className='button' onClick={this.postRecipe}>SAVE RECIPE</span>
         </div>
       )
     }
