@@ -78,7 +78,6 @@ class FullRecipe extends Component {
       let nutritionObject = this.calculateNutrition();
       return (
         <div id='full-recipe'>
-          <h2>WILL RENDER FULL RECIPE FOR RECIPE WITH ID NUMBER : {this.props.match.params.id}</h2>
           <h3>{recipe.title}</h3>
           <p className='description'>{recipe.description}</p>
           <ul>

@@ -5,7 +5,7 @@ import IngredientInput from './IngredientInput.jsx';
 const CreateIngredients = ({ingredients, addNewIngredient, updateRecipe, deleteItem}) => (
         <div id='create-ingredients'>
             <h3>Ingredients:</h3>
-            <input className='button' type='button' value='Add Ingredient' onClick={addNewIngredient} />
+            <input className='add button' type='button' value='Add Ingredient' onClick={addNewIngredient} />
             {ingredients.map((ingredient, index) => <IngredientInput
                 key={`${ingredient.counter}`}
                 index={index}

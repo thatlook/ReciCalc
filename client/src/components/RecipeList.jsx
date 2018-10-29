@@ -31,7 +31,7 @@ class RecipeList extends Component {
   render() {
     return (
       <div id='recipe-list'>
-        <h2>HERE ARE ALL YOUR DELICIOUS RECIPES: </h2>
+        <h3>Saved Recipes: </h3>
         <ul>
           {this.state.allRecipes.map(recipe => <RecipeListItem key={recipe.id} recipe={recipe} />)}
         </ul>

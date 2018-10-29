@@ -10,6 +10,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = { 
+      // keep copy of Create view state here in case user leaves page and returns without submitting
       // recipeUnderConstruction: {}
     }
   }

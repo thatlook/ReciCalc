@@ -121,18 +121,29 @@ class IngredientInput extends Component {
 
       return (
         <div className='ingredient-input'>
-          <div className='ingredient-info'>
-            <input className='name' type='text' name='name' placeholder='Ingredient name' 
+            <input className='user name' type='text' name='name' placeholder='Ingredient name' 
               onChange={this.handleChange} 
               value={ingredient.name} 
               disabled={ingredient.isValidated}
             />
-            <input className='quantity' type='number' name='quantity' placeholder='Quantity' 
+            <div className='quantity'>
+              <input className='user quantity-input' type='number' name='quantity' placeholder='Quantity' 
               onChange={this.handleChange} 
               value={ingredient.quantity} 
               disabled={ingredient.isSaved}
-            />
-            <span>grams</span>
+              /> <span>grams</span>
+            </div>
+            <div className='ingredient-validate' hidden={ingredient.isValidated}>
+              <input className='button' type='button' 
+                value={this.state.isValidating ? 'Confirm' : 'Validate'} 
+                onClick={() => this.validate()}
+              />
+              <select name="select" className='user select' onChange={this.updateSelection}>
+                <option value=''>--Please choose an item to validate--</option>
+                  {this.state.nameMatches.map((nameMatch, i) => <option object={nameMatch} value={nameMatch.name} key={i}>{nameMatch.name}</option>)}
+                <option value='none of the above'>--None of the above--</option>
+              </select>
+           </div>
             <input className='button' type='submit' value='Save' 
               disabled={ingredient.isSaved} 
               onClick={this.handleSave}
@@ -140,18 +151,6 @@ class IngredientInput extends Component {
             <input className='button' type='button' value='Delete' 
               onClick={() => deleteItem('ingredients', index)}
             />
-          </div>
-          <div className='ingredient-validate' hidden={ingredient.isValidated}>
-            <input className='button' type='button' 
-              value={this.state.isValidating ? 'Confirm' : 'Validate'} 
-              onClick={() => this.validate()}
-            />
-            <select name="select" className='select' onChange={this.updateSelection}>
-              <option value=''>--Please choose an item to validate--</option>
-                {this.state.nameMatches.map((nameMatch, i) => <option object={nameMatch} value={nameMatch.name} key={i}>{nameMatch.name}</option>)}
-              <option value='none of the above'>--None of the above--</option>
-            </select>
-          </div>
         </div>)
     }
 }
