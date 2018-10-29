@@ -142,16 +142,15 @@ module.exports.addRecipe = function(clientRecipe) {
       .into('recipes')
       .returning('id')
       .then(recipeId => {
-        outerRecipeId = recipeId;
+        outerRecipeId = recipeId[0];
         console.log('recipe ID: ', recipeId)
-        return dbIngredientJunction.map(entry => {
-          entry.recipe_id = recipeId[0];
-          return trx
-            .insert(entry)
-            .into('recipe_ingredients');
+        dbIngredientJunction.forEach(entry => {
+          entry.recipe_id = recipeId[0]
         })
+        return trx
+          .insert(dbIngredientJunction)
+          .into('recipe_ingredients');
       })
-      .all()
       .then(() => outerRecipeId);
   })
 }

@@ -233,7 +233,8 @@ h3 {
 
 
 /* Recipe List */
-#recipe-list {
+#recipe-list,
+#full-recipe {
     margin-left: 175px;
     margin-top: 15px;
 }
@@ -248,13 +249,37 @@ h3 {
 }
 
 .list-description {
-    margin: 6px 25px;
+    margin: 10px 25px;
     font-size: 18px;
 }
 
 .list-top {
     margin: 6px 35px;
     font-size: 14px;
+}
+
+/* Full Recipes */
+
+h4 {
+    margin: 15px 0;
+    font-size: 18px;
+    border-bottom: 1px solid #12770b;
+    max-width: 50%;
+}
+
+#full-description {
+    margin: 18px 25px;
+    font-size: 18px;
+}
+
+.full-list>li {
+    line-height: 1.2;
+    margin-left: 25px;
+}
+
+ol {
+    list-style-type: decimal;
+    list-style-position: inside;
 }
 
 /* Buttons and Inputs*/
