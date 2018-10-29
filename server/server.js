@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require("body-parser");
-// require db connection or functions?
 const router = require('./routes.js');
 
 
