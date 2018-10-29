@@ -64,6 +64,35 @@ module.exports.searchIngredientsByName = function(searchString) {
     .where('name', 'ilike', '%'+searchString+'%');
 };
 
+module.exports.searchIngredientsByNameSmarter = function(searchString) {
+  const strings = searchString.trim().split(' ').map(string => '%' + string + '%');
+  let allSearch = knex.select('*')
+    .from('ingredients')
+    .where('name', 'ilike', strings[0]);
+  for (let i = 1; i < strings.length; i++) {
+    allSearch = allSearch.andWhere('name', 'ilike', strings[i])
+  }
+  let anySearch = knex.select('*')
+    .from('ingredients')
+    .where('name', 'ilike', strings[0])
+  for (let i = 1; i < strings.length; i++) {
+    anySearch = anySearch.orWhere('name', 'ilike', strings[i]);
+  }
+  return Promise.all([allSearch, anySearch])
+    .then( ([allSearch, anySearch]) => {
+      anySearch = anySearch.filter(anyIng => {
+        let isUniqueIngredient = true;
+        allSearch.forEach(allIng => {
+          if (anyIng.ndbno === allIng.ndbno) {
+            isUniqueIngredient = false;
+          }
+        });
+        return isUniqueIngredient;
+      });
+      return allSearch.concat(anySearch);
+    })
+}
+
 module.exports.addIngredient = function(usdaIngredient) {
   //takes an ingredient object and stores it to the ingredients table
   //Assuming object is the usda return object's report.foods[0]'
