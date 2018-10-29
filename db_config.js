@@ -2,7 +2,7 @@ module.exports.location = {
   host : 'localhost',
   user : process.env.user,
   password : process.env.password,
-  database : 'recipes'
+  database : 'recipe'
 };
  
 module.exports.production = {
