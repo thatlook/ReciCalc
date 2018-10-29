@@ -6,7 +6,7 @@ const format = require('../helpers/formatCheckers.js');
 
 module.exports.recipes = {
   getList: (req, res) => {
-    //query datbase for a list of short recipe descriptions and return them
+    //query database for a list of short recipe descriptions and return them
     db.fetchRecipeList()
       .then(data => {
         res.status(200).json(data);
@@ -18,7 +18,7 @@ module.exports.recipes = {
   },
   getOne: (req, res) => {
     //endpoint: /api/recipes/:recipeId
-    //query databse for detailed information on the given recipe and return it
+    //query database for detailed information on the given recipe and return it
     let recipeId = parseInt(req.params.recipeId);
     if(isNaN(recipeId)) {
       res.status(400).send('Malformed recipe ID');
@@ -86,7 +86,7 @@ module.exports.ingredients = {
     //also expect it may have 'page'
     //console.log('looking for USDA ingredients by name: ' + req.query.searchTerm)
     let offset = req.query.page ? req.query.page * 8 : 0;
-    
+
     axios.get(`https://api.nal.usda.gov/ndb/search/?`, {
       params: {
         format: 'JSON',
