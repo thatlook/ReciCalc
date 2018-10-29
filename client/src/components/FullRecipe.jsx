@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Axios from 'axios';
 
 class FullRecipe extends Component {
   constructor(props) {
@@ -10,48 +11,37 @@ class FullRecipe extends Component {
   componentDidMount() {
     // make call to database for particular recipe referencing {this.props.match.params.id} to retrieve recipe by id number
     // recipe object returned in format below. hardcoding example for testing
-    this.setState({
-      recipe: {
-        title: 'Recipe One Name',
-        id: 1,
-        description: 'string describing recipe one',
-        topIngredients: 'Education, sample data',
-        ingredients: [
-          {
-            name: 'Education',
-            ndbno: 101,
-            quantity: 100,
-            nutrition: {
-              kcalPer: 1,
-              fatPer: 2,
-              satFatPer: 3,
-              fiberPer: 4,
-              cholesterolPer: 5,
-              sodiumPer: 6,
-              carbsPer: 7,
-              sugarPer: 8,
-              proteinPer: 9
-           }
-          },
-          {
-            name: 'Sample data',
-            ndbno: 1128,
-            quantity: 9,
-            nutrition: {
-              kcalPer: 1,
-              fatPer: 2,
-              satFatPer: 3,
-              fiberPer: 4,
-              cholesterolPer: 5,
-              sodiumPer: null,
-              carbsPer: null,
-              sugarPer: null,
-              proteinPer: null
-           }
-          }
-        ],
-        instructions: ['instruction 1', 'instruction 2']
-      }
+    Axios.get(`/api/recipes/${this.props.match.params.id}`).then(response => {
+      console.log('successful fullrecipe.jsx request',response.data);
+      this.setState({
+        recipe: {
+          title: response.data.title,
+          id: this.props.match.params.id,
+          description: response.data.description,
+          topIngredients: response.data.topIngredients,
+          ingredients: response.data.ingredients.map(ingredient => {
+            return {
+              name: ingredient.name,
+              ndbno: ingredient.ndbno,
+              quantity: ingredient.quantity,
+              nutrition: {
+                kcalPer: parseFloat(ingredient.nutrition.kcalPer),
+                fatPer: parseFloat(ingredient.nutrition.fatPer),
+                satFatPer: parseFloat(ingredient.nutrition.satFatPer),
+                fiberPer: parseFloat(ingredient.nutrition.fiberPer),
+                cholesterolPer: parseFloat(ingredient.nutrition.cholesterolPer),
+                sodiumPer: parseFloat(ingredient.nutrition.sodiumPer),
+                carbsPer: parseFloat(ingredient.nutrition.carbsPer),
+                sugarPer: parseFloat(ingredient.nutrition.sugarPer),
+                proteinPer: parseFloat(ingredient.nutrition.proteinPer)
+              }
+          }}),
+          instructions: response.data.instructions
+        }
+      })
+    })
+    .catch(error => {
+      console.log('error: ', error)
     })
   }
 
@@ -60,9 +50,11 @@ class FullRecipe extends Component {
     let totalNutrition = {};
     for (let ingredient of recipe.ingredients) {
       for (let nutrient in ingredient.nutrition) {
-        if (typeof ingredient.nutrition[nutrient] === 'number') {
-          let ingredientNutrientContribution = ingredient.nutrition[nutrient]*(ingredient.quantity/100)
+        if (!isNaN(ingredient.nutrition[nutrient])) {
+          let ingredientNutrientContribution = Math.round(ingredient.nutrition[nutrient]*ingredient.quantity)/100
           totalNutrition[nutrient] = totalNutrition[nutrient] + ingredientNutrientContribution  || ingredientNutrientContribution; 
+        } else {
+          totalNutrition[nutrient] = totalNutrition[nutrient] || 0;
         }
       }
     }

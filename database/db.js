@@ -57,12 +57,46 @@ module.exports.fetchRecipeById = function(recipeId) {
     });
 };
 
+// old version - very very stupid, but it works for sure
+//module.exports.searchIngredientsByName = function(searchString) {
+//  //look for ingredients that might be the target and return them
+//  return knex.select('*')
+//    .from('ingredients')
+//    .where('name', 'ilike', '%'+searchString+'%');
+//};
+
 module.exports.searchIngredientsByName = function(searchString) {
-  //look for ingredients that might be the target and return them
-  return knex.select('*')
+  const strings = searchString.trim().split(' ').map(string => string ? '%' + string + '%' : '');
+  let allSearch = knex.select('*')
     .from('ingredients')
-    .where('name', 'ilike', '%'+searchString+'%');
-};
+    .where('name', 'ilike', strings[0]);
+  for (let i = 1; i < strings.length; i++) {
+    if (strings[i]) {
+      allSearch = allSearch.andWhere('name', 'ilike', strings[i]);
+    }
+  }
+  let anySearch = knex.select('*')
+    .from('ingredients')
+    .where('name', 'ilike', strings[0])
+  for (let i = 1; i < strings.length; i++) {
+    if (strings[i]) {
+      anySearch = anySearch.orWhere('name', 'ilike', strings[i]);
+    }
+  }
+  return Promise.all([allSearch, anySearch])
+    .then( ([allSearch, anySearch]) => {
+      anySearch = anySearch.filter(anyIng => {
+        let isUniqueIngredient = true;
+        allSearch.forEach(allIng => {
+          if (anyIng.ndbno === allIng.ndbno) {
+            isUniqueIngredient = false;
+          }
+        });
+        return isUniqueIngredient;
+      });
+      return allSearch.concat(anySearch);
+    })
+}
 
 module.exports.addIngredient = function(usdaIngredient) {
   //takes an ingredient object and stores it to the ingredients table
