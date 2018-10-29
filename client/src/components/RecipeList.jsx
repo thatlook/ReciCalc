@@ -13,7 +13,7 @@ class RecipeList extends Component {
     // make a get call to database @ api/recipes to retrieve all user recipes and setState
     // placeholder below
     axios.get('api/recipes').then(response => {
-      console.log(response);
+      //console.log(response);
       this.setState({allRecipes: response.data.map(recipe => {
         return {
           id: recipe.id,
@@ -26,20 +26,6 @@ class RecipeList extends Component {
     .catch(error => {
       console.log('error: ', error);
     })
-    // this.setState({allRecipes: [
-    //     {
-    //       id: 1,
-    //       name: 'Hot Juicy Burger',
-    //       description: 'this is the hottest juciest burger you ever did see',
-    //       top_ingredients: 'ground beef, bun, mayonnaise'
-    //     },
-    //     {
-    //       id: 2,
-    //       name: 'Big plate of french fries',
-    //       description: 'this is how to make a big plate of french fries',
-    //       top_ingredients: 'potatoes, vegetable oil, salt'
-    //     }
-    // ]});
   }
 
   render() {
