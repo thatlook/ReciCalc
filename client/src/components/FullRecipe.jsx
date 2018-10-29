@@ -19,7 +19,7 @@ class FullRecipe extends Component {
           id: this.props.match.params.id,
           description: response.data.description,
           topIngredients: response.data.topIngredients,
-          ingredients: response.data.ingredients.map(ingredient => {
+          ingredients: response.data.ingredients ? response.data.ingredients.map(ingredient => {
             return {
               name: ingredient.name,
               ndbno: ingredient.ndbno,
@@ -35,8 +35,8 @@ class FullRecipe extends Component {
                 sugarPer: parseFloat(ingredient.nutrition.sugarPer),
                 proteinPer: parseFloat(ingredient.nutrition.proteinPer)
               }
-          }}),
-          instructions: response.data.instructions
+          }}) : [],
+          instructions: response.data.instructions ? response.data.instructions : []
         }
       })
     })
@@ -47,7 +47,17 @@ class FullRecipe extends Component {
 
   calculateNutrition(){
     const {recipe} = this.state
-    let totalNutrition = {};
+    let totalNutrition = {
+      kcalPer: 0,
+      fatPer: 0,
+      satFatPer: 0,
+      fiberPer: 0,
+      cholesterolPer: 0,
+      sodiumPer: 0,
+      carbsPer: 0,
+      sugarPer: 0,
+      proteinPer: 0
+    };
     for (let ingredient of recipe.ingredients) {
       for (let nutrient in ingredient.nutrition) {
         if (!isNaN(ingredient.nutrition[nutrient])) {
@@ -58,7 +68,7 @@ class FullRecipe extends Component {
         }
       }
     }
-    console.log(totalNutrition);
+    console.log('calculated nutrition: ', totalNutrition);
     return totalNutrition;
   }
 
