@@ -65,7 +65,7 @@ class FullRecipe extends Component {
   render () {
     const {recipe} = this.state;
     if (recipe === undefined) {
-      return(<div>ERROR: RECIPE DOES NOT EXIST</div>)
+      return(<div></div>)
     } else {
       let nutritionObject = this.calculateNutrition();
       return (
