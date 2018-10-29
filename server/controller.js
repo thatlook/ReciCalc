@@ -1,3 +1,4 @@
+require('dotenv').config()
 const API_KEY = process.env.API_KEY;
 const db = require('../database/db.js');
 const axios = require('axios');
