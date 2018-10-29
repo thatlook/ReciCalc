@@ -190,6 +190,8 @@ h3 {
 .instruction {
     width: 320px;
     height: 80px;
+    max-width: 320px;
+    max-height: 80px;
 }
 
 #description-save,
@@ -236,8 +238,23 @@ h3 {
     margin-top: 15px;
 }
 
-#list-title {
-  border: 1px solid #12770b
+.recipe-item {
+    margin: 25px 0;
+}
+
+.list-title {
+    font-size: 20px;
+    border-bottom: 1px solid #12770b
+}
+
+.list-description {
+    margin: 6px 25px;
+    font-size: 18px;
+}
+
+.list-top {
+    margin: 6px 35px;
+    font-size: 14px;
 }
 
 /* Buttons and Inputs*/
