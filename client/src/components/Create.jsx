@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { withRouter } from 'react-router-dom';
 import CreateTitle from './CreateTitle.jsx';
 import CreateDescription from './CreateDescription.jsx';
 import CreateIngredients from './CreateIngredients.jsx';
@@ -12,7 +13,8 @@ class Create extends Component {
             title: null,
             description: null,
             ingredients: [],
-            instructions: []
+            instructions: [],
+            submitted: false
         }
         this.counter = 0;
         this.sampleIngredient = {
@@ -73,6 +75,7 @@ class Create extends Component {
 
     // have postRecipe take user to RecipeList view??
     postRecipe(){
+
       let isValidRecipe = true;
       if(typeof this.state.title !== 'string' || this.state.title.trim().length === 0) {
         isValidRecipe = false;
@@ -94,6 +97,7 @@ class Create extends Component {
         axios.post('api/recipes', {recipe})
           .then(response => {
             console.log(response);
+            this.props.history.push(`/recipes/${response.data.newRecipeId}`);
           })
           .catch(err => {
             console.error(err);
@@ -107,7 +111,7 @@ class Create extends Component {
       return (
         <div id='create'>
           <h2>What's cookin'?</h2>
-          <span id='recipe-submit' className='button' onClick={this.postRecipe}>SAVE RECIPE</span>
+          <span id='recipe-submit' className='button' onClick={this.postRecipe} disabled={this.state.submitted}>SAVE RECIPE</span>
           <CreateTitle updateRecipe={this.updateRecipe} />
           <CreateDescription updateRecipe={this.updateRecipe} />
           <CreateIngredients 
@@ -128,4 +132,4 @@ class Create extends Component {
 }
 
 
-export default Create;
+export default withRouter(Create);
