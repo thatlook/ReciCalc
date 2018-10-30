@@ -1,5 +1,5 @@
 import React from 'react';
-import InstructionInput from './InstructionInput.jsx';
+import InstructionInput from './input/InstructionInput.jsx';
 
 
 const CreateInstructions = ({instructions, addNewInstruction, updateRecipe, deleteItem}) => (
