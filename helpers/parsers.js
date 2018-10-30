@@ -1,3 +1,5 @@
+// used to translate incoming USDA nutrition information
+// to database names
 const numberToNutDbName = {
   '208': 'kcal_per',
   '204': 'fat_per',
@@ -8,7 +10,7 @@ const numberToNutDbName = {
   '601': 'cholesterol_per',
   '269': 'sugar_per',
   '205': 'carbs_per'
-};
+}; 
 
 module.exports.usdaIngredientToDatabase = function(usdaIngredient) {
   //expects, for example, the nutrient report.foods[0]

@@ -1,4 +1,4 @@
-isValidNdbno = (item) => {
+const isValidNdbno = (item) => {
   if (typeof item === 'number') {
     item = item.toString().padStart(5, '0');
   }
@@ -16,7 +16,7 @@ isValidNdbno = (item) => {
   return true;
 };
 
-isValidIngredientList = (ingredients) => {
+const isValidIngredientList = (ingredients) => {
   return ingredients.every(ing => {
     if(isValidNdbno(ing.ndbno) === false) {
       return false;
@@ -28,7 +28,7 @@ isValidIngredientList = (ingredients) => {
   });
 } 
 
-module.exports.isValidRecipe = (recipe) => {
+const isValidRecipe = (recipe) => {
   if (typeof recipe !== 'object') {
     return false;
   }
@@ -47,4 +47,5 @@ module.exports.isValidRecipe = (recipe) => {
   return true;
 };
 
+module.exports.isValidReipe = isValidRecipe
 module.exports.isValidNdbno = isValidNdbno;
