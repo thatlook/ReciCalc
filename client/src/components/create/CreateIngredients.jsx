@@ -1,5 +1,5 @@
 import React from 'react';
-import IngredientInput from './IngredientInput.jsx';
+import IngredientInput from './input/IngredientInput.jsx';
 
 
 const CreateIngredients = ({ingredients, addNewIngredient, updateRecipe, deleteItem}) => (
