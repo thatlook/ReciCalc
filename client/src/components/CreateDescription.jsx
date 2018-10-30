@@ -16,6 +16,7 @@ class CreateDescription extends Component {
       this.setState({description: event.target.value});
     }
 
+    // when toggled, changes the 'save' button to read 'edit' and disables the input field
     toggleSaved(){
         this.setState(prevState => ({isSaved: !prevState.isSaved}));
     }
