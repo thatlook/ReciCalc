@@ -27,7 +27,7 @@ app.get('/*', (req, res) => {
   })
 })
 
-let port = process.env.PORT;
+let port = process.env.PORT || 3000;
 if(port === null || port === '') {
   port = 3000;
 }
