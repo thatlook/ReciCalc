@@ -10,6 +10,7 @@ class InstructionInput extends Component {
     }
 
     handleChange(event){
+      // below format used to destructure props for class-based components
       const {updateRecipe, index, ...rest} = this.props;
       updateRecipe(['instructions', event.target.name], event.target.value, index);
     }

@@ -19,6 +19,7 @@ class IngredientInput extends Component {
     }
 
     handleChange(event){
+      // below format used to destructure props for class-based components
       const {updateRecipe, index, ...rest} = this.props;
       if (this.state.currentOffset > -1) {
         this.setState({currentOffset: -1});
@@ -27,30 +28,31 @@ class IngredientInput extends Component {
     }
 
     updateSelection(event){
+      // keep track of which option user has selected from nameMatches array
       let updateObject = this.state.nameMatches.filter(nameMatch => nameMatch.name === event.target.value)[0];
-      this.setState({currentSelection: updateObject}, () => console.log(this.state));
+      this.setState({currentSelection: updateObject});
     }
 
     getNdbno(query){
       axios.get('api/ingredients/usda', {
         params: {
           searchTerm: `${query}`,
+          // offset used so that not all results from api are returned at once
           page: this.state.currentOffset
         }
       })
       .then((data) => {
-        const list = data.data.map((item, i) => {
+        const list = data.data.map(item => {
           return {name : item.name, ndbno: item.ndbno}; 
         });
-        this.setState({nameMatches: list}); // adjust this to update current offset
-        //console.log(`${data.config.params.query} successfully searched: `,list);
-        //console.log('name matches: ',this.state.nameMatches);
+        this.setState({nameMatches: list});
       })
       .catch(error => {
         throw(error)
       });    
     }
 
+    // search database to see if ingredient has already been saved there
     getFromDB(query){
       axios.get('api/ingredients', {
         params: {
@@ -62,10 +64,11 @@ class IngredientInput extends Component {
             return {name : item.name, ndbno: item.ndbno}; 
           });
           if(list.length === 0) {
+            // if no matching ingredient was found in directory, call API for matching ingredients
             this.getNdbno(this.props.ingredient.name);
           } else {
+            // if database did return some matches, set them to be the nameMatches array in state
             this.setState({nameMatches: list});
-            console.log('name matches from database: ',this.state.nameMatches);
           }
         })
         .catch(error => {
@@ -87,27 +90,32 @@ class IngredientInput extends Component {
 
     validate() {
       const {ingredient, updateRecipe, index, ...rest} = this.props;
+      // when user first clicks the 'validate' button
       if (!this.state.isValidating) {
         this.setState({isValidating: true})
         this.getFromDB(ingredient.name);
       } else {
+        // if user has selected an item that has a meaningful value:
         if (this.state.currentSelection !== undefined && !(this.state.currentSelection === 'none of the above' || this.state.currentSelection === '')) {
           let selection = this.state.currentSelection;
           this.finalValidation(selection.ndbno, selection.name);
-          //console.log(selection);
+          // make sure selection exists in our ingredient database (insert it if it doesn't)
           this.postToDatabase(selection);
           // make call to server to fetch nutrition information for given ndbno of currentSelection and add to database
         } else if (this.state.currentSelection === undefined || this.state.currentSelection === 'none of the above') {
           this.setState({currentOffset: this.state.currentOffset + 1},()=> {
-            this.getNdbno(ingredient.name); //with updated offset...
+            this.getNdbno(ingredient.name);
           })
         }
       }
 
     }
 
-    finalValidation(ndbno = 99999, name = 'hot ham'){
+    finalValidation(ndbno, name){
       const {updateRecipe, index, ...rest} = this.props;
+      // this is a terrible way to update state... three calls in a row connected via callbacks
+      // perhaps promises could be used, or the 'updateRecipe' function could be refactored to take
+      // multiple state changes at once
       updateRecipe(['ingredients', 'name'], name, index, () => 
         updateRecipe(['ingredients', 'ndbno'], ndbno, index, () => 
             updateRecipe(['ingredients', 'isValidated'], true, index)));
