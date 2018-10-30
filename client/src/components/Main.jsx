@@ -1,8 +1,8 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Header from './Header.jsx';
-import Create from './Create.jsx';
-import Recipes from './Recipes.jsx';
+import Create from './create/Create.jsx';
+import Recipes from './recipes/Recipes.jsx';
 
 const Main = () => (
   <div id='main'>
