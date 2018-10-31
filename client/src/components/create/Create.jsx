@@ -155,5 +155,11 @@ class Create extends Component {
     }
 }
 
+// PropTypes tell other developers what `props` a component expects
+// Warnings will be shown in the console when the defined rules are violated
+// VideoList.propTypes = {
+//   videos: React.PropTypes.array.isRequired
+// };
+
 // wrapped with withRouter in order to access props.history
 export default withRouter(Create);
