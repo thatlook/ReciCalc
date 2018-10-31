@@ -5,6 +5,7 @@ const SearchInput = ({addIngredient, ingredient, handleIngredientChange}) => (
     <h3>Search for Recipes by Ingredient!</h3>
     <input 
       className='user search'
+      value={ingredient}
       onChange={(e) => handleIngredientChange(e)}
       type='text' name='search' 
       placeholder='Enter an Ingredient'/>

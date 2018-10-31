@@ -1,9 +1,21 @@
 import axios from 'axios';
+import 
 
-
-getRecipeByIngr = (q) => {
-  axios.get('https://api.edamam.com')
+const getRecipeFromEdamam = (ingredients) => {
+  
+  let q = ingredients.reduce((acc, ingredient) => (
+    acc.concat(`, ${ingredient}`)
+  ))
+  
+  console.log(q);
+  axios.get('https://api.edamam.com/search',{
+    qs: {
+      q: q
+    }
+  })
 }
+
+export {getRecipeFromEdamam};
 
 
 // base url https://api.edamam.com
