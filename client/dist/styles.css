@@ -326,6 +326,24 @@ ol {
   display: flex;
 }
 
+.search h3{
+  border: solid 1px blue;
+}
+
 .search-input {
   margin-left: 175px;
+  flex-direction: column;
+}
+
+.search-list {
+  margin-left: 175px;
+  flex-direction: column;
+}
+
+.search-list-entry {
+  display: inline-block;
+}
+
+.remove-btn {
+  display: inline-block;
 }

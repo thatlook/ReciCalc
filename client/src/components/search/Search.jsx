@@ -13,7 +13,8 @@ class Search extends React.Component {
       ingredient: '',
     }
     this.addIngredient = this.addIngredient.bind(this);
-    this.handleIngredientChange = this.handleIngredientChange.bind(this)
+    this.handleIngredientChange = this.handleIngredientChange.bind(this);
+    this.deleteIngredient = this.deleteIngredient.bind(this);
   }
 
   handleIngredientChange(e) {
@@ -29,6 +30,15 @@ class Search extends React.Component {
     }))
   }
 
+  deleteIngredient(e) {
+    var ingredients = [...this.state.ingredients]; // make a separate copy of the array
+    var index = ingredients.indexOf(e.target.value)
+    ingredients.splice(index, 1);
+    this.setState({
+      ingredients: ingredients
+    });
+  }
+
   render() {
     return (
       <div id='search'>
@@ -39,6 +49,7 @@ class Search extends React.Component {
         />
         <SearchList 
           ingredients={this.state.ingredients}
+          deleteIngredient={this.deleteIngredient}
         />
       </div>
     )
