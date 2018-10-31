@@ -62,9 +62,12 @@ module.exports.recipes = {
     }
   },
   delete: (req, res) => {
+    let recipeId = parseInt(req.params.recipeId);
+    console.log('param.recipeId:',req.params.recipeId);
     // delete recipe in database
     console.log('recipe delete route hit');
-    console.log(req.body.recipe_id);
+
+    db.removeRecipe(recipeId);
     res.status(999).send('hit delete');
   }
 };

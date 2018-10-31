@@ -126,9 +126,6 @@ class Create extends Component {
       }
     }
 
-    deleteRecipe() {
-
-    }
 
     render() {
       return (

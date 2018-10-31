@@ -155,5 +155,14 @@ module.exports.addRecipe = function(clientRecipe) {
 }
 
 module.exports.removeRecipe = function(recipe_id) {
+ // remove all join table Id references then remove recipe
+  knex('recipe_ingredients')
+    .where('recipe_id', recipe_id)
+    .del()
+  .then(() =>
+    knex('recipes')
+      .where('id', recipe_id)
+      .del()
+  ).catch(err => console.log(err));
 
 }
