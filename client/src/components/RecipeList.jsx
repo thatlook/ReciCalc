@@ -28,10 +28,16 @@ class RecipeList extends Component {
     })
   }
 
+  deleteRecipe() {
+    console.log('delete last recipe clicked');
+    // console.log(this.state.allRecipes);
+  }
+
   render() {
     return (
       <div id='recipe-list'>
         <h3>Saved Recipes: </h3>
+        <input type="submit" value="delete last recipe" onClick={this.deleteRecipe} />
         <ul>
           {this.state.allRecipes.map(recipe => <RecipeListItem key={recipe.id} recipe={recipe} />)}
         </ul>

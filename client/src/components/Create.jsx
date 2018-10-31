@@ -112,7 +112,7 @@ class Create extends Component {
         console.log(recipe);
         axios.post('api/recipes', {recipe})
           .then(response => {
-            // console.log(response);
+            console.log(response);
             // response contains the database id for the newly created recipe
             // use this to redirect to the full recipe view for that recipe
             // (this.props.history.push can be used because component is wrapped by withRouter - see export statement)
@@ -126,11 +126,16 @@ class Create extends Component {
       }
     }
 
+    deleteRecipe() {
+
+    }
+
     render() {
       return (
         <div id='create'>
           <h2>What's cookin'?</h2>
           <span id='recipe-submit' className='button' onClick={this.postRecipe}>SAVE RECIPE</span>
+          <input type="submit" text="delete last recipe" onClick={this.deleteRecipe} />
           <CreateTitle updateRecipe={this.updateRecipe} />
           <CreateDescription updateRecipe={this.updateRecipe} />
           <CreateIngredients 

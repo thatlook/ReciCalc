@@ -63,7 +63,9 @@ module.exports.recipes = {
   },
   delete: (req, res) => {
     // delete recipe in database
-    let recipe_id = req.bodu.recipe_id;
+    console.log('recipe delete route hit');
+    console.log(req.body.recipe_id);
+    res.status(999).send('hit delete');
   }
 };
 

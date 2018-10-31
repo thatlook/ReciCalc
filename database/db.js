@@ -153,3 +153,7 @@ module.exports.addRecipe = function(clientRecipe) {
       .then(() => outerRecipeId);
   })
 }
+
+module.exports.removeRecipe = function(recipe_id) {
+
+}
