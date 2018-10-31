@@ -3,17 +3,14 @@ const path = require('path');
 const bodyParser = require("body-parser");
 const router = require('./routes.js');
 
-
 let app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(__dirname + '/../client/dist'));
 
-
 // CONTROLLERS
 
 app.use('/api', router);
-
 
 // FALLBACK ROUTE
 // React Router is a Client Side Router (CSR)

@@ -10,7 +10,7 @@ module.exports = {
     // publicPath = '/'
   },
   module : {
-    loaders : [
+    rules : [
       {
         test : /\.jsx?/,
         include : SRC_DIR,
