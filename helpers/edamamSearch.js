@@ -1,5 +1,5 @@
 import axios from 'axios';
-import 
+
 
 getRecipeByIngr = (q) => {
   axios.get('https://api.edamam.com')

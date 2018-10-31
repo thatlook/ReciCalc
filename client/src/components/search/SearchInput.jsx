@@ -1,10 +1,18 @@
 import React from 'react';
 
-const SearchInput = (props) => (
+const SearchInput = ({addIngredient, ingredient, handleIngredientChange}) => (
   <div className='search-input'>
     <h3>Search for Recipes by Ingredient!</h3>
-    <input className='user search' type='text' name='search' placeholder='Enter an Ingredient'/>
-    <input className='button' type='submit' value='Save'/> 
+    <input 
+      className='user search'
+      onChange={(e) => handleIngredientChange(e)}
+      type='text' name='search' 
+      placeholder='Enter an Ingredient'/>
+    <input 
+      onClick={() => addIngredient()}
+      className='button' 
+      type='submit' 
+      value='Save'/> 
   </div>
 )
 
