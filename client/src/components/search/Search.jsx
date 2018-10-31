@@ -51,6 +51,7 @@ class Search extends React.Component {
     } else {
       alert('please select an ingredient');
     }
+    
   }
 
   render() {

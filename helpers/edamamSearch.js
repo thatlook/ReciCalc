@@ -1,18 +1,33 @@
 import axios from 'axios';
-import 
+const config = require('../config.js');
 
+//sends api get request for recipies including selected ingredients
 const getRecipeFromEdamam = (ingredients) => {
-  
+
   let q = ingredients.reduce((acc, ingredient) => (
     acc.concat(`, ${ingredient}`)
   ))
   
   console.log(q);
-  axios.get('https://api.edamam.com/search',{
-    qs: {
-      q: q
-    }
-  })
+
+  return new Promise((resolve, reject) => {
+    axios.get('https://api.edamam.com/search',{
+      qs: {
+        q: q,
+        app_id: `${config.EDAMAM_APP_ID}`,
+        app_key: `${config.EDAMAM_KEY}`,
+        to: 8,
+      }
+    })
+    .then(res => {
+      console.log('response from edamam is ', res);
+      resolve('resolve todo')
+    })
+    .catch(err => {
+      console.log('error in api get from edamam', err);
+      reject('error in api get from edamam', err);
+    })
+  });
 }
 
 export {getRecipeFromEdamam};
