@@ -1,4 +1,9 @@
-// import axios from 'axios';
+import axios from 'axios';
+import 
+
+getRecipeByIngr = (q) => {
+  axios.get('https://api.edamam.com')
+}
 
 
 // base url https://api.edamam.com
