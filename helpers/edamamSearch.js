@@ -12,11 +12,11 @@ const getRecipeFromEdamam = (ingredients) => {
 
   return new Promise((resolve, reject) => {
     axios.get('https://api.edamam.com/search',{
-      qs: {
+      params: {
         q: q,
         app_id: `${config.EDAMAM_APP_ID}`,
         app_key: `${config.EDAMAM_KEY}`,
-        to: 8,
+        to: 3,
       }
     })
     .then(res => {
