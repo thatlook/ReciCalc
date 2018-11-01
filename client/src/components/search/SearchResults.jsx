@@ -3,7 +3,9 @@ import React from 'react';
 const SearchResults = (props) => {
   
   return (
-    <div>Search Results here</div>
+    <div>
+      <h2>Search Results</h2>
+    </div>
   )
 }
 

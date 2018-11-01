@@ -20,8 +20,8 @@ const getRecipeFromEdamam = (ingredients) => {
       }
     })
     .then(res => {
-      console.log('response from edamam is ', res);
-      resolve('resolve todo')
+      
+      resolve(res)
     })
     .catch(err => {
       console.log('error in api get from edamam', err);

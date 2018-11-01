@@ -47,7 +47,9 @@ class SearchCreate extends React.Component {
   submitSearch() {
     if (this.state.ingredients.length) {
       getRecipeFromEdamam(this.state.ingredients)
-      .then() //todo format incoming data then setState
+      .then(res => {
+        console.log(res.data);
+      }) //todo format incoming data then setState
       .then() //todo figure out how to link to new route link
     } else {
       alert('please select an ingredient');
