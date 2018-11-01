@@ -16,7 +16,7 @@ const getRecipeFromEdamam = (ingredients) => {
         q: q,
         app_id: `${config.EDAMAM_APP_ID}`,
         app_key: `${config.EDAMAM_KEY}`,
-        to: 3,
+        to: 5,
       }
     })
     .then(res => {
