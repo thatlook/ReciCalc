@@ -94,7 +94,7 @@ module.exports.searchIngredientsByName = function(searchString) {
       });
       return allSearch.concat(anySearch);
     })
-}
+};
 
 module.exports.addIngredient = function(usdaIngredient) {
   //takes an ingredient object and stores it to the ingredients table
@@ -110,12 +110,12 @@ module.exports.addIngredient = function(usdaIngredient) {
         throw err;
       }
     });
-}
+};
 
 module.exports.addRecipeIngredient = function(recipeIngredient) {
   //takes an ingredient entry on a recipe and adds it to the recipe_ingredient junction table
   //might be useful for future recipe editing, not used as of right now
-}
+};
 
 module.exports.addRecipe = function(clientRecipe) {
   //takes a recipe object, adds the basic data to the db, then adds recipe ingredients 
@@ -152,9 +152,9 @@ module.exports.addRecipe = function(clientRecipe) {
       })
       .then(() => outerRecipeId);
   })
-}
+};
 
-module.exports.removeRecipe = function(recipe_id) {
+module.exports.removeRecipe = function(recipe_id, cb) {
  // remove all join table Id references then remove recipe
   knex('recipe_ingredients')
     .where('recipe_id', recipe_id)
@@ -162,7 +162,8 @@ module.exports.removeRecipe = function(recipe_id) {
   .then(() =>
     knex('recipes')
       .where('id', recipe_id)
-      .del()
-  ).catch(err => console.log(err));
-
-}
+      .del())
+  .then(() => cb(null, 'delete successful'))
+  .catch((err) => cb(err, null))
+  //showing synax error but works fine..?
+};
