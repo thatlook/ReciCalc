@@ -12,6 +12,24 @@ class RecipeList extends Component {
   componentDidMount(){
     // make a get call to database @ api/recipes to retrieve all user recipes and setState
     // placeholder below
+    // axios.get('api/recipes').then(response => {
+    //   //console.log(response);
+    //   this.setState({allRecipes: response.data.map(recipe => {
+    //     return {
+    //       id: recipe.id,
+    //       name: recipe.name,
+    //       description: recipe.description,
+    //       top_ingredients: recipe.top_ingredients
+    //     }
+    //   })})
+    // })
+    // .catch(error => {
+    //   console.log('error: ', error);
+    // })
+    this.update();
+  }
+
+  update() {
     axios.get('api/recipes').then(response => {
       //console.log(response);
       this.setState({allRecipes: response.data.map(recipe => {
@@ -28,12 +46,27 @@ class RecipeList extends Component {
     })
   }
 
+  deleteRecipe(recipe) {
+    // let temp  = this.state.allRecipes[this.state.allRecipes.length - 1];
+    console.log('delete last recipe clicked');
+    console.log(recipe);
+
+    axios.delete(`api/recipes/${recipe.id}`)
+      .then(response => {
+        console.log('delete response:',response);
+      })
+      .then(() => this.update())
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
   render() {
     return (
       <div id='recipe-list'>
         <h3>Saved Recipes: </h3>
         <ul>
-          {this.state.allRecipes.map(recipe => <RecipeListItem key={recipe.id} recipe={recipe} />)}
+          {this.state.allRecipes.map(recipe => <RecipeListItem key={recipe.id} recipe={recipe} deleteRecipe={this.deleteRecipe.bind(this)}/>)}
         </ul>
       </div>
     )

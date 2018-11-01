@@ -5,6 +5,7 @@ const controller = require('./controller.js');
 router.get('/recipes', controller.recipes.getList)
 router.get('/recipes/:recipeId', controller.recipes.getOne)
 router.post('/recipes', controller.recipes.post)
+router.delete('/recipes/:recipeId', controller.recipes.delete)
 
 router.get('/ingredients', controller.ingredients.getDbByName)
 router.get('/ingredients/usda', controller.ingredients.getUsdaByName)
