@@ -14,7 +14,20 @@ class SearchCreate extends React.Component {
     this.state = {
       ingredients: [],
       ingredient: '',
-      searchResults: [],
+      searchResults: [{
+        title: 'Peanut Butter Banana Smoothie Recipe',
+        image: 'https://www.edamam.com/web-img/90b/90bdb6373111199cca741fc422ac3c28.jpg',
+        labels: ["Vegetarian", "Tree-Nut-Free", "Alcohol-Free"], //need to concat dietLables and healthLabels
+        ingredientsLines: ["1/2 banana", "1 tablespoon natural peanut butter", "1 cup ice cold skim milk"],
+        calories: 233.61649999999997,
+        totalFat: 0,
+        satFat: 0,
+        cholesterol: 0,
+        totalCarbs: 0,
+        sugar: 0,
+        fiber: 0,
+        protein: 0,
+      }],
     };
     this.addIngredient = this.addIngredient.bind(this);
     this.handleIngredientChange = this.handleIngredientChange.bind(this);
