@@ -20,7 +20,7 @@ module.exports.searchEdamam = {
         q: q,
         app_id: `${config.EDAMAM_APP_ID}`,
         app_key: `${config.EDAMAM_KEY}`,
-        to: 1,
+        to: 6,
       }
     })
     .then(data => {
