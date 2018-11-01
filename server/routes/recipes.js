@@ -38,9 +38,8 @@ module.exports.recipes = {
   },
   post: (req, res) => {
     //Store recipe in database
-    console.log('Incoming recipe request. Recipe:');
     let recipe = req.body.recipe;
-    console.log(recipe);
+    console.log('Incoming recipe request:', recipe);
     if(format.isValidRecipe(recipe) === false) {
       res.status(400).send('Malformed recipe');
     } else {
@@ -60,16 +59,15 @@ module.exports.recipes = {
   },
   delete: (req, res) => {
     let recipeId = parseInt(req.params.recipeId);
-    console.log('param.recipeId:',req.params.recipeId);
     // delete recipe in database
     console.log('recipe delete route hit');
 
     db.removeRecipe(recipeId, (err, data) => {
       if (err) {
-        console.log(err);
+        console.log('err durring recipe delete', err);
         res.status(400).send('err durring recipe delete');
       } else {
-        console.log(data);
+        console.log('recipe delted', data);
         res.status(200).send('receipe deleted');
       }
     });
