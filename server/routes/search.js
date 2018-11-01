@@ -23,12 +23,14 @@ module.exports.searchEdamam = {
         to: 1,
       }
     })
-    .then(response => {
-      res.end(response);
+    .then(data => {
+      console.log('getFromEd data ', data.data.hits )
+      
+      res.status(200).send(data.data.hits);
     })
     .catch(err => {
       console.log('error in api get from edamam', err);
-      res.end('error in api get from edamam', err);
+      res.status(400).end('error in api get from edamam', err);
     })
   },
 };
