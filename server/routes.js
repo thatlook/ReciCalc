@@ -6,7 +6,6 @@ const recipesRouter = require('./routes/recipes').recipes;
 const ingredientsRouter = require('./routes/ingredients').ingredients;
 const searchEdamam = require('./routes/search').searchEdamam;
 
-
 const authRouter = require('./routes/auth').auth;
 const usersRouter = require('./routes/users').users;
 

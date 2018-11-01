@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import SearchInput from './SearchInput.jsx';
 import SearchList from './SearchList.jsx';
 import { Link } from 'react-router-dom';
@@ -46,11 +47,22 @@ class SearchCreate extends React.Component {
 
   submitSearch() {
     if (this.state.ingredients.length) {
-      getRecipeFromEdamam(this.state.ingredients)
+      axios.get('/api/search', {
+        params: {
+          ingredients: this.state.ingredients
+        }
+      })
       .then(res => {
-        console.log(JSON.stringify(res.data));
-      }) //todo format incoming data then setState
-      .then() //todo figure out how to link to new route link
+        console.log('res on client from get search is ', res)
+      })
+      .catch(err => {
+        console.log('error on client from get search is ', err);
+      })
+      // getRecipeFromEdamam(this.state.ingredients)
+      // .then(res => {
+      //   console.log(JSON.stringify(res.data));
+      // }) //todo format incoming data then setState
+      // .then() //todo figure out how to link to new route link
     } else {
       alert('please select an ingredient');
     }

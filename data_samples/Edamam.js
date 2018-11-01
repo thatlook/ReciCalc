@@ -14,7 +14,7 @@ const sampleRecipe = {
   "hits": [{
     "recipe": {
       "uri": "http://www.edamam.com/ontologies/edamam.owl#recipe_59cd2bd25b21a23399cb8fea6f954b42",
-      "label": "Peanut Butter Banana Smoothie Recipe",
+      "label": "Peanut Butter Banana Smoothie Recipe", // **
       "image": "https://www.edamam.com/web-img/90b/90bdb6373111199cca741fc422ac3c28.jpg",
       "source": "Serious Eats",
       "url": "http://www.seriouseats.com/recipes/2012/01/peanut-butter-banana-smoothie.html",
