@@ -1,5 +1,5 @@
 import React from 'react';
-import SearchInput from './SearchInput';
+import SearchInput from './SearchInput.jsx';
 import SearchList from './SearchList.jsx';
 import { Link } from 'react-router-dom';
 import { getRecipeFromEdamam } from '../../../../helpers/edamamSearch.js';
@@ -9,12 +9,12 @@ const EDAMAM_KEY = process.env.API_KEY;
 
 class SearchCreate extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       ingredients: [],
       ingredient: '',
       searchResults: [],
-    }
+    };
     this.addIngredient = this.addIngredient.bind(this);
     this.handleIngredientChange = this.handleIngredientChange.bind(this);
     this.deleteIngredient = this.deleteIngredient.bind(this);
@@ -23,12 +23,12 @@ class SearchCreate extends React.Component {
 
   handleIngredientChange(e) {
     this.setState({
-      ingredient: e.target.value
+      ingredient: e.target.value,
     })
   }
 
   addIngredient() {
-    let ingredient = this.state.ingredient;
+    const ingredient = this.state.ingredient;
     this.setState(prevState => ({
       ingredients: [...prevState.ingredients, ingredient],
       ingredient: ''
@@ -36,8 +36,8 @@ class SearchCreate extends React.Component {
   }
 
   deleteIngredient(e) {
-    var ingredients = [...this.state.ingredients];
-    var index = e.target.name;
+    let ingredients = [...this.state.ingredients];
+    let index = e.target.name;
     ingredients.splice(index, 1);
     this.setState({
       ingredients: ingredients
@@ -48,7 +48,7 @@ class SearchCreate extends React.Component {
     if (this.state.ingredients.length) {
       getRecipeFromEdamam(this.state.ingredients)
       .then(res => {
-        console.log(res.data);
+        console.log(JSON.stringify(res.data));
       }) //todo format incoming data then setState
       .then() //todo figure out how to link to new route link
     } else {

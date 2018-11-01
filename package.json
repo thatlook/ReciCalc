@@ -7,8 +7,7 @@
     "start": "node server/server.js",
     "heroku-postbuild": "webpack -p",
     "react-dev": "webpack -d --watch",
-    "server-dev": "nodemon server/server.js",
-    "lint": "eslint"
+    "server-dev": "nodemon server/server.js"
   },
   "author": "MiLC-men",
   "license": "ISC",

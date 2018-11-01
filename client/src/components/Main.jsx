@@ -5,7 +5,6 @@ import Create from './create/Create.jsx';
 import Recipes from './recipes/Recipes.jsx';
 import SearchCreate from './search/SearchCreate.jsx'
 import SearchResults from './search/SearchResults.jsx'
-import Search from './search/Search.jsx'
 
 
 const Main = () => (
@@ -16,7 +15,7 @@ const Main = () => (
       <Route path='/create' component={Create} />
       {/* Recipes itself is a switch to either recipe list view or individual recipe view */}
       <Route path='/recipes' component={Recipes} />
-      {/* <Route path='/search' component={Search} /> */}
+      
       <Route path='/search-create' component={SearchCreate} />
       <Route path='/search-results' component={SearchResults} />
       {/* can add a fallback error component: <Route component={ErrorNotFound} /> */}
