@@ -1,7 +1,10 @@
 node_modules
+client/dist/bundle.js
+package-lock.json
+
+.env
+.DS_Store
+
 config.js
 api_config.js
-.env
-client/dist/bundle.js
-.DS_Store
-package-lock.json
+auth0_config.js
