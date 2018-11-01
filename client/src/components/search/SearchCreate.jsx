@@ -2,7 +2,7 @@ import React from 'react';
 import SearchInput from './SearchInput.jsx';
 import SearchList from './SearchList.jsx';
 import { Link } from 'react-router-dom';
-import { getRecipeFromEdamam } from '../../../../helpers/edamamSearch.js';
+import { getRecipeFromEdamam } from '../../../../server/routes/search.js';
 
 const EDAMAM_APP_ID = process.env.API_KEY;
 const EDAMAM_KEY = process.env.API_KEY;
