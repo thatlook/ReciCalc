@@ -1,5 +1,5 @@
 import React from 'react';
-import SearchInput from './SearchInput.jsx';
+import SearchInput from './SearchInput';
 import SearchList from './SearchList.jsx';
 import { Link } from 'react-router-dom';
 import { getRecipeFromEdamam } from '../../../../helpers/edamamSearch.js';

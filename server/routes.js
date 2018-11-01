@@ -1,15 +1,29 @@
-const router = require('express').Router()
-const controller = require('./controller.js')
+const router = require('express').Router();
+const secured = require('../lib/middleware/secured');
+// const controller = require('./controller.js');
 
-router.get('/recipes', controller.recipes.getList)
-router.get('/recipes/:recipeId', controller.recipes.getOne)
-router.post('/recipes', controller.recipes.post)
-
-router.get('/ingredients', controller.ingredients.getDbByName)
-router.get('/ingredients/usda', controller.ingredients.getUsdaByName)
-router.get('/ingredients/usda/:ndbno', controller.ingredients.getUsdaIngredientInfo)
-router.post('/ingredients', controller.ingredients.post)
+const recipesRouter = require('./routes/recipes').recipes;
+const ingredientsRouter = require('./routes/ingredients').ingredients;
 
 
+const authRouter = require('./routes/auth').auth;
+const usersRouter = require('./routes/users').users;
+
+router.get('/api/recipes', recipesRouter.getList);
+router.get('/api/recipes/:recipeId', recipesRouter.getOne);
+router.post('/api/recipes', recipesRouter.post);
+
+router.get('/api/ingredients', ingredientsRouter.getDbByName);
+router.get('/api/ingredients/usda', ingredientsRouter.getUsdaByName);
+router.get('/api/ingredients/usda/:ndbno', ingredientsRouter.getUsdaIngredientInfo);
+router.post('/api/ingredients', ingredientsRouter.post);
+
+router.get('/login', authRouter.login, (req, res) => {
+  res.redirect('/');
+});
+router.get('/callback', authRouter.callback);
+router.get('/logout', authRouter.logout);
+
+router.get('/user', secured(), usersRouter.getUserProfile);
 
 module.exports = router
