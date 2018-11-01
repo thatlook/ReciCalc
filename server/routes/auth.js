@@ -1,0 +1,34 @@
+const passport = require('passport');
+
+module.exports.auth = {
+  // Perform the login, after login Auth0 will redirect to callback
+  login: (req, res) => {
+    passport.authenticate('auth0', {
+      scope: 'openid email profile'
+    });
+  },
+  // Perform the final stage of authentication and redirect to previously requested URL or '/user'
+  callback: (req, res, next) => {
+    passport.authenticate('auth0', (err, user, info) => {
+      if (err) {
+        return next(err);
+      }
+      if (!user) {
+        return res.redirect('/login');
+      }
+      req.logIn(user, (err) => {
+        if (err) {
+          return next(err);
+        }
+        const returnTo = req.session.returnTo;
+        delete req.session.returnTo;
+        res.redirect(returnTo || '/user');
+      });
+    })(req, res, next);
+  },
+  // Perform session logout and redirect to homepage
+  logout: (req, res) => {
+      req.logout();
+      res.redirect('/');
+  }
+};
