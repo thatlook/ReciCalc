@@ -5,6 +5,7 @@ const secured = require('../lib/middleware/secured');
 const recipesRouter = require('./routes/recipes').recipes;
 const ingredientsRouter = require('./routes/ingredients').ingredients;
 
+
 const authRouter = require('./routes/auth').auth;
 const usersRouter = require('./routes/users').users;
 
