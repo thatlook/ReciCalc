@@ -61,7 +61,7 @@ module.exports.recipes = {
         })
     }
   },
-  delete: ((req, res) => {
+  delete: (req, res) => {
     let recipeId = parseInt(req.params.recipeId);
     console.log('param.recipeId:',req.params.recipeId);
     // delete recipe in database
@@ -76,7 +76,7 @@ module.exports.recipes = {
         res.status(200).send('receipe deleted');
       }
     });
-  })
+  }
 }
 
 module.exports.ingredients = {
