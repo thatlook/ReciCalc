@@ -4,7 +4,7 @@ const secured = require('../lib/middleware/secured');
 
 const recipesRouter = require('./routes/recipes').recipes;
 const ingredientsRouter = require('./routes/ingredients').ingredients;
-
+const searchEdamam = require('./routes/search').searchEdamam;
 
 const authRouter = require('./routes/auth').auth;
 const usersRouter = require('./routes/users').users;
@@ -26,5 +26,7 @@ router.get('/callback', authRouter.callback);
 router.get('/logout', authRouter.logout);
 
 router.get('/user', secured(), usersRouter.getUserProfile);
+
+router.get('/api/search', searchEdamam.getRecipeFromEdamam);
 
 module.exports = router;
