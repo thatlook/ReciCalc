@@ -17,8 +17,8 @@ class Create extends React.Component {
       instr: '',
       ingAmount: 0,
 
-      allIng: [['', '']],
-      allInstr: [''],
+      ingredients: [{ndbno: '', quantity: 0, name:''}], // [{ndbno: '808', quantity: 2}]
+      instructions: [''],
 
       ingCount: 1,
       instrCount: 1,
@@ -26,6 +26,8 @@ class Create extends React.Component {
 
       nutrients: [],
       totalCal: 0,
+      ndbno:[],
+      measure: [],
       chartData: [[0, 1], [1, 2], [2, 4], [3, 2], [4, 7]]
     };
     
@@ -62,8 +64,12 @@ class Create extends React.Component {
     const chartData = [];
     const only = ['291', '205', '268', '203', '204']
     let totalCal = 0;
+    let ndbno = [];
+    let measure = [];
     const sum = {}
     for (let nut of data) {
+      ndbno.push(nut.ndbno)
+      measure.push(nut.weight)
       for (let obj of nut.nutrients) {
         if (only.includes(obj.nutrient_id)){
           let name = obj.nutrient;
@@ -86,7 +92,9 @@ class Create extends React.Component {
     
     this.setState({
       chartData,
-      totalCal
+      totalCal, 
+      ndbno,
+      measure
     })
   }
   
@@ -108,16 +116,31 @@ class Create extends React.Component {
     event.preventDefault();
     event.persist();
 
-    if (this.state.allIng.length - 1 !== this.state.ingCount) {
+    if (this.state.ingredients.length - 1 !== this.state.ingCount) {
       this.setState({
-        allIng: [...this.state.allIng, [this.state.ing, this.state.ingAmount]],
+        ingredients: [...this.state.ingredients, 
+          {name:this.state.ing, 
+            quantity:this.state.measure[this.state.measure.length - 1], 
+            ndbno:this.state.ndbno[this.state.ndbno.length - 1]
+          }].slice(1),
         submit: true
       }, () => {
-        if (this.state.allInstr.length - 1 !== this.state.instrCount) {
+        if (this.state.instructions.length - 1 !== this.state.instrCount) {
           this.setState({
-            allInstr: [...this.state.allInstr, this.state.instr]
+            instructions: [...this.state.instructions, this.state.instr].slice(1)
           }, () => {
+            // unshift
+
             alert(JSON.stringify(this.state))
+            const recipe = Object.assign({}, this.state);
+            axios.post('api/recipes', {recipe})
+            .then((res) => {
+              console.log('>>> api/recipes', res);
+              this.props.history.push(`/recipes/${response.data.newRecipeId}`)
+            })
+            .catch((err) => {
+              console.log('>>> error post api/recipes', err)
+            })
             // TODO: send recipe data to server to save in db
             // axios.post('/api/ingredients', this.state).then((res) => {
             //   console.log('>>> recieved from server', res.data);
@@ -141,12 +164,12 @@ class Create extends React.Component {
 
     if (event.target.name === 'ing') {
       this.setState({
-        allIng: [...this.state.allIng, [this.state.ing, this.state.ingAmount]],
+        ingredients: [...this.state.ingredients, {name:this.state.ing, quantity:this.state.measure[this.state.measure.length - 1], ndbno:this.state.ndbno[this.state.ndbno.length - 1]}],
         ingCount: this.state.ingCount + 1
       })
     } else if (event.target.name === 'instr') {
       this.setState({
-        allInstr: [...this.state.allInstr, this.state.instr],
+        instructions: [...this.state.instructions, this.state.instr],
         instrCount: this.state.instrCount + 1
 
       })
@@ -196,7 +219,7 @@ class Create extends React.Component {
           <label>
             <h3>Ingredients:</h3>
             <Input handleChange={this.handleChange} handleBlur={this.handleBlur} handleMore={this.handleMore} name="ing" placeholder="Add ingredient" ingredient={true}/>
-            {this.state.allIng.map((val, i, coll) => {
+            {this.state.ingredients.map((val, i, coll) => {
               if (i > 0 ) {
                 if (this.state.submit && i === coll.length - 1) {
                   return 
@@ -210,6 +233,7 @@ class Create extends React.Component {
                     placeholder={"Add ingredient"}
                     ingredient={true}
                     handleBlur={this.handleBlur}
+                    amount={val}
                     />
                     )
 
@@ -225,7 +249,7 @@ class Create extends React.Component {
           <label>
             <h3>Instructions:</h3>
             <Input handleChange={this.handleChange} handleMore={this.handleMore} name="instr" placeholder="Add instruction"/>
-            {this.state.allInstr.map((val, i, coll) => {
+            {this.state.instructions.map((val, i, coll) => {
               if (i > 0 ) {
                 if (this.state.submit && i === coll.length - 1) {
                   return 

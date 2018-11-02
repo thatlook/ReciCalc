@@ -11,12 +11,7 @@ const Input = (props) => {
         onChange={props.handleChange} 
         onBlur={props.handleBlur}
         />
-        <input 
-        type="text"
-        placeholder="Amount"
-        name="ingAmount"
-        onChange={props.handleChange}
-        />
+        {props.amount} g
         <button 
         className="button" 
         name="ing" 
