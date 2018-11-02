@@ -38,7 +38,7 @@ const usdaNutrientSearch = (ndbno) => {
     },
   })
   .then((data) => {
-    return data.data.report.foods[0].nutrients
+    return data.data.report.foods[0]
   })
   .catch((err) => {
     console.log('ERROR in usda nutrient search', err)
@@ -54,9 +54,7 @@ const queryDBSearch = (searchTerm) => {
 
 const IngredientSearch = (req, res) => {
   // 1. search db
-  console.log('>>> starting server process...')
-
-
+  const resObj = {};
 
   let searchTerm = req.body.query;
   queryDBSearch(searchTerm)
@@ -74,12 +72,17 @@ const IngredientSearch = (req, res) => {
   })
   .then((ingredients) => {
     // FOUND! search USDA nutrients using ndbno
-    let ndbno = ingredients.data.list.item[0].ndbno // ndbno of first item
-    return usdaNutrientSearch(ndbno) 
+    const item = ingredients.data.list.item[0]
+    resObj.ndbno = item.ndbno;
+    return usdaNutrientSearch(item.ndbno) 
   })
   .then((nutrients) => {
     // FOUND! send to front end
-    res.status(200).json(nutrients)
+    
+    resObj.weight = nutrients.weight;
+    resObj.measure = nutrients.measure;
+    resObj.nutrients = nutrients.nutrients;
+    res.status(200).json(resObj)
     return nutrients
   })
   // .then((nutrients) => {
