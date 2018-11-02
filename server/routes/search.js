@@ -7,7 +7,7 @@ const EDAMAM_KEY = process.env.EDAMAM_KEY;
 module.exports.searchEdamam = {
   getRecipeFromEdamam: (req, res) => {
     
-    console.log('req in getRecipeFromEdamam is ', req.query);
+    // console.log('req in getRecipeFromEdamam is ', req.query);
 
     let ingredients = req.query.ingredients;
 
@@ -15,7 +15,7 @@ module.exports.searchEdamam = {
       acc.concat(`, ${ingredient}`)
     ))
 
-    console.log('query for edamam search is ', q);
+    // console.log('query for edamam search is ', q);
 
     axios.get('https://api.edamam.com/search',{
       params: {
@@ -26,7 +26,7 @@ module.exports.searchEdamam = {
       }
     })
     .then(data => {
-      console.log('getFromEd data ', data.data.hits )
+      // console.log('getFromEd data ', data.data.hits )
       
       res.status(200).send(data.data.hits);
     })
