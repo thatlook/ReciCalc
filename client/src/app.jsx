@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import Landing from './components/Landing.jsx';
 import Main from './components/Main.jsx';
-
+import Auth0Lock from 'auth0-lock';
 
 // could be refactored as a functional component if state not needed
 class App extends Component {
@@ -13,6 +13,10 @@ class App extends Component {
       // considering keeping an interim copy of a user recipe here in case they 
       // navigate away from the create page before submitting
     }
+  }
+
+  componentDidMount () {
+    this.lock = new Auth0Lock('Zi98h1wvF3hpE6aTHPf663zi1U75PFZ1', 'rocket-turtles.auth0.com')
   }
 
   render () {

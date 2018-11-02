@@ -3,6 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import Header from './Header.jsx';
 import Create from './create/Create.jsx';
 import Recipes from './recipes/Recipes.jsx';
+import Login from './login/Login.jsx';
 
 const Main = () => (
   <div id='main'>
@@ -13,6 +14,8 @@ const Main = () => (
       {/* Recipes itself is a switch to either recipe list view or individual recipe view */}
       <Route path='/recipes' component={Recipes} />
       {/* can add a fallback error component: <Route component={ErrorNotFound} /> */}
+      <Route path='/login' component={Login} />
+
     </Switch>
   </div>
 )
