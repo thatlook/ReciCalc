@@ -2,7 +2,7 @@ module.exports.location = {
   host: 'localhost',
   user: process.env.user,
   password: process.env.password,
-  database: 'unbuntu'
+  database: 'ubuntu'
 };
 
 module.exports.production = {
