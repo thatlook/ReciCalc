@@ -66,7 +66,8 @@ class SearchCreate extends React.Component {
         }
       })
       .then(res => {
-        console.log('res on client from get search is ', res)
+        console.log('res on client from get search is ', res);
+        
       })
       .catch(err => {
         console.log('error on client from get search is ', err);

@@ -1,5 +1,7 @@
 const axios = require('axios');
-const config = require('../../config.js');
+// const config = require('../../config.js');
+const EDAMAM_APP_ID = process.env.EDAMAM_APP_ID;
+const EDAMAM_KEY = process.env.EDAMAM_KEY;
 
 
 module.exports.searchEdamam = {
@@ -18,9 +20,9 @@ module.exports.searchEdamam = {
     axios.get('https://api.edamam.com/search',{
       params: {
         q: q,
-        app_id: `${config.EDAMAM_APP_ID}`,
-        app_key: `${config.EDAMAM_KEY}`,
-        to: 1,
+        app_id: `${EDAMAM_APP_ID}`,
+        app_key: `${EDAMAM_KEY}`,
+        to: 6,
       }
     })
     .then(data => {
