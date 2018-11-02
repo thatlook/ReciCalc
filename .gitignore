@@ -8,3 +8,7 @@ package-lock.json
 config.js
 api_config.js
 auth0_config.js
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

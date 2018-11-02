@@ -33,7 +33,7 @@ app.use(express.static(__dirname + '/../client/dist'));
 
 // app.use(session(sess));
 
-// // Configure Passport to use Auth0
+// Configure Passport to use Auth0
 // const strategy = new Auth0Strategy(
 //   {
 //     domain: process.env.AUTH0_DOMAIN || AUTH0_CONFIG.domain,
@@ -55,16 +55,14 @@ app.use(express.static(__dirname + '/../client/dist'));
 // app.use(passport.session());
 
 // // You can use this section to keep a smaller payload
-// // used during /login
 // passport.serializeUser(function (user, done) {
-//   done(null, user.id);
-// });
-// // used during /logout
-// passport.deserializeUser(function (user, done) {
-//   console.log('passport.deserializeUser',user);
 //   done(null, user);
 // });
-// -------------
+
+// passport.deserializeUser(function (user, done) {
+//   done(null, user);
+// });
+// // -------------
 
 
 // ROUTES
