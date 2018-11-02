@@ -5,7 +5,6 @@ import Recipes from './recipes/Recipes.jsx';
 import SearchCreate from './search/SearchCreate.jsx'
 import SearchResults from './search/SearchResults.jsx'
 import oneCreate from './create/oneCreate.jsx'
-import Login from './login/Login.jsx';
 
 const Main = () => (
   <div id='main'>
@@ -19,8 +18,6 @@ const Main = () => (
       <Route path='/search-create' component={SearchCreate} />
       <Route path='/search-results' component={SearchResults} />
       {/* can add a fallback error component: <Route component={ErrorNotFound} /> */}
-      <Route path='/login' component={Login} />
-
     </Switch>
   </div>
 )
