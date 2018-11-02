@@ -22,13 +22,16 @@ class Create extends React.Component {
 
       ingCount: 1,
       instrCount: 1,
-      submit: false
+      submit: false,
+
+      chartData: [[0, 1], [1, 2], [2, 4], [3, 2], [4, 7]]
     };
     
     // bind methods
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleMore = this.handleMore.bind(this);
+    this.handleBlur = this.handleBlur.bind(this)
   }
 
 
@@ -41,12 +44,35 @@ class Create extends React.Component {
     
     this.setState((state, props) => {
       state[key] = value;
-    }, () => {
-      // send search query to usda and recieve data
-
-      // show real time in chart
     })
+    
+  }
 
+  handleData(data){
+    // show only top 5
+    const d = [];
+    const only = ['291', '205', '268', '203', '204']
+
+    for (let obj of data) {
+      if (only.includes(obj.nutrient_id)){
+        let name = obj.nutrient;
+        let num = isNaN(obj.gm) ? 0 : obj.gm; 
+        d.push([name, num]);
+      }
+    }
+
+    return d;
+  }
+  
+  handleBlur(event){
+    event.preventDefault();
+    event.persist();
+    
+    // TODO: send search query to usda and receive data
+    axios.post('/api/ingredients', {query: this.state.ing}).then((res) => {
+      this.setState({chartData: this.handleData(res.data)})
+    });
+    // TODO: show real time in chart
   }
 
   handleClick(event){
@@ -63,12 +89,13 @@ class Create extends React.Component {
             allInstr: [...this.state.allInstr, this.state.instr]
           }, () => {
             alert(JSON.stringify(this.state))
-            axios.post('/api/ingredients', this.state).then((res) => {
-              console.log('>>> recieved from server', res.data);
-
-            }).catch((err) => {
-              console.log('>>> error posting api/ingredients to server', err.error)
-            })
+            // // TODO: send recipe data to server to save in db
+            // axios.post('/api/ingredients', this.state).then((res) => {
+            //   console.log('>>> recieved from server', res.data);
+            //   // TODO: redirect to recipe page
+            // }).catch((err) => {
+            //   console.log('>>> error posting api/ingredients to server', err.error)
+            // })
           })
         }
       })
@@ -97,17 +124,13 @@ class Create extends React.Component {
     }
   }
 
-  handleInput(){
-
-  }
-
 
   render(){
     // https://www.netrition.com/rdi_page.html
     let data = [
       {
-        label: "Series 1",
-        data: [[0, 1], [1, 2], [2, 4], [3, 2], [4, 7]]
+        label: "gm",
+        data: this.state.chartData
       }
 
     ]
@@ -141,7 +164,7 @@ class Create extends React.Component {
 
           <label>
             <h3>Ingredients:</h3>
-            <Input handleChange={this.handleChange} handleMore={this.handleMore} name="ing" placeholder="Add ingredient" ingredient={true}/>
+            <Input handleChange={this.handleChange} handleBlur={this.handleBlur} handleMore={this.handleMore} name="ing" placeholder="Add ingredient" ingredient={true}/>
             {this.state.allIng.map((val, i, coll) => {
               if (i > 0 ) {
                 if (this.state.submit && i === coll.length - 1) {
@@ -155,6 +178,7 @@ class Create extends React.Component {
                     name={"ing"}
                     placeholder={"Add ingredient"}
                     ingredient={true}
+                    handleBlur={this.handleBlur}
                     />
                     )
 
