@@ -1,7 +1,8 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-// import { IngredientInput, InstructionInput } from './oneInput.jsx';
-import Input from './createInput.jsx'
+import Input from './createInput.jsx';
+import axios from 'axios';
+import { Chart, Axis, Series, Tooltip, Pie } from 'react-charts';
 
 
 class Create extends React.Component {
@@ -40,6 +41,10 @@ class Create extends React.Component {
     
     this.setState((state, props) => {
       state[key] = value;
+    }, () => {
+      // send search query to usda and recieve data
+
+      // show real time in chart
     })
 
   }
@@ -58,6 +63,12 @@ class Create extends React.Component {
             allInstr: [...this.state.allInstr, this.state.instr]
           }, () => {
             alert(JSON.stringify(this.state))
+            axios.post('/api/ingredients', this.state).then((res) => {
+              console.log('>>> recieved from server', res.data);
+
+            }).catch((err) => {
+              console.log('>>> error posting api/ingredients to server', err.error)
+            })
           })
         }
       })
@@ -92,11 +103,26 @@ class Create extends React.Component {
 
 
   render(){
+    // https://www.netrition.com/rdi_page.html
+    let data = [
+      {
+        label: "Series 1",
+        data: [[0, 1], [1, 2], [2, 4], [3, 2], [4, 7]]
+      }
 
+    ]
 
     return (
       <div id="create">
         <h2>What's cookin'?</h2>
+        <div>
+          <h3>Your Nutrients</h3>
+          <Chart data={data}>
+            <Axis type="pie" />
+            <Series type={Pie} showPoints={false} />
+            <Tooltip />
+          </Chart>
+        </div>
         <form>
           <label>
             <h3>Recipe title:</h3>
