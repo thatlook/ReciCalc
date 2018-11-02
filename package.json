@@ -8,7 +8,7 @@
     "heroku-postbuild": "webpack -p",
     "react-dev": "webpack -d --watch",
     "server-dev": "nodemon server/server.js",
-    "knex migrate": "knex migrate:latest"
+    "knex-migrate": "knex migrate:latest"
   },
   "author": "MiLC-men",
   "license": "ISC",
