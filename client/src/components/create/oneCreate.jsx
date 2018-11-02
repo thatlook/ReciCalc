@@ -24,6 +24,8 @@ class Create extends React.Component {
       instrCount: 1,
       submit: false,
 
+      nutrients: [],
+      totalCal: 0,
       chartData: [[0, 1], [1, 2], [2, 4], [3, 2], [4, 7]]
     };
     
@@ -50,29 +52,56 @@ class Create extends React.Component {
 
   handleData(data){
     // show only top 5
-    const d = [];
-    const only = ['291', '205', '268', '203', '204']
+    // 0: "ndbno"
+    // 1: "weight"
+    // 2: "measure"
+    // 3: "nutrients"
+    // TODO: show weight OR measure on page
 
-    for (let obj of data) {
-      if (only.includes(obj.nutrient_id)){
-        let name = obj.nutrient;
-        let num = isNaN(obj.gm) ? 0 : obj.gm; 
-        d.push([name, num]);
+    // create data for chart
+    const chartData = [];
+    const only = ['291', '205', '268', '203', '204']
+    let totalCal = 0;
+    const sum = {}
+    for (let nut of data) {
+      for (let obj of nut.nutrients) {
+        if (only.includes(obj.nutrient_id)){
+          let name = obj.nutrient;
+          let num = isNaN(obj.value) ? 0 : parseFloat(obj.value); 
+
+          if (sum[name]) {
+            sum[name] += num;
+          } else {
+            sum[name] = num;
+          }
+        } else if (obj.nutrient_id === '208') {
+          totalCal += parseFloat(obj.value)
+        } 
       }
     }
 
-    return d;
+    for (let key in sum) {
+      chartData.push([key, sum[key]]);
+    }
+    
+    this.setState({
+      chartData,
+      totalCal
+    })
   }
   
   handleBlur(event){
     event.preventDefault();
     event.persist();
     
-    // TODO: send search query to usda and receive data
+    // send search query to db or usda
     axios.post('/api/ingredients', {query: this.state.ing}).then((res) => {
-      this.setState({chartData: this.handleData(res.data)})
+
+      this.setState({nutrients: [...this.state.nutrients, res.data]}, () => {
+        this.handleData(this.state.nutrients)
+      })
+
     });
-    // TODO: show real time in chart
   }
 
   handleClick(event){
@@ -89,7 +118,7 @@ class Create extends React.Component {
             allInstr: [...this.state.allInstr, this.state.instr]
           }, () => {
             alert(JSON.stringify(this.state))
-            // // TODO: send recipe data to server to save in db
+            // TODO: send recipe data to server to save in db
             // axios.post('/api/ingredients', this.state).then((res) => {
             //   console.log('>>> recieved from server', res.data);
             //   // TODO: redirect to recipe page
@@ -129,7 +158,7 @@ class Create extends React.Component {
     // https://www.netrition.com/rdi_page.html
     let data = [
       {
-        label: "gm",
+        label: "g",
         data: this.state.chartData
       }
 
@@ -145,6 +174,8 @@ class Create extends React.Component {
             <Series type={Pie} showPoints={false} />
             <Tooltip />
           </Chart>
+          <h3>Total Calories</h3>
+          <h5>{this.state.totalCal} kcal</h5>
         </div>
         <form>
           <label>
