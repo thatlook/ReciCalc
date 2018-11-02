@@ -9,6 +9,7 @@ const Input = (props) => {
         name={props.name} 
         placeholder={props.placeholder} 
         onChange={props.handleChange} 
+        onBlur={props.handleBlur}
         />
         <input 
         type="text"

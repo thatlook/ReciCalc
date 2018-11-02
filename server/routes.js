@@ -17,7 +17,7 @@ router.delete('/api/recipes/:recipeId', recipesRouter.delete);
 router.get('/api/ingredients', ingredientsRouter.getDbByName);
 router.get('/api/ingredients/usda', ingredientsRouter.getUsdaByName);
 router.get('/api/ingredients/usda/:ndbno', ingredientsRouter.getUsdaIngredientInfo);
-router.post('/api/ingredients', ingredientsRouter.post);
+router.post('/api/ingredients', ingredientsRouter.IngredientSearch);
 
 router.get('/login', authRouter.login, (req, res) => {
   res.redirect('/');
