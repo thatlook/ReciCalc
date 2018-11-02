@@ -2,7 +2,6 @@ import React from 'react';
 
 const SearchList = ({ingredients, deleteIngredient}) => (
   <div className='search-list'>
-    <h3 className='search'>Selected Ingredients:</h3>
     {ingredients.map((ingredient, i) => (
       <div key={i}>
         <ul 

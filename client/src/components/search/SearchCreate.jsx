@@ -2,11 +2,33 @@ import React from 'react';
 import axios from 'axios';
 import SearchInput from './SearchInput.jsx';
 import SearchList from './SearchList.jsx';
+import SearchResults from './SearchResults.jsx';
 import { Link } from 'react-router-dom';
 import { getRecipeFromEdamam } from '../../../../server/routes/search.js';
 
 const EDAMAM_APP_ID = process.env.API_KEY;
 const EDAMAM_KEY = process.env.API_KEY;
+
+// MOVE TO MASTER CSS PAGE
+const gridWrapper = {
+  backgroundColor: 'green',
+  paddingLeft: '10px',
+  display: 'grid',
+  gridTemplateColumns: '200px repeat(6, 1fr)',
+  gridAutoRows: 'minmax(100px, auto)',
+  gridGap: '10px'
+}
+
+const sideBar = {
+  top: '10px',
+  textAlign: 'center',
+  borderRadius: '3px',
+  topMargin: '10px',
+  paddingTop: '10px',
+  gridColumn: '1/2',
+  gridRow: '1/8',
+  backgroundColor: 'lightGrey'
+}
 
 class SearchCreate extends React.Component {
   constructor(props) {
@@ -84,23 +106,25 @@ class SearchCreate extends React.Component {
 
   render() {
     return (
-      <div id='search'>
-      
-        <input
-          className='button'
-          onClick={() => this.submitSearch()}
-          type='submit'
-          value='Search for Recipes!'
-        />
-        <SearchInput 
-          addIngredient={this.addIngredient}
-          ingredient={this.state.ingredient}
-          handleIngredientChange={this.handleIngredientChange}
-        />
-        <SearchList 
-          ingredients={this.state.ingredients}
-          deleteIngredient={this.deleteIngredient}
-        />
+      <div style={gridWrapper}>
+        <div style={sideBar}>
+          <input
+              className='button'
+              onClick={() => this.submitSearch()}
+              type='submit'
+              value='Search for Recipes!'
+          />
+          <SearchInput 
+            addIngredient={this.addIngredient}
+            ingredient={this.state.ingredient}
+            handleIngredientChange={this.handleIngredientChange}
+          />
+          <SearchList 
+            ingredients={this.state.ingredients}
+            deleteIngredient={this.deleteIngredient}
+          />
+        </div>
+        <SearchResults results={this.state.searchResults} />
       </div>
     )
   }
