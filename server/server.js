@@ -20,18 +20,18 @@ app.use(express.static(__dirname + '/../client/dist'));
 // AUTHENTICATION
 // -------------
 // config express-session
-const sess = {
-  secret: process.env.AUTH0_CLIENT_SECRET || AUTH0_CONFIG.secret,
-  cookie: {},
-  resave: false,
-  saveUninitialized: true
-};
+// const sess = {
+//   secret: process.env.AUTH0_CLIENT_SECRET || AUTH0_CONFIG.secret,
+//   cookie: {},
+//   resave: false,
+//   saveUninitialized: true
+// };
 
-if (app.get('env') === 'production') {
-  sess.cookie.secure = true; // serve secure cookies, requires https
-}
+// if (app.get('env') === 'production') {
+//   sess.cookie.secure = true; // serve secure cookies, requires https
+// }
 
-app.use(session(sess));
+// app.use(session(sess));
 
 // Configure Passport to use Auth0
 const strategy = new Auth0Strategy(
