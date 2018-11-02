@@ -12,7 +12,6 @@
   "author": "MiLC-men",
   "license": "ISC",
   "devDependencies": {
-    "auth0": "^2.13.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
@@ -25,13 +24,11 @@
     "webpack-cli": "^3.1.2"
   },
   "dependencies": {
+    "auth0-lock": "^11.11.0",
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
-    "express-session": "^1.15.6",
     "knex": "^0.15.2",
-    "passport": "^0.4.0",
-    "passport-auth0": "^1.1.0",
     "pg": "^7.5.0",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",

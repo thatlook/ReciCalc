@@ -4,8 +4,6 @@ import Header from './Header.jsx';
 import Recipes from './recipes/Recipes.jsx';
 import SearchCreate from './search/SearchCreate.jsx'
 import SearchResults from './search/SearchResults.jsx'
-
-
 import oneCreate from './create/oneCreate.jsx'
 
 const Main = () => (
