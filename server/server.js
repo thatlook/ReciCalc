@@ -9,7 +9,7 @@ const passport = require('passport');
 const Auth0Strategy = require('passport-auth0');
 const userInViews = require('../lib/middleware/userInViews');
 
-const AUTH0_CONFIG = require('../auth0_config').AUTH0_CONFIG;
+// const AUTH0_CONFIG = require('../auth0_config').AUTH0_CONFIG;
 
 let app = express();
 app.use(bodyParser.json());
