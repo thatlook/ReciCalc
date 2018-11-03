@@ -3,9 +3,6 @@ import { Route, Switch } from 'react-router-dom';
 import Header from './Header.jsx';
 import Recipes from './recipes/Recipes.jsx';
 import SearchCreate from './search/SearchCreate.jsx'
-import SearchResults from './search/SearchResults.jsx'
-
-
 import oneCreate from './create/oneCreate.jsx'
 
 const Main = () => (
@@ -18,7 +15,6 @@ const Main = () => (
       <Route path='/recipes' component={Recipes} />
       
       <Route path='/search-create' component={SearchCreate} />
-      <Route path='/search-results' component={SearchResults} />
       {/* can add a fallback error component: <Route component={ErrorNotFound} /> */}
     </Switch>
   </div>

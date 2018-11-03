@@ -1,8 +1,11 @@
 import React from 'react';
 
+const searchInputStyle = {
+  display: 'inline-block'
+}
+
 const SearchInput = ({addIngredient, ingredient, handleIngredientChange}) => (
-  <div className='search-input'>
-    <h3>Search for Recipes by Ingredient!</h3>
+  <span className='search-input' style={searchInputStyle}>
     <input 
       className='user search'
       value={ingredient}
@@ -13,8 +16,8 @@ const SearchInput = ({addIngredient, ingredient, handleIngredientChange}) => (
       onClick={() => addIngredient()}
       className='button' 
       type='submit' 
-      value='Save'/> 
-  </div>
+      value='Add'/> 
+  </span>
 )
 
 export default SearchInput;

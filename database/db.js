@@ -12,9 +12,11 @@ const knex = require('knex')(options);
 //    // .where({id})
 //};
 
-module.exports.fetchRecipeList = function() {
+module.exports.fetchRecipeList = function(userId) {
   //return a list of short recipe descriptions
-  return knex.select().from('recipes');
+  return knex.select()
+  .from('recipes')
+  .where({'userId': userId});
 };
 
 
@@ -124,6 +126,7 @@ module.exports.addRecipe = function(clientRecipe) {
     const dbRecipe = {
       name: clientRecipe.title,
       description: clientRecipe.description,
+      userId: clientRecipe.userId,
       top_ingredients: clientRecipe.topIngredients,
       instructions: JSON.stringify(clientRecipe.instructions)
     };
@@ -166,4 +169,36 @@ module.exports.removeRecipe = function(recipe_id, cb) {
   .then(() => cb(null, 'delete successful'))
   .catch((err) => cb(err, null))
   //showing synax error but works fine..?
+};
+
+module.exports.addUser = (user, cb) => {
+  knex('users').select()
+  .where({gitName: user})
+  .then(rows => {
+    if (rows.length === 0) {
+      return knex('users')
+      .insert({gitName: user})
+      .then(() => (
+        knex('users').select('id')
+        .where({gitName: user}))
+      )
+      .then(id => {
+        cb(null, id)
+      })
+      .catch(err, null)
+    } else {
+      return knex('users').select('id')
+      .where({gitName: user})
+      .then((row) => {
+        cb(null, row[0].id.toString())
+      })
+      .catch(err => {
+        cb(err, null);
+      })
+    }
+  })
+  .catch(err => {
+    return new Error(err);
+  })
+  
 };

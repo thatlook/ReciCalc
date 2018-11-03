@@ -1,9 +1,15 @@
+const db = require('../..//database/db.js');
+
 module.exports.users = {
-  getUserProfile: (req, res, next) => {
-    const { _raw, _json, ...userProfile } = req.user;
-    res.render('user', {
-      userProfile: JSON.stringify(userProfile, null, 2),
-      title: 'Profile page'
-    });
+  post: (req, response) => {
+    db.addUser(req.body.user, (err, result) => {
+      if (err) {
+        console.log('err for users route is ', err);
+        resonse.end('error in addUser')
+      } else {
+        // console.log('res for users route is ', result);
+        response.end(result);
+      }
+    })
   }
-};
+}

@@ -4,8 +4,9 @@ const format = require('../../helpers/formatCheckers.js');
 
 module.exports.recipes = {
   getList: (req, res) => {
+    let userId = req.query.user;
     //query database for a list of short recipe descriptions and return them
-    db.fetchRecipeList()
+    db.fetchRecipeList(userId)
       .then(data => {
         res.status(200).json(data);
       })
@@ -40,11 +41,13 @@ module.exports.recipes = {
     //Store recipe in database
     let recipe = req.body.recipe;
     console.log('Incoming recipe request:', recipe);
+
     if(format.isValidRecipe(recipe) === false) {
       res.status(400).send('Malformed recipe');
     } else {
       db.addRecipe(recipe)
         .then(data => {
+          console.log('saved recipe to db')
           res.status(201).json({newRecipeId: data});
         })
         .catch(err => {

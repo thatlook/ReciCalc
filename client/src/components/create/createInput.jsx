@@ -10,12 +10,6 @@ const Input = (props) => {
         placeholder={props.placeholder} 
         onChange={props.handleChange} 
         />
-        <input 
-        type="text"
-        placeholder="Amount"
-        name="ingAmount"
-        onChange={props.handleChange}
-        />
         <button 
         className="button" 
         name="ing" 

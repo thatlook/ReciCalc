@@ -4,25 +4,37 @@ import Input from './createInput.jsx';
 import axios from 'axios';
 import { Chart, Axis, Series, Tooltip, Pie } from 'react-charts';
 
-
 class Create extends React.Component {
   constructor(props){
     super(props);
     
     this.state = {
       title: '',
-      desc: '',
+      description: '',
 
-      ing: '',
-      instr: '',
-      ingAmount: 0,
+      userId: '',
 
-      allIng: [['', '']],
-      allInstr: [''],
+      // handle change
+      ing: '',  // current ing from onchange
+      instr: '',  // curr instr from onchange
 
-      ingCount: 1,
-      instrCount: 1,
-      submit: false
+      // handle blur
+      ingredients: [{ndbno:'', quantity:0, name:''}], // ingredient list ex: [{ndbno: '808', quantity: 2, name:'spam'}]
+      instructions: [''],  // instruction list ex: ['mix', 'sautee']
+
+      top_ingredients:'',  // string to go into db
+
+      // dynamic rendering
+      submit: false,  // whether total submit button was clicked
+
+      // data from api
+      nutrients: [],  
+      totalCal: 0, 
+      ndbno: [''],
+      measure: [''],
+
+      // chart data
+      chartData: [[0, 1], [1, 2], [2, 4], [3, 2], [4, 7]]  // default data to show
     };
     
     // bind methods
@@ -31,73 +43,178 @@ class Create extends React.Component {
     this.handleMore = this.handleMore.bind(this);
   }
 
+  componentDidMount() {
+    this.setUser();
+  }
+
+  setUser() {
+    let profile = JSON.parse(localStorage.profile);
+    axios.post('/api/users', {
+      user: profile.nickname
+    })
+    .then(res => {
+      this.setState({
+        userId: parseInt(res.data)
+      })
+
+    })
+  }
 
   handleChange(event){
     event.preventDefault();
     event.persist();
     
+    // title, description, ing, instr
     let key = event.target.name;
     let value = event.target.value;
-    
     this.setState((state, props) => {
       state[key] = value;
-    }, () => {
-      // send search query to usda and recieve data
-
-      // show real time in chart
     })
+  }
 
+  handleData(data, cb){
+    // can show only top 5
+
+    // create data for chart
+    const only = ['291', '205', '268', '203', '204'];  // use only major nutrients
+    
+    // for state
+    let ndbno = [];
+    let measure = [];
+
+    const chartData = [];
+    let totalCal = 0;
+
+    const sum = {};
+    for (let nut of data) {
+
+      ndbno.push(nut.ndbno)
+      measure.push(nut.weight)
+
+      for (let obj of nut.nutrients) {
+        if (only.includes(obj.nutrient_id)){
+          let name = obj.nutrient;
+          let num = isNaN(obj.value) ? 0 : parseFloat(obj.value); 
+
+          if (sum[name]) {
+            sum[name] += num;
+          } else {
+            sum[name] = num;
+          }
+
+          // total calories
+        } else if (obj.nutrient_id === '208') {
+          totalCal += parseFloat(obj.value)
+        } 
+      }
+    }
+
+    for (let key in sum) {
+      chartData.push([key, sum[key]]);
+    }
+    
+    this.setState({
+      ndbno,
+      measure,
+      
+      chartData,
+      totalCal
+    }, () => {
+
+      // last item is always empty --> splice and add new unempty data
+      this.setState((state, props) => {
+        let n = {
+          name: state.ing,
+          quantity: state.measure[state.measure.length - 1],
+          ndbno: state.ndbno[state.ndbno.length - 1]
+        }
+
+        state.ingredients.splice(state.ingredients.length - 1, 1, n)
+     
+      }, () => {
+        cb()
+      })
+
+    })
   }
 
   handleClick(event){
     event.preventDefault();
     event.persist();
 
-    if (this.state.allIng.length - 1 !== this.state.ingCount) {
-      this.setState({
-        allIng: [...this.state.allIng, [this.state.ing, this.state.ingAmount]],
-        submit: true
-      }, () => {
-        if (this.state.allInstr.length - 1 !== this.state.instrCount) {
-          this.setState({
-            allInstr: [...this.state.allInstr, this.state.instr]
-          }, () => {
-            alert(JSON.stringify(this.state))
-            axios.post('/api/ingredients', this.state).then((res) => {
-              console.log('>>> recieved from server', res.data);
-
-            }).catch((err) => {
-              console.log('>>> error posting api/ingredients to server', err.error)
-            })
-          })
+    this.setState({
+      submit: true,
+      top_ingredients: this.state.ingredients.reduce((prev, curr, i) => {
+        if (i === 0) {
+          return prev + curr.ndbno;
+        } else {
+          return [prev, curr.ndbno].join(', ');
         }
+      }, '')
+
+    }, () => {
+      this.setState((state, props) => {
+        state.ingredients.pop()
+        state.instructions.pop()
+      }, () => {
+        const recipe = Object.assign({}, this.state);
+        axios.post('api/recipes', {recipe})
+        .then((res) => {
+          this.props.history.push(`/recipes/${res.data.newRecipeId}`)
+        })
+        .catch((err) => {
+          console.error('ERROR while post request for /api/recipes', err)
+        })
+
       })
-    } 
-
- 
 
 
+
+    })
   }
 
+  // add more inputs
   handleMore(event){
     event.preventDefault();
     event.persist();
-
+    
     if (event.target.name === 'ing') {
-      this.setState({
-        allIng: [...this.state.allIng, [this.state.ing, this.state.ingAmount]],
-        ingCount: this.state.ingCount + 1
+      // call api
+      axios.post('/api/ingredients', {query: this.state.ing})
+      .then((res) => {
+        this.setState({
+          nutrients: [...this.state.nutrients, res.data]
+        }, () => {
+          this.handleData(this.state.nutrients, () => {
+            // add empty
+            this.setState({
+              ingredients: [...this.state.ingredients, {name:'', quantity: 0, ndbno:''}]
+            })
+          })
+        })
       })
-    } else if (event.target.name === 'instr') {
-      this.setState({
-        allInstr: [...this.state.allInstr, this.state.instr],
-        instrCount: this.state.instrCount + 1
+      .catch((err) => {
+        console.log('ERROR receiving ingredient data', err)
+      })
 
-      })
     }
-  }
 
-  handleInput(){
+    else if (event.target.name === 'instr') {
+      // save current instr to instructions
+
+      this.setState((state, props) => {
+        // last item is always empty --> replace with new
+        state.instructions.splice(state.instructions.length - 1, 1, state.instr)
+     
+      }, () => {
+        // add empty
+        this.setState({
+          instructions: [...this.state.instructions, '']
+        })
+
+      })
+      
+    }
 
   }
 
@@ -106,8 +223,8 @@ class Create extends React.Component {
     // https://www.netrition.com/rdi_page.html
     let data = [
       {
-        label: "Series 1",
-        data: [[0, 1], [1, 2], [2, 4], [3, 2], [4, 7]]
+        label: "g",
+        data: this.state.chartData
       }
 
     ]
@@ -122,6 +239,8 @@ class Create extends React.Component {
             <Series type={Pie} showPoints={false} />
             <Tooltip />
           </Chart>
+          <h3>Total Calories</h3>
+          <h5>{this.state.totalCal} kcal</h5>
         </div>
         <form>
           <label>
@@ -130,36 +249,25 @@ class Create extends React.Component {
           </label>
 
           <label>
-            <h3>Recipe image:</h3>
-            <input />
-          </label>
-
-          <label>
             <h3>Recipe description:</h3>
-            <textarea name="desc" placeholder="Add recipe description" onChange={this.handleChange}/>
+            <textarea name="description" placeholder="Add recipe description" onChange={this.handleChange}/>
           </label>
 
           <label>
             <h3>Ingredients:</h3>
-            <Input handleChange={this.handleChange} handleMore={this.handleMore} name="ing" placeholder="Add ingredient" ingredient={true}/>
-            {this.state.allIng.map((val, i, coll) => {
-              if (i > 0 ) {
-                if (this.state.submit && i === coll.length - 1) {
-                  return 
-                } else {
-                  return (
-                    <Input 
-                    key={"item-" + i} 
-                    handleChange={this.handleChange}
-                    handleMore={this.handleMore}
-                    name={"ing"}
-                    placeholder={"Add ingredient"}
-                    ingredient={true}
-                    />
-                    )
+            {/* <Input handleChange={this.handleChange} handleMore={this.handleMore} name="ing" placeholder="Add ingredient" ingredient={true}/> */}
+            {this.state.ingredients.map((val, i, coll) => {
+ 
+              return (<Input 
+              placeholder={"Add ingredient"}
+              value={val.name}
+              key={"item-" + i} 
+              handleChange={this.handleChange}
+              handleMore={this.handleMore}
+              name={"ing"}
+              ingredient={true}
+              />)
 
-                }
-              }
 
 
             })}
@@ -169,25 +277,19 @@ class Create extends React.Component {
 
           <label>
             <h3>Instructions:</h3>
-            <Input handleChange={this.handleChange} handleMore={this.handleMore} name="instr" placeholder="Add instruction"/>
-            {this.state.allInstr.map((val, i, coll) => {
-              if (i > 0 ) {
-                if (this.state.submit && i === coll.length - 1) {
-                  return 
-                } else {
-                  return (
-                    <Input 
-                    key={"item-" + i} 
-                    handleChange={this.handleChange}
-                    handleMore={this.handleMore}
-                    name="instr"
-                    placeholder="Add instruction"
-                    />
-                    )
-
-                }
-              }
-
+            {/* <Input handleChange={this.handleChange} handleMore={this.handleMore} name="instr" placeholder="Add instruction"/> */}
+            {this.state.instructions.map((val, i, coll) => {
+              
+              return (
+                <Input 
+                key={"item-" + i} 
+                handleChange={this.handleChange}
+                value={val}
+                handleMore={this.handleMore}
+                name="instr"
+                placeholder="Add instruction"
+                />
+                )
 
             })}
           </label>
