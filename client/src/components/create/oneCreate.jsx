@@ -13,6 +13,8 @@ class Create extends React.Component {
       title: '',
       description: '',
 
+      userId: '',
+
       // handle change
       ing: '',  // current ing from onchange
       instr: '',  // curr instr from onchange
@@ -42,6 +44,22 @@ class Create extends React.Component {
     this.handleMore = this.handleMore.bind(this);
   }
 
+  componentDidMount() {
+    this.setUser();
+  }
+
+  setUser() {
+    let profile = JSON.parse(localStorage.profile);
+    axios.post('/api/users', {
+      user: profile.nickname
+    })
+    .then(res => {
+      this.setState({
+        userId: parseInt(res.data)
+      })
+
+    })
+  }
 
   handleChange(event){
     event.preventDefault();
@@ -136,6 +154,7 @@ class Create extends React.Component {
       }, '')
 
     }, () => {
+
       this.setState((state, props) => {
         state.ingredients.pop()
         state.instructions.pop()
@@ -148,7 +167,6 @@ class Create extends React.Component {
         .catch((err) => {
           console.error('ERROR while post request for /api/recipes', err)
         })
-
 
       })
 

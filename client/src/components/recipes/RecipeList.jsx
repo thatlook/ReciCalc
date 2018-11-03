@@ -2,10 +2,11 @@ import React, {Component} from 'react';
 import RecipeListItem from './RecipeListItem.jsx';
 import axios from 'axios';
 class RecipeList extends Component {
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state = {
-          allRecipes: []
+          allRecipes: [],
+          userId: ''
         }
     }
 
@@ -26,11 +27,32 @@ class RecipeList extends Component {
     // .catch(error => {
     //   console.log('error: ', error);
     // })
-    this.update();
+    this.setUser();
+    // this.update();
+  }
+
+  setUser() {
+    let profile = JSON.parse(localStorage.profile);
+    axios.post('/api/users', {
+      user: profile.nickname
+    })
+    .then(res => {
+      this.setState({
+        userId: parseInt(res.data)
+      })
+    })
+    .then(() => {
+      this.update();
+    })
   }
 
   update() {
-    axios.get('api/recipes').then(response => {
+    axios.get('api/recipes/', {
+      params: {
+        user: this.state.userId
+      }
+    })
+    .then(response => {
       //console.log(response);
       this.setState({allRecipes: response.data.map(recipe => {
         return {
