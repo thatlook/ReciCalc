@@ -11,7 +11,6 @@ const Input = (props) => {
         onChange={props.handleChange} 
         onBlur={props.handleBlur}
         />
-        {props.amount} g
         <button 
         className="button" 
         name="ing" 

@@ -81,20 +81,21 @@ const IngredientSearch = (req, res) => {
     
     resObj.weight = nutrients.weight;
     resObj.measure = nutrients.measure;
+    resObj.quantity = 1;
     resObj.nutrients = nutrients.nutrients;
     res.status(200).json(resObj)
     return nutrients
   })
-  // .then((nutrients) => {
-  //   // save to db
-  //   return db.addIngredient(nutrients)
-  // })
-  // .then(() => {
-  //   console.log('saved ingredient to DB')
-  // })
-  // .catch((err) => {
-  //   console.log('couldnt save ingredient to DB or ingredient not in usda', err.error)
-  // })
+  .then((nutrients) => {
+    // save to db
+    return db.addIngredient(nutrients)
+  })
+  .then(() => {
+    console.log('saved ingredient to DB')
+  })
+  .catch((err) => {
+    console.log('couldnt save ingredient to DB or ingredient not in usda', err.error)
+  })
   
 }
 
