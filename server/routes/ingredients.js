@@ -72,6 +72,7 @@ const IngredientSearch = (req, res) => {
   })
   .then((ingredients) => {
     // FOUND! search USDA nutrients using ndbno
+    console.log('usda query search success')
     const item = ingredients.data.list.item[0]
     resObj.ndbno = item.ndbno;
     return usdaNutrientSearch(item.ndbno) 
@@ -88,6 +89,7 @@ const IngredientSearch = (req, res) => {
   })
   .then((nutrients) => {
     // save to db
+    console.log('usda nut search success')
     return db.addIngredient(nutrients)
   })
   .then(() => {
