@@ -57,19 +57,20 @@ const IngredientSearch = (req, res) => {
   const resObj = {};
 
   let searchTerm = req.body.query;
-  queryDBSearch(searchTerm)
-  .then((ingredients) => {
-    // FOUND! send to front end
-    res.status(200).json([ingredient[0]])
-  })
-  .catch((err) => {
-    // NOT FOUND! search USDA
-    console.log('ingredient not in DB', err.error);
-  })
-  .then(() => {
+  // queryDBSearch(searchTerm)
+  // .then((ingredients) => {
+  //   // FOUND! send to front end
+  //   res.status(200).json([ingredient[0]])
+  // })
+  // .catch((err) => {
+  //   // NOT FOUND! search USDA
+  //   console.log('ingredient not in DB', err.error);
+  // })
+  // .then(() => {
     // searching USDA
-    return usdaQuerySearch(searchTerm)
-  })
+    // return 
+  usdaQuerySearch(searchTerm)
+  // })
   .then((ingredients) => {
     // FOUND! search USDA nutrients using ndbno
     console.log('usda query search success')
