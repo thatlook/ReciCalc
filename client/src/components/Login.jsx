@@ -5,39 +5,45 @@ import auth0_config from '../../../auth0_config.js';
 let options = {
   languageDictionary: {
     title: 'Rocket Turtles'
-  },
-  // auth: {
-  //   redirectUrl: 'http://localhost:3000/create'
-  // }
+  }
 };
 
 let lock = new Auth0Lock(auth0_config.clientID, auth0_config.domain, options);
-// Listening for the authenticated event
+
 lock.on("authenticated", function(authResult) {
-  // Use the token in authResult to getUserInfo() and save it to localStorage
-  lock.getUserInfo(authResult.accessToken, function(err, profile) {
-    if (err) {
-      console.error('GET USER INFO ERROR', err);
-    }
-    localStorage.setItem('accessToken', authResult.accessToken);
-  });
+  localStorage.setItem('accessToken', authResult.accessToken);
 });
 
 class Login extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      login: false
+      profile: {}
     }
     this.logout = this.logout.bind(this);
+    this.getUserInfo = this.getUserInfo.bind(this);
   }
-  
+  componentDidMount() {
+    if (localStorage.accessToken) {
+      this.getUserInfo();
+    }
+  }
+
+  getUserInfo() {
+    lock.getUserInfo(localStorage.accessToken, function(err, profile) {
+      if (err) {
+        console.error('GET USER INFO ERROR', err);
+      }
+      localStorage.setItem('profile', JSON.stringify(profile));
+    });
+  }
+
   logout() {
     localStorage.removeItem('accessToken');
     lock.logout({'returnTo':'http://localhost:3000'});
   }
 
-  renderLoginLogout() {
+  renderLoginButton() {
     if (localStorage.accessToken) {
       return (
         <button className='nav link' onClick={()=>this.logout()}>Logout</button>
@@ -52,7 +58,7 @@ class Login extends React.Component {
   render() {
     return (
       <div>
-        {this.renderLoginLogout()}
+        {this.renderLoginButton()}
       </div>
     )
   }
