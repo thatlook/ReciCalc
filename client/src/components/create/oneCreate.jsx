@@ -42,7 +42,6 @@ class Create extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleMore = this.handleMore.bind(this);
-    this.getProfile = this.getProfile.bind(this);
 
     
   }
