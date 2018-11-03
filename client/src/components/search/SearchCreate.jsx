@@ -70,6 +70,7 @@ class SearchCreate extends React.Component {
         console.log('res on client from get search is ', res);
         this.updateSearchResults(res.data);
       })
+
       .catch(err => {
         console.log('error on client from get search is ', err);
       })
@@ -85,7 +86,10 @@ class SearchCreate extends React.Component {
 
   updateSearchResults(results) {
     console.log('from update', results);
-    this.setState({searchResults: results});
+    this.setState({
+      searchResults: results,
+      ingredients: []
+    });
   }
 
   render() {
@@ -106,7 +110,7 @@ class SearchCreate extends React.Component {
           ingredients={this.state.ingredients}
           deleteIngredient={this.deleteIngredient}
         />
-        {console.log('in render', this.state.searchResults)}
+        {/* {console.log('in render', this.state.searchResults)} */}
         <div>
           <SearchResultList searchResults={this.state.searchResults}/>
         </div>
