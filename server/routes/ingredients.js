@@ -64,7 +64,7 @@ const IngredientSearch = (req, res) => {
   })
   .catch((err) => {
     // NOT FOUND! search USDA
-    // console.log('ingredient not in DB', err.error);
+    console.log('ingredient not in DB', err.error);
   })
   .then(() => {
     // searching USDA
