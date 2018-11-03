@@ -38,32 +38,16 @@ class Create extends React.Component {
     
     // bind methods
     this.handleChange = this.handleChange.bind(this);
-    // this.handleChangeInput = this.handleChangeInput.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleMore = this.handleMore.bind(this);
   }
-
-  // handleChangeInput(idx){
-  //   // return (event) => {
-  //     event.preventDefault();
-  //     event.persist();
-
-  //     // either ing or instr
-  //     let key = event.target.name;
-  //     let value = event.target.value;
-  //     this.setState((state, props) => {
-  //       state[key] = value;
-  //     })
-  //   // }
-
-  // }
 
 
   handleChange(event){
     event.preventDefault();
     event.persist();
     
-    // either title or description
+    // title, description, ing, instr
     let key = event.target.name;
     let value = event.target.value;
     this.setState((state, props) => {
@@ -71,7 +55,7 @@ class Create extends React.Component {
     })
   }
 
-  handleData(data){
+  handleData(data, cb){
     // can show only top 5
 
     // create data for chart
@@ -112,8 +96,6 @@ class Create extends React.Component {
       chartData.push([key, sum[key]]);
     }
     
-
-    
     this.setState({
       ndbno,
       measure,
@@ -121,23 +103,19 @@ class Create extends React.Component {
       chartData,
       totalCal
     }, () => {
-      this.setState({
-        ingredients: [...this.state.ingredients, {
-          name: this.state.ing,
-          quantity: this.state.measure[this.state.measure.length - 1],
-          ndbno: this.state.ndbno[this.state.ndbno.length - 1]
-        }]
-      }, () => {
-        // add empty obj
-        let empty = {
-          name: '',
-          quantity: 0,
-          ndbno: ''
+
+      // last item is always empty --> splice and add new unempty data
+      this.setState((state, props) => {
+        let n = {
+          name: state.ing,
+          quantity: state.measure[state.measure.length - 1],
+          ndbno: state.ndbno[state.ndbno.length - 1]
         }
-        this.setState({
-          ingredients: [...this.state.ingredients, empty]
-        })
-        
+
+        state.ingredients.splice(state.ingredients.length - 1, 1, n)
+     
+      }, () => {
+        cb()
       })
 
     })
@@ -158,14 +136,23 @@ class Create extends React.Component {
       }, '')
 
     }, () => {
-      const recipe = Object.assign({}, this.state);
-      axios.post('api/recipes', {recipe})
-      .then((res) => {
-        this.props.history.push(`/recipes/${res.data.newRecipeId}`)
+      this.setState((state, props) => {
+        state.ingredients.pop()
+        state.instructions.pop()
+      }, () => {
+        const recipe = Object.assign({}, this.state);
+        axios.post('api/recipes', {recipe})
+        .then((res) => {
+          this.props.history.push(`/recipes/${res.data.newRecipeId}`)
+        })
+        .catch((err) => {
+          console.error('ERROR while post request for /api/recipes', err)
+        })
+
+
       })
-      .catch((err) => {
-        console.error('ERROR while post request for /api/recipes', err)
-      })
+
+
 
     })
   }
@@ -182,7 +169,12 @@ class Create extends React.Component {
         this.setState({
           nutrients: [...this.state.nutrients, res.data]
         }, () => {
-          this.handleData(this.state.nutrients)
+          this.handleData(this.state.nutrients, () => {
+            // add empty
+            this.setState({
+              ingredients: [...this.state.ingredients, {name:'', quantity: 0, ndbno:''}]
+            })
+          })
         })
       })
       .catch((err) => {
@@ -194,13 +186,16 @@ class Create extends React.Component {
     else if (event.target.name === 'instr') {
       // save current instr to instructions
 
-      // last item is always empty --> replace with new
       this.setState((state, props) => {
-        this.state.instructions.splice(this.state.instructions.length - 1, 1, this.state.instr)
+        // last item is always empty --> replace with new
+        state.instructions.splice(state.instructions.length - 1, 1, state.instr)
+     
       }, () => {
+        // add empty
         this.setState({
           instructions: [...this.state.instructions, '']
         })
+
       })
       
     }
