@@ -37,6 +37,10 @@ q {
   quotes: none;
 }
 
+a {
+  text-decoration: none;
+}
+
 blockquote:before,
 blockquote:after,
 q:before,
@@ -346,4 +350,38 @@ ol {
 
 .remove-btn {
   display: inline-block;
+}
+
+/* recipe search */
+#searchResultsWrap {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: minmax(500, auto);
+  grid-column-gap: 50px
+}
+
+.result-recipe-wrap {
+  /* background-color: lightpink; */
+  text-align: center;
+}
+
+.center {
+  margin: auto;
+  width: 50%;
+}
+
+.result-recipe-title {
+  font-style: Bold;
+  font-size: 135%;
+  color: black;
+  border-bottom: 2px solid black;
+  margin-bottom: 10px;
+}
+
+.divider {
+  background-color: black;
+}
+
+.result-recipe-ingredient {
+  color: black;
 }
