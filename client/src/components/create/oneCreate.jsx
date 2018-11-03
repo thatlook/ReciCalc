@@ -122,23 +122,30 @@ class Create extends React.Component {
     
     // send search query
     if (this.state.ing) {  
-      // if first time
-      if ([this.state.nutrients.length, this.state.ingredients.length].every((val) => (val <= this.state.ingCount))) {
+      
+      // rewrite code
+
+      // state.ing = 'spam'
+
+      // send axios post ('spam')
+
+      // add to state nutrients
+
+      
+
+      if ([this.state.nutrients.length, this.state.ingredients.length].every((val) => (val >= this.state.ingCount))) {
         axios.post('/api/ingredients', {query: this.state.ing}).then((res) => {
-    
+          console.log('>>> res', res.data)
           this.setState({
             nutrients: [...this.state.nutrients, res.data],
             ingCount: this.state.ingCount + 1
           }, () => {
-            console.log('>>> sent api request for ing')
             this.handleData(this.state.nutrients)
           })
     
         }).catch((err) => {
           console.log('ERROR receiving ingredient data', rr)
         });
-
-
       } 
     } 
   }
@@ -171,6 +178,7 @@ class Create extends React.Component {
     })
   }
 
+  // add more views
   handleMore(event){
     event.preventDefault();
     event.persist();
@@ -241,10 +249,8 @@ class Create extends React.Component {
                     placeholder={"Add ingredient"}
                     ingredient={true}
                     handleBlur={this.handleBlur}
-                    value={val}
                     />
                     )
-
                 }
               }
 
@@ -274,9 +280,7 @@ class Create extends React.Component {
                     )
 
                 }
-              } else {
-                console.log('>>> else')
-              }
+              } 
 
 
             })}
