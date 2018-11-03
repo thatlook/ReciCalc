@@ -6,7 +6,7 @@ class RecipeList extends Component {
         super(props);
         this.state = {
           allRecipes: [],
-          userId: 0
+          userId: ''
         }
     }
 
