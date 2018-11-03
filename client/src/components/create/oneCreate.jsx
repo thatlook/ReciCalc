@@ -72,7 +72,7 @@ class Create extends React.Component {
   // }
 
   setUser() {
-    let profile = localStorage.getItem('accessToken');
+    let profile = localStorage.getItem('profile');
     axios.post('/api/users', {
       user: profile.nickname
     })
