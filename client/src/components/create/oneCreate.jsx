@@ -47,8 +47,8 @@ class Create extends React.Component {
   }
 
   componentDidMount() {
-    this.getAccessToken();
-    this.getProfile();
+    // this.getAccessToken();
+    // this.getProfile();
     this.setUser();
   }
 
