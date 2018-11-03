@@ -57,7 +57,7 @@ const IngredientSearch = (req, res) => {
   const resObj = {};
 
   let searchTerm = req.body.query;
-  console.log(searchterm, 'is searchterm');
+  console.log(searchTerm, 'is searchterm');
   // queryDBSearch(searchTerm)
   // .then((ingredients) => {
   //   // FOUND! send to front end
