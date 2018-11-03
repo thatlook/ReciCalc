@@ -51,7 +51,7 @@ class Create extends React.Component {
   }
 
   getAccessToken() {
-    const accessToken = localStorage.getItem('access_token');
+    const accessToken = localStorage.getItem('accessToken');
     if (!accessToken) {
       throw new Error('No Access Token found');
     }
