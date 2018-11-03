@@ -60,11 +60,6 @@ class Create extends React.Component {
 
   handleData(data){
     // can show only top 5
-    // 0: "ndbno"
-    // 1: "weight"
-    // 2: "measure"
-    // 3: "nutrients"
-    // TODO: show weight OR measure on page
 
     // create data for chart
     const only = ['291', '205', '268', '203', '204'];  // use only major nutrients
@@ -126,15 +121,26 @@ class Create extends React.Component {
     event.persist();
     
     // send search query
-    axios.post('/api/ingredients', {query: this.state.ing}).then((res) => {
+    if (this.state.ing) {  
+      // if first time
+      if ([this.state.nutrients.length, this.state.ingredients.length].every((val) => (val <= this.state.ingCount))) {
+        axios.post('/api/ingredients', {query: this.state.ing}).then((res) => {
+    
+          this.setState({
+            nutrients: [...this.state.nutrients, res.data],
+            ingCount: this.state.ingCount + 1
+          }, () => {
+            console.log('>>> sent api request for ing')
+            this.handleData(this.state.nutrients)
+          })
+    
+        }).catch((err) => {
+          console.log('ERROR receiving ingredient data', rr)
+        });
 
-      this.setState({
-        nutrients: [...this.state.nutrients, res.data]
-      }, () => {
-        this.handleData(this.state.nutrients)
-      })
 
-    });
+      } 
+    } 
   }
 
   handleClick(event){
@@ -156,11 +162,10 @@ class Create extends React.Component {
       const recipe = Object.assign({}, this.state);
       axios.post('api/recipes', {recipe})
       .then((res) => {
-        console.log('>>> api/recipes', res);
         this.props.history.push(`/recipes/${res.data.newRecipeId}`)
       })
       .catch((err) => {
-        console.log('>>> error post api/recipes', err)
+        console.error('ERROR while post request for /api/recipes', err)
       })
 
     })
@@ -171,23 +176,9 @@ class Create extends React.Component {
     event.persist();
 
     if (event.target.name === 'ing') {
-      if (this.state.ingCount) {  // not 0
-        this.setState({
-          // ingredients: [...this.state.ingredients, {
-          //   quantity: this.state.measure[this.state.measure.length - 1],
-          //   ndbno: this.state.ndbno[this.state.ndbno.length - 1]
-          // }],
-          ingCount: this.state.ingCount + 1
-        })
-      } else {  // first item
-        this.setState({
-          // ingredients: [{
-          //   quantity: this.state.measure[this.state.measure.length - 1],
-          //   ndbno: this.state.ndbno[this.state.ndbno.length - 1],
-          // }],
-          ingCount: this.state.ingCount + 1
-        })
-      }
+      this.setState({
+        ingCount: this.state.ingCount + 1
+      })
 
 
     } else if (event.target.name === 'instr') {
@@ -237,7 +228,6 @@ class Create extends React.Component {
             <h3>Ingredients:</h3>
             <Input handleChange={this.handleChange} handleBlur={this.handleBlur} handleMore={this.handleMore} name="ing" placeholder="Add ingredient" ingredient={true}/>
             {this.state.ingredients.map((val, i, coll) => {
-              console.log('>>> map', val)
               if (i > 0 ) {
                 if (this.state.submit && i === coll.length) {
                   return 
