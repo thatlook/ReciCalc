@@ -8,7 +8,7 @@ module.exports.users = {
         resonse.end('error in addUser')
       } else {
         // console.log('res for users route is ', result);
-        response.end(result);
+        response.end(JSON.stringify(result));
       }
     })
   }
