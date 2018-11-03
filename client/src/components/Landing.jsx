@@ -21,8 +21,11 @@ lock.on("authenticated", function(authResult) {
     localStorage.setItem('profile', JSON.stringify(profile));
 
     // don't bring these console logs to the deployed version
-    console.log(profile);
-    console.log(localStorage)
+    console.log('profile data is ', profile);
+    // console.log('localstorage info is ', localStorage.profile)
+
+
+
   });
 });
 
