@@ -1,5 +1,5 @@
 const axios = require('axios');
-const config = require('../../config.js');
+// const config = require('../../config.js');
 const EDAMAM_APP_ID = process.env.EDAMAM_APP_ID;
 const EDAMAM_KEY = process.env.EDAMAM_KEY;
 
