@@ -13,9 +13,6 @@ class App extends Component {
     }
   }
 
-  componentDidMount () {
-  }
-
   render () {
     return (
       // if Browser Router were imported without an alias, this outermost wrapper would be 'BrowserRouter', not 'Router'
