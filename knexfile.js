@@ -1,5 +1,6 @@
 const configDB = require('./db_config.js').location;
 require('dotenv').config()
+
 module.exports = {
 
   development: {
@@ -22,6 +23,7 @@ module.exports = {
       tableName: 'knex_migrations'
     }
   },
+
 
   production: {
     client: 'pg',
