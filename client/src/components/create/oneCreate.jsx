@@ -18,19 +18,19 @@ class Create extends React.Component {
       instr: '',  // curr instr from onchange
 
       // handle blur
-      ingredients: [], // ingredient list ex: [{ndbno: '808', quantity: 2}]
-      instructions: [],  // instruction list ex: ['mix', 'sautee']
+      ingredients: [{ndbno:'', quantity:0, name:''}], // ingredient list ex: [{ndbno: '808', quantity: 2, name:'spam'}]
+      instructions: [''],  // instruction list ex: ['mix', 'sautee']
 
       top_ingredients:'',  // string to go into db
 
       // dynamic rendering
-      ingCount: 0,  // number 'more' buttons were added
-      instrCount: 0,  // number 'more' buttons were added
+      // ingCount: 0,  // number 'more' buttons were added
+      // instrCount: 0,  // number 'more' buttons were added
       submit: false,  // whether total submit button was clicked
 
       // data from api
       nutrients: [],  
-      totalCal: 0,  
+      totalCal: 0, 
       ndbno: [''],
       measure: [''],
 
@@ -40,9 +40,24 @@ class Create extends React.Component {
     
     // bind methods
     this.handleChange = this.handleChange.bind(this);
+    this.handleChangeInput = this.handleChangeInput.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleMore = this.handleMore.bind(this);
-    this.handleBlur = this.handleBlur.bind(this)
+    // this.handleBlur = this.handleBlur.bind(this)
+  }
+
+  handleChangeInput(idx){
+    return (event) => {
+      event.preventDefault();
+      event.persist();
+
+      // either ing or instr
+      let key = event.target.name;
+      let value = event.target.value;
+      this.setState((state, props) => {
+        state[key] = value;
+      })
+    }
   }
 
 
@@ -50,7 +65,7 @@ class Create extends React.Component {
     event.preventDefault();
     event.persist();
     
-    // either ing or instr
+    // either title or description
     let key = event.target.name;
     let value = event.target.value;
     this.setState((state, props) => {
@@ -99,56 +114,71 @@ class Create extends React.Component {
       chartData.push([key, sum[key]]);
     }
     
+
+    
     this.setState({
       ndbno,
       measure,
-
+      
       chartData,
       totalCal
     }, () => {
       this.setState({
         ingredients: [...this.state.ingredients, {
+          name: this.state.ing,
           quantity: this.state.measure[this.state.measure.length - 1],
           ndbno: this.state.ndbno[this.state.ndbno.length - 1]
         }]
+      }, () => {
+        console.log('>>> adding empty ing')
+        // add empty obj
+        let empty = {
+          name: '',
+          quantity: 0,
+          ndbno: ''
+        }
+        this.setState({
+          ingredients: [...this.state.ingredients, empty]
+        })
+        
       })
 
     })
   }
   
-  handleBlur(event){
-    event.preventDefault();
-    event.persist();
+  // handleBlur(event){
+  //   event.preventDefault();
+  //   event.persist();
     
-    // send search query
-    if (this.state.ing) {  
+  //   // send search query
+  //   if (this.state.ing) {  
       
-      // rewrite code
+  //     // rewrite code
 
-      // state.ing = 'spam'
+  //     // state.ing = 'spam'
 
-      // send axios post ('spam')
+  //     // send axios post ('spam')
 
-      // add to state nutrients
+  //     // add to state nutrients
 
       
 
-      if ([this.state.nutrients.length, this.state.ingredients.length].every((val) => (val >= this.state.ingCount))) {
-        axios.post('/api/ingredients', {query: this.state.ing}).then((res) => {
-          console.log('>>> res', res.data)
-          this.setState({
-            nutrients: [...this.state.nutrients, res.data],
-            ingCount: this.state.ingCount + 1
-          }, () => {
-            this.handleData(this.state.nutrients)
-          })
+  //     if ([this.state.nutrients.length, this.state.ingredients.length].every((val) => (val >= this.state.ingCount))) {
+  //       axios.post('/api/ingredients', {query: this.state.ing}).then((res) => {
+  //         console.log('>>> res', res.data)
+  //         this.setState({
+  //           nutrients: [...this.state.nutrients, res.data],
+  //           ingCount: this.state.ingCount + 1
+  //         }, () => {
+  //           this.handleData(this.state.nutrients)
+  //         })
     
-        }).catch((err) => {
-          console.log('ERROR receiving ingredient data', rr)
-        });
-      } 
-    } 
-  }
+  //       }).catch((err) => {
+  //         console.log('ERROR receiving ingredient data', rr)
+  //       });
+  //     } 
+  //   } 
+  // }
 
   handleClick(event){
     event.preventDefault();
@@ -165,7 +195,6 @@ class Create extends React.Component {
       }, '')
 
     }, () => {
-      alert(JSON.stringify(this.state))
       const recipe = Object.assign({}, this.state);
       axios.post('api/recipes', {recipe})
       .then((res) => {
@@ -178,23 +207,50 @@ class Create extends React.Component {
     })
   }
 
-  // add more views
+  // add more inputs
   handleMore(event){
     event.preventDefault();
     event.persist();
-
+    
     if (event.target.name === 'ing') {
-      this.setState({
-        ingCount: this.state.ingCount + 1
+      // call api
+      axios.post('/api/ingredients', {query: this.state.ing})
+      .then((res) => {
+        this.setState({
+          nutrients: [...this.state.nutrients, res.data]
+        }, () => {
+          this.handleData(this.state.nutrients)
+        })
+      })
+      .catch((err) => {
+        console.log('ERROR receiving ingredient data', err)
       })
 
+      // // add empty obj
+      // let empty = {
+      //   name: '',
+      //   quantity: 0,
+      //   ndbno: ''
+      // }
+      // this.setState({
+      //   ingredients: [...this.state.ingredients, empty]
+      // })
 
-    } else if (event.target.name === 'instr') {
+    }
+
+    else if (event.target.name === 'instr') {
+      // save current instr to instructions
       this.setState({
-        instructions: [...this.state.instructions, this.state.instr],
-        instrCount: this.state.instrCount + 1
+        instructions: [...this.state.instructions, this.state.instr]
+      }, () => {
+        // add empty string
+        this.setState({
+          instructions: [...this.state.instructions, '']
+        })
+
       })
     }
+
   }
 
 
@@ -234,25 +290,19 @@ class Create extends React.Component {
 
           <label>
             <h3>Ingredients:</h3>
-            <Input handleChange={this.handleChange} handleBlur={this.handleBlur} handleMore={this.handleMore} name="ing" placeholder="Add ingredient" ingredient={true}/>
+            {/* <Input handleChange={this.handleChange} handleMore={this.handleMore} name="ing" placeholder="Add ingredient" ingredient={true}/> */}
             {this.state.ingredients.map((val, i, coll) => {
-              if (i > 0 ) {
-                if (this.state.submit && i === coll.length) {
-                  return 
-                } else {
-                  return (
-                    <Input 
-                    key={"item-" + i} 
-                    handleChange={this.handleChange}
-                    handleMore={this.handleMore}
-                    name={"ing"}
-                    placeholder={"Add ingredient"}
-                    ingredient={true}
-                    handleBlur={this.handleBlur}
-                    />
-                    )
-                }
-              }
+ 
+              return (<Input 
+              placeholder={"Add ingredient"}
+              value={val.name}
+              key={"item-" + i} 
+              handleChange={this.handleChangeInput(i)}
+              handleMore={this.handleMore}
+              name={"ing"}
+              ingredient={true}
+              />)
+
 
 
             })}
@@ -262,26 +312,19 @@ class Create extends React.Component {
 
           <label>
             <h3>Instructions:</h3>
-            <Input handleChange={this.handleChange} handleMore={this.handleMore} name="instr" placeholder="Add instruction"/>
+            {/* <Input handleChange={this.handleChange} handleMore={this.handleMore} name="instr" placeholder="Add instruction"/> */}
             {this.state.instructions.map((val, i, coll) => {
               
-              if (i > 0 ) {
-                if (this.state.submit && i === coll.length) {
-                  return 
-                } else {
-                  return (
-                    <Input 
-                    key={"item-" + i} 
-                    handleChange={this.handleChange}
-                    handleMore={this.handleMore}
-                    name="instr"
-                    placeholder="Add instruction"
-                    />
-                    )
-
-                }
-              } 
-
+              return (
+                <Input 
+                key={"item-" + i} 
+                handleChange={this.handleChangeInput(i)}
+                value={val}
+                handleMore={this.handleMore}
+                name="instr"
+                placeholder="Add instruction"
+                />
+                )
 
             })}
           </label>
