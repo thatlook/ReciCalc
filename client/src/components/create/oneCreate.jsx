@@ -154,6 +154,10 @@ class Create extends React.Component {
       }, '')
 
     }, () => {
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4e305ae6bcebdb384627a391eef3bb161272a694
       this.setState((state, props) => {
         state.ingredients.pop()
         state.instructions.pop()
@@ -167,7 +171,10 @@ class Create extends React.Component {
           console.error('ERROR while post request for /api/recipes', err)
         })
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4e305ae6bcebdb384627a391eef3bb161272a694
       })
 
 
