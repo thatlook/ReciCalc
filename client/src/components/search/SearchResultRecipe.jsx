@@ -1,10 +1,8 @@
 import React from 'react';
 import { generateKeyPairSync } from 'crypto';
 
-
-
 const SearchResultRecipe = (props) => {
-  console.log(props.recipe, 'is props recipe')
+  // console.log(props.recipe, 'is props recipe')
   return (<div className="result-recipe-wrap">
     <a href={props.recipe.url}>
     <div className={props.recipe.label !== '' ? "result-recipe-title" : "divider"}>
