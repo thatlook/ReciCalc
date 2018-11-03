@@ -3,16 +3,17 @@ import { generateKeyPairSync } from 'crypto';
 
 
 
-const SearchResultRecipe = (props) => (
-  <div className="result-recipe-wrap">
-    <a className="resutl-recipe-title" href={props.recipe.url}>
-    <div className="result-recipe-title">
+const SearchResultRecipe = (props) => {
+  console.log(props.recipe, 'is props recipe')
+  return (<div className="result-recipe-wrap">
+    <a href={props.recipe.url}>
+    <div className={props.recipe.label !== '' ? "result-recipe-title" : "divider"}>
       {props.recipe.label} 
     </div>
     <img src={props.recipe.image}
       href={props.recipe.url}
     />
-    <div className="result-recipe-title">
+    <div className={props.recipe.label !== '' ? "result-recipe-title" : "divider"}>
       {props.recipe.source}
     </div>
     </a>
@@ -24,7 +25,8 @@ const SearchResultRecipe = (props) => (
         </li>
       ))}
     </ul>
-  </div>
-)
+  </div>)
+}
+
 
 export default SearchResultRecipe;
