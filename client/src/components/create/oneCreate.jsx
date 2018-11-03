@@ -72,8 +72,9 @@ class Create extends React.Component {
 
   setUser() {
     let profile = localStorage.getItem('profile');
+    let profileJSON = JSON.parse(profile);
     axios.post('/api/users', {
-      user: profile.nickname
+      user: profileJSON.nickname
     })
     .then(res => {
       this.setState({
