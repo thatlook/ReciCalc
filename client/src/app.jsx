@@ -3,8 +3,6 @@ import ReactDOM from 'react-dom';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import Landing from './components/Landing.jsx';
 import Main from './components/Main.jsx';
-
-
 // could be refactored as a functional component if state not needed
 class App extends Component {
   constructor(props) {
@@ -13,6 +11,9 @@ class App extends Component {
       // considering keeping an interim copy of a user recipe here in case they 
       // navigate away from the create page before submitting
     }
+  }
+
+  componentDidMount () {
   }
 
   render () {
