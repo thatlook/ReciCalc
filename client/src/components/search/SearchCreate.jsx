@@ -2,33 +2,12 @@ import React from 'react';
 import axios from 'axios';
 import SearchInput from './SearchInput.jsx';
 import SearchList from './SearchList.jsx';
-import SearchResults from './SearchResults.jsx';
+import SearchResultList from './SearchResultList.jsx';
 import { Link } from 'react-router-dom';
 import { getRecipeFromEdamam } from '../../../../server/routes/search.js';
 
 const EDAMAM_APP_ID = process.env.API_KEY;
 const EDAMAM_KEY = process.env.API_KEY;
-
-// MOVE TO MASTER CSS PAGE
-const gridWrapper = {
-  backgroundColor: 'green',
-  paddingLeft: '10px',
-  display: 'grid',
-  gridTemplateColumns: '200px repeat(6, 1fr)',
-  gridAutoRows: 'minmax(100px, auto)',
-  gridGap: '10px'
-}
-
-const sideBar = {
-  top: '10px',
-  textAlign: 'center',
-  borderRadius: '3px',
-  topMargin: '10px',
-  paddingTop: '10px',
-  gridColumn: '1/2',
-  gridRow: '1/8',
-  backgroundColor: 'lightGrey'
-}
 
 class SearchCreate extends React.Component {
   constructor(props) {
@@ -37,10 +16,10 @@ class SearchCreate extends React.Component {
       ingredients: [],
       ingredient: '',
       searchResults: [{
-        title: 'Peanut Butter Banana Smoothie Recipe',
+        label: 'Peanut Butter Banana Smoothie Recipe',
         image: 'https://www.edamam.com/web-img/90b/90bdb6373111199cca741fc422ac3c28.jpg',
         labels: ["Vegetarian", "Tree-Nut-Free", "Alcohol-Free"], //need to concat dietLables and healthLabels
-        ingredientsLines: ["1/2 banana", "1 tablespoon natural peanut butter", "1 cup ice cold skim milk"],
+        ingredientLines: ["1/2 banana", "1 tablespoon natural peanut butter", "1 cup ice cold skim milk"],
         calories: 233.61649999999997,
         totalFat: 0,
         satFat: 0,
@@ -89,7 +68,7 @@ class SearchCreate extends React.Component {
       })
       .then(res => {
         console.log('res on client from get search is ', res);
-        
+        this.updateSearchResults(res.data);
       })
       .catch(err => {
         console.log('error on client from get search is ', err);
@@ -102,30 +81,35 @@ class SearchCreate extends React.Component {
     } else {
       alert('please select an ingredient');
     }
-    
+  }
+
+  updateSearchResults(results) {
+    console.log('from update', results);
+    this.setState({searchResults: results});
   }
 
   render() {
     return (
-      <div style={gridWrapper}>
-        <div style={sideBar}>
-          <input
-              className='button'
-              onClick={() => this.submitSearch()}
-              type='submit'
-              value='Search for Recipes!'
-          />
-          <SearchInput 
-            addIngredient={this.addIngredient}
-            ingredient={this.state.ingredient}
-            handleIngredientChange={this.handleIngredientChange}
-          />
-          <SearchList 
-            ingredients={this.state.ingredients}
-            deleteIngredient={this.deleteIngredient}
-          />
+      <div >
+        <input
+            className='button'
+            onClick={() => this.submitSearch()}
+            type='submit'
+            value='Search for Recipes!'
+        />
+        <SearchInput 
+          addIngredient={this.addIngredient}
+          ingredient={this.state.ingredient}
+          handleIngredientChange={this.handleIngredientChange}
+        />
+        <SearchList 
+          ingredients={this.state.ingredients}
+          deleteIngredient={this.deleteIngredient}
+        />
+        {console.log('in render', this.state.searchResults)}
+        <div>
+          <SearchResultList searchResults={this.state.searchResults}/>
         </div>
-        <SearchResults results={this.state.searchResults} />
       </div>
     )
   }
