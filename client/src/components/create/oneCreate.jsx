@@ -24,8 +24,6 @@ class Create extends React.Component {
       top_ingredients:'',  // string to go into db
 
       // dynamic rendering
-      // ingCount: 0,  // number 'more' buttons were added
-      // instrCount: 0,  // number 'more' buttons were added
       submit: false,  // whether total submit button was clicked
 
       // data from api
@@ -40,25 +38,25 @@ class Create extends React.Component {
     
     // bind methods
     this.handleChange = this.handleChange.bind(this);
-    this.handleChangeInput = this.handleChangeInput.bind(this);
+    // this.handleChangeInput = this.handleChangeInput.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleMore = this.handleMore.bind(this);
-    // this.handleBlur = this.handleBlur.bind(this)
   }
 
-  handleChangeInput(idx){
-    return (event) => {
-      event.preventDefault();
-      event.persist();
+  // handleChangeInput(idx){
+  //   // return (event) => {
+  //     event.preventDefault();
+  //     event.persist();
 
-      // either ing or instr
-      let key = event.target.name;
-      let value = event.target.value;
-      this.setState((state, props) => {
-        state[key] = value;
-      })
-    }
-  }
+  //     // either ing or instr
+  //     let key = event.target.name;
+  //     let value = event.target.value;
+  //     this.setState((state, props) => {
+  //       state[key] = value;
+  //     })
+  //   // }
+
+  // }
 
 
   handleChange(event){
@@ -130,7 +128,6 @@ class Create extends React.Component {
           ndbno: this.state.ndbno[this.state.ndbno.length - 1]
         }]
       }, () => {
-        console.log('>>> adding empty ing')
         // add empty obj
         let empty = {
           name: '',
@@ -145,40 +142,6 @@ class Create extends React.Component {
 
     })
   }
-  
-  // handleBlur(event){
-  //   event.preventDefault();
-  //   event.persist();
-    
-  //   // send search query
-  //   if (this.state.ing) {  
-      
-  //     // rewrite code
-
-  //     // state.ing = 'spam'
-
-  //     // send axios post ('spam')
-
-  //     // add to state nutrients
-
-      
-
-  //     if ([this.state.nutrients.length, this.state.ingredients.length].every((val) => (val >= this.state.ingCount))) {
-  //       axios.post('/api/ingredients', {query: this.state.ing}).then((res) => {
-  //         console.log('>>> res', res.data)
-  //         this.setState({
-  //           nutrients: [...this.state.nutrients, res.data],
-  //           ingCount: this.state.ingCount + 1
-  //         }, () => {
-  //           this.handleData(this.state.nutrients)
-  //         })
-    
-  //       }).catch((err) => {
-  //         console.log('ERROR receiving ingredient data', rr)
-  //       });
-  //     } 
-  //   } 
-  // }
 
   handleClick(event){
     event.preventDefault();
@@ -226,29 +189,20 @@ class Create extends React.Component {
         console.log('ERROR receiving ingredient data', err)
       })
 
-      // // add empty obj
-      // let empty = {
-      //   name: '',
-      //   quantity: 0,
-      //   ndbno: ''
-      // }
-      // this.setState({
-      //   ingredients: [...this.state.ingredients, empty]
-      // })
-
     }
 
     else if (event.target.name === 'instr') {
       // save current instr to instructions
-      this.setState({
-        instructions: [...this.state.instructions, this.state.instr]
+
+      // last item is always empty --> replace with new
+      this.setState((state, props) => {
+        this.state.instructions.splice(this.state.instructions.length - 1, 1, this.state.instr)
       }, () => {
-        // add empty string
         this.setState({
           instructions: [...this.state.instructions, '']
         })
-
       })
+      
     }
 
   }
@@ -297,7 +251,7 @@ class Create extends React.Component {
               placeholder={"Add ingredient"}
               value={val.name}
               key={"item-" + i} 
-              handleChange={this.handleChangeInput(i)}
+              handleChange={this.handleChange}
               handleMore={this.handleMore}
               name={"ing"}
               ingredient={true}
@@ -318,7 +272,7 @@ class Create extends React.Component {
               return (
                 <Input 
                 key={"item-" + i} 
-                handleChange={this.handleChangeInput(i)}
+                handleChange={this.handleChange}
                 value={val}
                 handleMore={this.handleMore}
                 name="instr"
