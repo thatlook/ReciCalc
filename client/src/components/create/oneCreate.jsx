@@ -36,19 +36,40 @@ class Create extends React.Component {
       // chart data
       chartData: [[0, 1], [1, 2], [2, 4], [3, 2], [4, 7]]  // default data to show
     };
-    
+    userProfile;
     // bind methods
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleMore = this.handleMore.bind(this);
+    this.getProfile = this.getProfile.bind(this);
   }
 
   componentDidMount() {
+    this.getAccessToken();
+    this.getProfile();
     this.setUser();
   }
 
+  getAccessToken() {
+    const accessToken = localStorage.getItem('access_token');
+    if (!accessToken) {
+      throw new Error('No Access Token found');
+    }
+    return accessToken;
+  }
+
+  getProfile(cb) {
+    let accessToken = this.getAccessToken();
+    this.auth0.client.userInfo(accessToken, (err, profile) => {
+      if (profile) {
+        this.userProfile = profile;
+      }
+      cb(err, profile);
+    });
+  }
+
   setUser() {
-    let profile = JSON.parse(localStorage.profile);
+    let profile = this.userProfile;
     axios.post('/api/users', {
       user: profile.nickname
     })
