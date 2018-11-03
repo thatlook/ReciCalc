@@ -99,11 +99,11 @@ body,
   grid-row: 2 / 3;
   align-self: start;
   display: grid;
-  grid-template-rows: 2fr 1fr;
+  grid-template-rows: 2fr 1fr 1fr;
   grid-template-columns: 1fr 1fr;
   justify-items: center;
   align-items: center;
-  width: 425px;
+  width: 450;
   height: 225px;
   color: #000570;
   background-color: rgba(255, 255, 255, .7);
