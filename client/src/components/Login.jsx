@@ -1,6 +1,6 @@
 import React from 'react';
 import Auth0Lock from 'auth0-lock';
-import auth0_config from '../../../auth0_config.js';
+// import auth0_config from '../../../auth0_config.js';
 const clientID = process.env.clientID;
 const domain = process.env.domain;
 
