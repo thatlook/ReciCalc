@@ -3,7 +3,6 @@ import { withRouter } from 'react-router-dom';
 import Input from './createInput.jsx';
 import axios from 'axios';
 import { Chart, Axis, Series, Tooltip, Pie } from 'react-charts';
-import auth0 from 'auth0';
 
 
 class Create extends React.Component {
@@ -45,6 +44,7 @@ class Create extends React.Component {
     this.handleMore = this.handleMore.bind(this);
     this.getProfile = this.getProfile.bind(this);
 
+    
   }
 
   componentDidMount() {
@@ -53,26 +53,26 @@ class Create extends React.Component {
     this.setUser();
   }
 
-  getAccessToken() {
-    const accessToken = localStorage.getItem('accessToken');
-    if (!accessToken) {
-      throw new Error('No Access Token found');
-    }
-    return accessToken;
-  }
+  // getAccessToken() {
+  //   const accessToken = localStorage.getItem('accessToken');
+  //   if (!accessToken) {
+  //     throw new Error('No Access Token found');
+  //   }
+  //   return accessToken;
+  // }
 
-  getProfile(cb) {
-    let accessToken = this.getAccessToken();
-    this.auth0.client.userInfo(accessToken, (err, profile) => {
-      if (profile) {
-        this.userProfile = profile;
-      }
-      cb(err, profile);
-    });
-  }
+  // getProfile(cb) {
+  //   let accessToken = this.getAccessToken();
+  //   this.auth0.client.userInfo(accessToken, (err, profile) => {
+  //     if (profile) {
+  //       this.userProfile = profile;
+  //     }
+  //     cb(err, profile);
+  //   });
+  // }
 
   setUser() {
-    let profile = this.userProfile;
+    let profile = localStorage.getItem('accessToken');
     axios.post('/api/users', {
       user: profile.nickname
     })
