@@ -40,7 +40,9 @@ class Login extends React.Component {
 
   logout() {
     localStorage.removeItem('accessToken');
-    lock.logout({'returnTo':'http://localhost:3000'});
+    lock.logout({
+      'returnTo': 'http://ec2-34-222-234-13.us-west-2.compute.amazonaws.com'
+    });
   }
 
   renderLoginButton() {
