@@ -45,10 +45,6 @@ class Create extends React.Component {
     this.handleMore = this.handleMore.bind(this);
     this.getProfile = this.getProfile.bind(this);
 
-    this.auth0 = new auth0.WebAuth({
-      // ...
-      scope: 'openid profile'
-    });
   }
 
   componentDidMount() {
