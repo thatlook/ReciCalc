@@ -4,7 +4,6 @@ import Input from './createInput.jsx';
 import axios from 'axios';
 import { Chart, Axis, Series, Tooltip, Pie } from 'react-charts';
 
-
 class Create extends React.Component {
   constructor(props){
     super(props);
