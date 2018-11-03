@@ -3,6 +3,8 @@ import { withRouter } from 'react-router-dom';
 import Input from './createInput.jsx';
 import axios from 'axios';
 import { Chart, Axis, Series, Tooltip, Pie } from 'react-charts';
+import auth0 from 'auth0';
+
 
 class Create extends React.Component {
   constructor(props){
@@ -42,6 +44,11 @@ class Create extends React.Component {
     this.handleClick = this.handleClick.bind(this);
     this.handleMore = this.handleMore.bind(this);
     this.getProfile = this.getProfile.bind(this);
+
+    auth0 = new auth0.WebAuth({
+      // ...
+      scope: 'openid profile'
+    });
   }
 
   componentDidMount() {
