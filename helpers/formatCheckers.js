@@ -51,6 +51,7 @@ const isValidRecipe = (recipe) => {
   if (isValidIngredientList(recipe.ingredients) === false) {
     return false;
   }
+
   return true;
 };
 

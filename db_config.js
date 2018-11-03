@@ -1,7 +1,9 @@
+require('dotenv').config()
+
 module.exports.location = {
   host: 'localhost',
-  user: process.env.user,
-  password: process.env.password,
+  user: 'postgres', // process.env.user,
+  password: '', // process.env.password,
   database: 'ubuntu'
 };
 
@@ -11,5 +13,5 @@ module.exports.production = {
 }
 
 
-module.exports.environment = 'production'
+module.exports.environment = 'development' // 'production'
 //Used in database/db.js to determine with part of knexfile.js to use

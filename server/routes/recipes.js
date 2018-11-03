@@ -40,11 +40,13 @@ module.exports.recipes = {
     //Store recipe in database
     let recipe = req.body.recipe;
     console.log('Incoming recipe request:', recipe);
+
     if(format.isValidRecipe(recipe) === false) {
       res.status(400).send('Malformed recipe');
     } else {
       db.addRecipe(recipe)
         .then(data => {
+          console.log('saved recipe to db')
           res.status(201).json({newRecipeId: data});
         })
         .catch(err => {

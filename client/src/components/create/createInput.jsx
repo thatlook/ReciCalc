@@ -9,12 +9,7 @@ const Input = (props) => {
         name={props.name} 
         placeholder={props.placeholder} 
         onChange={props.handleChange} 
-        />
-        <input 
-        type="text"
-        placeholder="Amount"
-        name="ingAmount"
-        onChange={props.handleChange}
+        onBlur={props.handleBlur}
         />
         <button 
         className="button" 

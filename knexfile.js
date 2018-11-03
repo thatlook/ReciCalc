@@ -1,5 +1,6 @@
 const configDB = require('./db_config.js').location;
 require('dotenv').config()
+
 module.exports = {
 
   development: {
