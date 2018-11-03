@@ -36,7 +36,7 @@ class Create extends React.Component {
       // chart data
       chartData: [[0, 1], [1, 2], [2, 4], [3, 2], [4, 7]]  // default data to show
     };
-    userProfile;
+    this.userProfile;
     // bind methods
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
