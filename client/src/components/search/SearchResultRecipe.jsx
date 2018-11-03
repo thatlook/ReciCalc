@@ -5,10 +5,17 @@ import { generateKeyPairSync } from 'crypto';
 
 const SearchResultRecipe = (props) => (
   <div className="result-recipe-wrap">
-    <img src={props.recipe.image}/>
+    <a className="resutl-recipe-title" href={props.recipe.url}>
     <div className="result-recipe-title">
-      {props.recipe.label}
+      {props.recipe.label} 
     </div>
+    <img src={props.recipe.image}
+      href={props.recipe.url}
+    />
+    <div className="result-recipe-title">
+      {props.recipe.source}
+    </div>
+    </a>
     <span className="divider"></span>
     <ul className="result-recipe-ingredient-list">
       {props.recipe.ingredientLines.map((ingredient, index) => (
