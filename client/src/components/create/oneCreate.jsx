@@ -8,6 +8,47 @@ import RecipeDesc from './recipeDesc.jsx';
 import AddIngredients from './addIngredients.jsx';
 import AddInstructions from './addInstructions.jsx';
 
+/* helper functions */
+async function getNDB(searchTerm, handleData, cb) {
+  try {
+    const res = await axios.post('/api/ingredients', { query: searchTerm });
+    const data = handleData(res.data, searchTerm);
+    cb(data);
+  } catch (e) {
+    console.log('ERROR receiving ingredient data', e);
+  }
+}
+
+const handleData = (data, searchTerm) => {
+  const only = ['291', '205', '268', '203', '204']; // use only major nutrients
+
+  const obj = {
+    totalCal: 0,
+    chartData: [],
+    ndbno: data.ndbno,
+    name: data.name ? data.name : searchTerm,
+    quantity: data.weight
+  };
+
+  data.nutrients.forEach(val => {
+    if (only.includes(val.nutrient_id)) {
+      const nutObj = {};
+
+      let name = val.nutrient;
+      let num = isNaN(val.value) ? 0 : parseFloat(val.value);
+
+      nutObj[name] = num;
+      obj.chartData.push(nutObj);
+
+      // total calories
+    } else if (val.nutrient_id === '208') {
+      obj.totalCal += parseFloat(val.value);
+    }
+  });
+
+  return obj;
+};
+
 class Create extends React.Component {
   constructor(props) {
     super(props);
@@ -15,7 +56,7 @@ class Create extends React.Component {
     this.state = {
       /* NECESSARY FOR DB SAVE */
       title: '',
-      ingredients: [{ ndbno: '', quantity: 0, name: '' }], // ingredient list ex: [{ndbno: '808', quantity: 2, name:'spam'}]
+      ingredients: [], // ingredient list ex: [{ndbno: '808', quantity: 2, name:'spam'}]
       instructions: [], // instruction list ex: ['mix', 'sautee']
 
       /* OPTIONAL */
@@ -51,131 +92,57 @@ class Create extends React.Component {
     // bind methods
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleMore = this.handleMore.bind(this);
-    this.handleInstructionInput = this.handleInstructionInput.bind(this);
+    // this.handleMore = this.handleMore.bind(this);
     this.handleInstructionAdd = this.handleInstructionAdd.bind(this);
+    this.handleIngredientAdd = this.handleIngredientAdd.bind(this);
   }
 
+  /*
   componentDidMount() {
-    // this.getAccessToken();
-    // this.getProfile();
-    // this.setUser();
+    this.getAccessToken();
+    this.getProfile();
+    this.setUser();
   }
 
-  // getAccessToken() {
-  //   const accessToken = localStorage.getItem('accessToken');
-  //   if (!accessToken) {
-  //     throw new Error('No Access Token found');
-  //   }
-  //   return accessToken;
-  // }
+  getAccessToken() {
+    const accessToken = localStorage.getItem('accessToken');
+    if (!accessToken) {
+      throw new Error('No Access Token found');
+    }
+    return accessToken;
+  }
 
-  // getProfile(cb) {
-  //   let accessToken = this.getAccessToken();
-  //   this.auth0.client.userInfo(accessToken, (err, profile) => {
-  //     if (profile) {
-  //       this.userProfile = profile;
-  //     }
-  //     cb(err, profile);
-  //   });
-  // }
-
-  // setUser() {
-  //   let profile = localStorage.getItem('profile');
-  //   let profileJSON = JSON.parse(profile);
-  //   axios.post('/api/users', {
-  //     user: profileJSON.nickname
-  //   })
-  //   .then(res => {
-  //     this.setState({
-  //       userId: parseInt(res.data)
-  //     })
-
-  //   })
-  // }
-
-  handleChange(event) {
-    event.preventDefault();
-    event.persist();
-
-    // title, description, ing, instr
-    let key = event.target.name;
-    let value = event.target.value;
-    this.setState((state, props) => {
-      state[key] = value;
+  getProfile(cb) {
+    let accessToken = this.getAccessToken();
+    this.auth0.client.userInfo(accessToken, (err, profile) => {
+      if (profile) {
+        this.userProfile = profile;
+      }
+      cb(err, profile);
     });
   }
 
-  handleData(data, cb) {
-    // can show only top 5
+  setUser() {
+    let profile = localStorage.getItem('profile');
+    let profileJSON = JSON.parse(profile);
+    axios.post('/api/users', {
+      user: profileJSON.nickname
+    })
+    .then(res => {
+      this.setState({
+        userId: parseInt(res.data)
+      })
 
-    // create data for chart
-    const only = ['291', '205', '268', '203', '204']; // use only major nutrients
-
-    // for state
-    let ndbno = [];
-    let measure = [];
-
-    const chartData = [];
-    let totalCal = 0;
-
-    const sum = {};
-    for (let nut of data) {
-      ndbno.push(nut.ndbno);
-      measure.push(nut.weight);
-
-      for (let obj of nut.nutrients) {
-        if (only.includes(obj.nutrient_id)) {
-          let name = obj.nutrient;
-          let num = isNaN(obj.value) ? 0 : parseFloat(obj.value);
-
-          if (sum[name]) {
-            sum[name] += num;
-          } else {
-            sum[name] = num;
-          }
-
-          // total calories
-        } else if (obj.nutrient_id === '208') {
-          totalCal += parseFloat(obj.value);
-        }
-      }
-    }
-
-    for (let key in sum) {
-      chartData.push([key, sum[key]]);
-    }
-
-    this.setState(
-      {
-        ndbno,
-        measure,
-
-        chartData,
-        totalCal
-      },
-      () => {
-        // last item is always empty --> splice and add new unempty data
-        this.setState(
-          (state, props) => {
-            let n = {
-              name: state.ing,
-              quantity: state.measure[state.measure.length - 1],
-              ndbno: state.ndbno[state.ndbno.length - 1]
-            };
-
-            state.ingredients.splice(state.ingredients.length - 1, 1, n);
-          },
-          () => {
-            cb();
-          }
-        );
-      }
-    );
+    })
   }
+  */
 
-  handleInstructionInput(event) {
-    this.setState({ instr: event.target.value });
+  handleChange(event) {
+    let key = event.target.name;
+    let value = event.target.value;
+    this.setState(state => {
+      state[key] = value;
+    });
   }
 
   handleInstructionAdd(event) {
@@ -186,38 +153,70 @@ class Create extends React.Component {
     }));
   }
 
-  // add more inputs
-  handleMore(event) {
+  handleIngredientAdd(event) {
     event.preventDefault();
-    event.persist();
 
-    if (event.target.name === 'ing') {
-      // call api
-      axios
-        .post('/api/ingredients', { query: this.state.ing })
-        .then(res => {
-          this.setState(
-            {
-              nutrients: [...this.state.nutrients, res.data]
-            },
-            () => {
-              this.handleData(this.state.nutrients, () => {
-                // add empty
-                this.setState({
-                  ingredients: [
-                    ...this.state.ingredients,
-                    { name: '', quantity: 0, ndbno: '' }
-                  ]
-                });
-              });
+    const cb = (nutrients, sState) => {
+      const { name, quantity, ndbno, totalCal, chartData } = nutrients;
+
+      sState(state => {
+        const CD = [];
+        console.log('>>> chartdata from state', state.chartData);
+
+        chartData.forEach(obj => {
+          state.chartData.forEach(tup => {
+            if (tup[0] === Object.keys(obj)[0]) {
+              CD.push([tup[0], tup[1] + Object.values(obj)[0]]);
             }
-          );
-        })
-        .catch(err => {
-          console.log('ERROR receiving ingredient data', err);
+          });
         });
-    }
+
+        return {
+          ingredients: [...state.ingredients, { name, quantity, ndbno }],
+          totalCal: state.totalCal + totalCal,
+          chartData: CD
+        };
+      });
+    };
+
+    // make api call
+    const nutrients = getNDB(this.state.ing, handleData, cb);
+
+    // set state
   }
+
+  // add more inputs
+  // handleMore(event) {
+  //   event.preventDefault();
+  //   event.persist();
+
+  //   if (event.target.name === 'ing') {
+  //     // call api
+  //     axios
+  //       .post('/api/ingredients', { query: this.state.ing })
+  //       .then(res => {
+  //         this.setState(
+  //           {
+  //             nutrients: [...this.state.nutrients, res.data]
+  //           },
+  //           () => {
+  //             this.handleData(this.state.nutrients, () => {
+  //               // add empty
+  //               this.setState({
+  //                 ingredients: [
+  //                   ...this.state.ingredients,
+  //                   { name: '', quantity: 0, ndbno: '' }
+  //                 ]
+  //               });
+  //             });
+  //           }
+  //         );
+  //       })
+  //       .catch(err => {
+  //         console.log('ERROR receiving ingredient data', err);
+  //       });
+  //   }
+  // }
 
   handleSubmit(event) {
     event.preventDefault();
@@ -273,11 +272,11 @@ class Create extends React.Component {
           <AddIngredients
             ingredients={this.state.ingredients}
             handleChange={this.handleChange}
-            handleMore={this.handleMore}
+            handleMore={this.handleIngredientAdd}
           />
           <AddInstructions
             instructions={this.state.instructions}
-            handleChange={this.handleInstructionInput}
+            handleChange={this.handleChange}
             handleMore={this.handleInstructionAdd}
           />
 
