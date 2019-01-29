@@ -1,12 +1,12 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import Input from './createInput.jsx';
 import axios from 'axios';
 
 import PieChart from './pieChart.jsx';
 import TotalCalories from './totalCalories.jsx';
 import RecipeDesc from './recipeDesc.jsx';
 import AddIngredients from './addIngredients.jsx';
+import AddInstructions from './addInstructions.jsx';
 
 class Create extends React.Component {
   constructor(props) {
@@ -279,39 +279,11 @@ class Create extends React.Component {
             handleChange={this.handleChange}
             handleMore={this.handleMore}
           />
-          {/* <label>
-            <h3>Ingredients:</h3>
-            {this.state.ingredients.map((val, i, coll) => {
-              return (
-                <Input
-                  placeholder={'Add ingredient'}
-                  value={val.name}
-                  key={'item-' + i}
-                  handleChange={this.handleChange}
-                  handleMore={this.handleMore}
-                  name={'ing'}
-                  ingredient={true}
-                />
-              );
-            })}
-          </label> */}
-
-          <label>
-            <h3>Instructions:</h3>
-            {/* <Input handleChange={this.handleChange} handleMore={this.handleMore} name="instr" placeholder="Add instruction"/> */}
-            {this.state.instructions.map((val, i, coll) => {
-              return (
-                <Input
-                  key={'item-' + i}
-                  handleChange={this.handleChange}
-                  value={val}
-                  handleMore={this.handleMore}
-                  name="instr"
-                  placeholder="Add instruction"
-                />
-              );
-            })}
-          </label>
+          <AddInstructions
+            instructions={this.state.instructions}
+            handleChange={this.handleChange}
+            handleMore={this.handleMore}
+          />
 
           <input
             type="submit"
