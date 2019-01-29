@@ -4,6 +4,7 @@ import Input from './createInput.jsx';
 import axios from 'axios';
 
 import PieChart from './pieChart.jsx';
+import TotalCalories from './totalCalories.jsx';
 
 class Create extends React.Component {
   constructor(props) {
@@ -266,10 +267,7 @@ class Create extends React.Component {
 
         <div className="nutrients" id="chartNut">
           <PieChart data={this.state.data} />
-
-          {/* TOTAL CALORIES */}
-          <h3>Total Calories</h3>
-          <h5>{this.state.totalCal} kcal</h5>
+          <TotalCalories totalCal={this.state.totalCal} />
         </div>
 
         <form className="nutrients" id="formNut">
