@@ -5,6 +5,7 @@ import axios from 'axios';
 
 import PieChart from './pieChart.jsx';
 import TotalCalories from './totalCalories.jsx';
+import RecipeDesc from './recipeDesc.jsx';
 
 class Create extends React.Component {
   constructor(props) {
@@ -271,24 +272,7 @@ class Create extends React.Component {
         </div>
 
         <form className="nutrients" id="formNut">
-          <label>
-            <h3>Recipe title:</h3>
-            <input
-              type="text"
-              name="title"
-              placeholder="Add recipe title"
-              onChange={this.handleChange}
-            />
-          </label>
-
-          <label>
-            <h3>Recipe description:</h3>
-            <textarea
-              name="description"
-              placeholder="Add recipe description"
-              onChange={this.handleChange}
-            />
-          </label>
+          <RecipeDesc handleChange={this.handleChange} />
 
           <label>
             <h3>Ingredients:</h3>
