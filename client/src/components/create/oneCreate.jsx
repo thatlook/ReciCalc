@@ -2,7 +2,8 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import Input from './createInput.jsx';
 import axios from 'axios';
-import { Chart, Axis, Series, Tooltip, Pie } from 'react-charts';
+
+import PieChart from './pieChart.jsx';
 
 class Create extends React.Component {
   constructor(props) {
@@ -34,7 +35,13 @@ class Create extends React.Component {
       measure: [''],
 
       // chart data
-      chartData: [[0, 1], [1, 2], [2, 4], [3, 2], [4, 7]] // default data to show
+      chartData: [[0, 1], [1, 2], [2, 4], [3, 2], [4, 7]], // default data to show
+      data: [
+        {
+          label: 'g',
+          data: [[0, 1], [1, 2], [2, 4], [3, 2], [4, 7]]
+        }
+      ]
     };
     // this.userProfile;
     // bind methods
@@ -251,14 +258,6 @@ class Create extends React.Component {
   }
 
   render() {
-    // https://www.netrition.com/rdi_page.html
-    let data = [
-      {
-        label: 'g',
-        data: this.state.chartData
-      }
-    ];
-
     return (
       <div id="createWrapper">
         <div id="nuthead" className="nutrients">
@@ -266,14 +265,9 @@ class Create extends React.Component {
         </div>
 
         <div className="nutrients" id="chartNut">
-          <h3>Your Nutrients</h3>
-          <div id="chart">
-            <Chart data={data}>
-              <Axis type="pie" />
-              <Series type={Pie} showPoints={false} />
-              <Tooltip />
-            </Chart>
-          </div>
+          <PieChart data={this.state.data} />
+
+          {/* TOTAL CALORIES */}
           <h3>Total Calories</h3>
           <h5>{this.state.totalCal} kcal</h5>
         </div>
