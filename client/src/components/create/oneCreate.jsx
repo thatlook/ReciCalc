@@ -6,6 +6,7 @@ import axios from 'axios';
 import PieChart from './pieChart.jsx';
 import TotalCalories from './totalCalories.jsx';
 import RecipeDesc from './recipeDesc.jsx';
+import AddIngredients from './addIngredients.jsx';
 
 class Create extends React.Component {
   constructor(props) {
@@ -273,10 +274,13 @@ class Create extends React.Component {
 
         <form className="nutrients" id="formNut">
           <RecipeDesc handleChange={this.handleChange} />
-
-          <label>
+          <AddIngredients
+            ingredients={this.state.ingredients}
+            handleChange={this.handleChange}
+            handleMore={this.handleMore}
+          />
+          {/* <label>
             <h3>Ingredients:</h3>
-            {/* <Input handleChange={this.handleChange} handleMore={this.handleMore} name="ing" placeholder="Add ingredient" ingredient={true}/> */}
             {this.state.ingredients.map((val, i, coll) => {
               return (
                 <Input
@@ -290,7 +294,7 @@ class Create extends React.Component {
                 />
               );
             })}
-          </label>
+          </label> */}
 
           <label>
             <h3>Instructions:</h3>
