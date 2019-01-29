@@ -13,18 +13,18 @@ class Create extends React.Component {
     super(props);
 
     this.state = {
+      /* NECESSARY FOR DB SAVE */
       title: '',
-      description: '',
+      ingredients: [{ ndbno: '', quantity: 0, name: '' }], // ingredient list ex: [{ndbno: '808', quantity: 2, name:'spam'}]
+      instructions: [], // instruction list ex: ['mix', 'sautee']
 
-      userId: '',
+      /* OPTIONAL */
+      // userId: '',
+      description: '',
 
       // handle change
       ing: '', // current ing from onchange
       instr: '', // curr instr from onchange
-
-      // handle blur
-      ingredients: [{ ndbno: '', quantity: 0, name: '' }], // ingredient list ex: [{ndbno: '808', quantity: 2, name:'spam'}]
-      instructions: [''], // instruction list ex: ['mix', 'sautee']
 
       top_ingredients: '', // string to go into db
 
@@ -46,11 +46,14 @@ class Create extends React.Component {
         }
       ]
     };
-    this.userProfile;
+    // this.userProfile;
+
     // bind methods
     this.handleChange = this.handleChange.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
     this.handleMore = this.handleMore.bind(this);
+    this.handleInstructionInput = this.handleInstructionInput.bind(this);
+    this.handleInstructionAdd = this.handleInstructionAdd.bind(this);
   }
 
   componentDidMount() {
@@ -171,7 +174,52 @@ class Create extends React.Component {
     );
   }
 
-  handleClick(event) {
+  handleInstructionInput(event) {
+    this.setState({ instr: event.target.value });
+  }
+
+  handleInstructionAdd(event) {
+    event.preventDefault();
+
+    this.setState(state => ({
+      instructions: [...state.instructions, state.instr]
+    }));
+  }
+
+  // add more inputs
+  handleMore(event) {
+    event.preventDefault();
+    event.persist();
+
+    if (event.target.name === 'ing') {
+      // call api
+      axios
+        .post('/api/ingredients', { query: this.state.ing })
+        .then(res => {
+          this.setState(
+            {
+              nutrients: [...this.state.nutrients, res.data]
+            },
+            () => {
+              this.handleData(this.state.nutrients, () => {
+                // add empty
+                this.setState({
+                  ingredients: [
+                    ...this.state.ingredients,
+                    { name: '', quantity: 0, ndbno: '' }
+                  ]
+                });
+              });
+            }
+          );
+        })
+        .catch(err => {
+          console.log('ERROR receiving ingredient data', err);
+        });
+    }
+  }
+
+  handleSubmit(event) {
     event.preventDefault();
     event.persist();
 
@@ -208,58 +256,6 @@ class Create extends React.Component {
     );
   }
 
-  // add more inputs
-  handleMore(event) {
-    event.preventDefault();
-    event.persist();
-
-    if (event.target.name === 'ing') {
-      // call api
-      axios
-        .post('/api/ingredients', { query: this.state.ing })
-        .then(res => {
-          this.setState(
-            {
-              nutrients: [...this.state.nutrients, res.data]
-            },
-            () => {
-              this.handleData(this.state.nutrients, () => {
-                // add empty
-                this.setState({
-                  ingredients: [
-                    ...this.state.ingredients,
-                    { name: '', quantity: 0, ndbno: '' }
-                  ]
-                });
-              });
-            }
-          );
-        })
-        .catch(err => {
-          console.log('ERROR receiving ingredient data', err);
-        });
-    } else if (event.target.name === 'instr') {
-      // save current instr to instructions
-
-      this.setState(
-        (state, props) => {
-          // last item is always empty --> replace with new
-          state.instructions.splice(
-            state.instructions.length - 1,
-            1,
-            state.instr
-          );
-        },
-        () => {
-          // add empty
-          this.setState({
-            instructions: [...this.state.instructions, '']
-          });
-        }
-      );
-    }
-  }
-
   render() {
     return (
       <div id="createWrapper">
@@ -281,15 +277,15 @@ class Create extends React.Component {
           />
           <AddInstructions
             instructions={this.state.instructions}
-            handleChange={this.handleChange}
-            handleMore={this.handleMore}
+            handleChange={this.handleInstructionInput}
+            handleMore={this.handleInstructionAdd}
           />
 
           <input
             type="submit"
             value="Save Recipe"
             className="button"
-            onClick={this.handleClick}
+            onClick={this.handleSubmit}
           />
         </form>
       </div>
