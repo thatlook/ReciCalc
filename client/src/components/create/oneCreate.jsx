@@ -19,17 +19,15 @@ class Create extends React.Component {
       ingredients: [], // ingredient list ex: [{ndbno: '808', quantity: 2, name:'spam'}]
       instructions: [], // instruction list ex: ['mix', 'sautee']
 
-      /* OPTIONAL */
-      // userId: '',
+      userId: 0,
       description: '',
+
       searching: false,
+      submit: false, // whether total submit button was clicked
 
       // handle change
       ing: '', // current ing from onchange
       instr: '', // curr instr from onchange
-
-      top_ingredients: '', // string to go into db
-      submit: false, // whether total submit button was clicked
 
       totalCal: 0,
       data: [
@@ -47,6 +45,7 @@ class Create extends React.Component {
     this.handleInstructionAdd = this.handleInstructionAdd.bind(this);
     this.handleIngredientAdd = this.handleIngredientAdd.bind(this);
     this.getNDB = this.getNDB.bind(this);
+    this.submitRecipe = this.submitRecipe.bind(this);
   }
 
   /*
@@ -178,41 +177,21 @@ class Create extends React.Component {
     this.getNDB(this.state.ing);
   }
 
+  async submitRecipe() {
+    try {
+      await this.setState({ submit: true });
+      const recipe = Object.assign({}, this.state);
+      const res = await axios.post('api/recipes', { recipe });
+      await this.props.history.push(`/recipes/${res.data.newRecipeId}`);
+    } catch (e) {
+      console.error('ERROR while post request for /api/recipes', e);
+    }
+  }
+
   handleSubmit(event) {
     event.preventDefault();
-    event.persist();
-
-    this.setState(
-      {
-        submit: true,
-        top_ingredients: this.state.ingredients.reduce((prev, curr, i) => {
-          if (i === 0) {
-            return prev + curr.ndbno;
-          } else {
-            return [prev, curr.ndbno].join(', ');
-          }
-        }, '')
-      },
-      () => {
-        this.setState(
-          (state, props) => {
-            state.ingredients.pop();
-            state.instructions.pop();
-          },
-          () => {
-            const recipe = Object.assign({}, this.state);
-            axios
-              .post('api/recipes', { recipe })
-              .then(res => {
-                this.props.history.push(`/recipes/${res.data.newRecipeId}`);
-              })
-              .catch(err => {
-                console.error('ERROR while post request for /api/recipes', err);
-              });
-          }
-        );
-      }
-    );
+    // event.persist();
+    this.submitRecipe();
   }
 
   render() {
