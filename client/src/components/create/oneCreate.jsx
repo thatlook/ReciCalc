@@ -7,6 +7,7 @@ import TotalCalories from './totalCalories.jsx';
 import RecipeDesc from './recipeDesc.jsx';
 import AddIngredients from './addIngredients.jsx';
 import AddInstructions from './addInstructions.jsx';
+import Spinner from './spinner.jsx';
 
 class Create extends React.Component {
   constructor(props) {
@@ -21,6 +22,7 @@ class Create extends React.Component {
       /* OPTIONAL */
       // userId: '',
       description: '',
+      searching: false,
 
       // handle change
       ing: '', // current ing from onchange
@@ -105,6 +107,7 @@ class Create extends React.Component {
 
   async getNDB(searchTerm) {
     try {
+      await this.setState({ searching: true });
       const res = await axios.post('/api/ingredients', { query: searchTerm });
       const data = res.data;
       const only = ['291', '205', '268', '203', '204']; // use only major nutrients
@@ -160,7 +163,8 @@ class Create extends React.Component {
               label: 'g',
               data: chartData
             }
-          ]
+          ],
+          searching: false
         };
       });
     } catch (e) {
@@ -225,6 +229,7 @@ class Create extends React.Component {
 
         <form className="nutrients" id="formNut">
           <RecipeDesc handleChange={this.handleChange} />
+          {this.state.searching ? <Spinner /> : null}
           <AddIngredients
             ingredients={this.state.ingredients}
             handleChange={this.handleChange}
