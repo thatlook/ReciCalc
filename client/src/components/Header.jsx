@@ -5,9 +5,13 @@ import { Link } from 'react-router-dom';
 const Header = () => {
   return (
     <div id="header">
-      <h1 id="header-logo" className="logo">
-        RECI-CALC
-      </h1>
+      <div>
+        <Link to="/landing">
+          <h1 id="header-logo" className="logo">
+            RECI-CALC
+          </h1>
+        </Link>
+      </div>
       <div id="nav-links">
         <span>
           <Link className="nav link" to="/create">
