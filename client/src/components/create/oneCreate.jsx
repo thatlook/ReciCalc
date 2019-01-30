@@ -8,47 +8,6 @@ import RecipeDesc from './recipeDesc.jsx';
 import AddIngredients from './addIngredients.jsx';
 import AddInstructions from './addInstructions.jsx';
 
-/* helper functions */
-async function getNDB(searchTerm, handleData, cb) {
-  try {
-    const res = await axios.post('/api/ingredients', { query: searchTerm });
-    const data = handleData(res.data, searchTerm);
-    cb(data);
-  } catch (e) {
-    console.log('ERROR receiving ingredient data', e);
-  }
-}
-
-const handleData = (data, searchTerm) => {
-  const only = ['291', '205', '268', '203', '204']; // use only major nutrients
-
-  const obj = {
-    totalCal: 0,
-    chartData: [],
-    ndbno: data.ndbno,
-    name: data.name ? data.name : searchTerm,
-    quantity: data.weight
-  };
-
-  data.nutrients.forEach(val => {
-    if (only.includes(val.nutrient_id)) {
-      const nutObj = {};
-
-      let name = val.nutrient;
-      let num = isNaN(val.value) ? 0 : parseFloat(val.value);
-
-      nutObj[name] = num;
-      obj.chartData.push(nutObj);
-
-      // total calories
-    } else if (val.nutrient_id === '208') {
-      obj.totalCal += parseFloat(val.value);
-    }
-  });
-
-  return obj;
-};
-
 class Create extends React.Component {
   constructor(props) {
     super(props);
@@ -68,22 +27,13 @@ class Create extends React.Component {
       instr: '', // curr instr from onchange
 
       top_ingredients: '', // string to go into db
-
-      // dynamic rendering
       submit: false, // whether total submit button was clicked
 
-      // data from api
-      nutrients: [],
       totalCal: 0,
-      ndbno: [''],
-      measure: [''],
-
-      // chart data
-      chartData: [[0, 1], [1, 2], [2, 4], [3, 2], [4, 7]], // default data to show
       data: [
         {
           label: 'g',
-          data: [[0, 1], [1, 2], [2, 4], [3, 2], [4, 7]]
+          data: [[0, 1], [1, 2], [2, 4], [3, 2], [4, 7]] // default data to show
         }
       ]
     };
@@ -92,9 +42,9 @@ class Create extends React.Component {
     // bind methods
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    // this.handleMore = this.handleMore.bind(this);
     this.handleInstructionAdd = this.handleInstructionAdd.bind(this);
     this.handleIngredientAdd = this.handleIngredientAdd.bind(this);
+    this.getNDB = this.getNDB.bind(this);
   }
 
   /*
@@ -153,70 +103,76 @@ class Create extends React.Component {
     }));
   }
 
-  handleIngredientAdd(event) {
-    event.preventDefault();
+  async getNDB(searchTerm) {
+    try {
+      const res = await axios.post('/api/ingredients', { query: searchTerm });
+      const data = res.data;
+      const only = ['291', '205', '268', '203', '204']; // use only major nutrients
 
-    const cb = (nutrients, sState) => {
-      const { name, quantity, ndbno, totalCal, chartData } = nutrients;
+      /* manipulate data */
+      const obj = {
+        totalCal: 0,
+        chartData: [],
+        ndbno: data.ndbno,
+        name: data.name ? data.name : searchTerm,
+        quantity: data.weight
+      };
 
-      sState(state => {
-        const CD = [];
-        console.log('>>> chartdata from state', state.chartData);
+      data.nutrients.forEach(val => {
+        if (only.includes(val.nutrient_id)) {
+          let name = val.nutrient;
+          let num = isNaN(val.value) ? 0 : parseFloat(val.value);
+          obj.chartData.push([name, num]);
 
-        chartData.forEach(obj => {
-          state.chartData.forEach(tup => {
-            if (tup[0] === Object.keys(obj)[0]) {
-              CD.push([tup[0], tup[1] + Object.values(obj)[0]]);
-            }
+          // total calories
+        } else if (val.nutrient_id === '208') {
+          obj.totalCal += parseFloat(val.value);
+        }
+      });
+
+      /* set state */
+      await this.setState(state => {
+        const { ndbno, name, quantity } = obj;
+        let { chartData, totalCal } = obj;
+
+        if (typeof state.data[0].data[0][0] === 'string') {
+          chartData = chartData.map(val => {
+            const arr = [];
+
+            state.data[0].data.forEach(tup => {
+              if (val[0] === tup[0]) {
+                arr.push(val[0]);
+                arr.push(val[1] + tup[1]);
+              }
+            });
+
+            return arr;
           });
-        });
+        }
+
+        totalCal = state.totalCal + totalCal;
 
         return {
-          ingredients: [...state.ingredients, { name, quantity, ndbno }],
-          totalCal: state.totalCal + totalCal,
-          chartData: CD
+          ingredients: [...state.ingredients, { quantity, ndbno, name }],
+          totalCal,
+          data: [
+            {
+              label: 'g',
+              data: chartData
+            }
+          ]
         };
       });
-    };
-
-    // make api call
-    const nutrients = getNDB(this.state.ing, handleData, cb);
-
-    // set state
+    } catch (e) {
+      console.log('>>> alert should go');
+      // alert('Search term doesnt exist');
+    }
   }
 
-  // add more inputs
-  // handleMore(event) {
-  //   event.preventDefault();
-  //   event.persist();
-
-  //   if (event.target.name === 'ing') {
-  //     // call api
-  //     axios
-  //       .post('/api/ingredients', { query: this.state.ing })
-  //       .then(res => {
-  //         this.setState(
-  //           {
-  //             nutrients: [...this.state.nutrients, res.data]
-  //           },
-  //           () => {
-  //             this.handleData(this.state.nutrients, () => {
-  //               // add empty
-  //               this.setState({
-  //                 ingredients: [
-  //                   ...this.state.ingredients,
-  //                   { name: '', quantity: 0, ndbno: '' }
-  //                 ]
-  //               });
-  //             });
-  //           }
-  //         );
-  //       })
-  //       .catch(err => {
-  //         console.log('ERROR receiving ingredient data', err);
-  //       });
-  //   }
-  // }
+  handleIngredientAdd(event) {
+    event.preventDefault();
+    this.getNDB(this.state.ing);
+  }
 
   handleSubmit(event) {
     event.preventDefault();
