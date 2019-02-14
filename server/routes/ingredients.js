@@ -61,7 +61,7 @@ const IngredientSearch = (req, res) => {
   const resObj = {};
 
   let searchTerm = req.body.query;
-  console.log(searchTerm, 'is searchterm');
+  // console.log(searchTerm, 'is searchterm');
   // queryDBSearch(searchTerm)
   // .then((ingredients) => {
   //   // FOUND! send to front end
@@ -78,7 +78,7 @@ const IngredientSearch = (req, res) => {
     // })
     .then(ingredients => {
       // FOUND! search USDA nutrients using ndbno
-      console.log('usda query search success');
+      // console.log('usda query search success');
       const item = ingredients.data.list.item[0];
       resObj.ndbno = item.ndbno;
       return usdaNutrientSearch(item.ndbno);
@@ -95,11 +95,11 @@ const IngredientSearch = (req, res) => {
     })
     .then(nutrients => {
       // save to db
-      console.log('usda nut search success');
+      // console.log('usda nut search success');
       return db.addIngredient(nutrients);
     })
     .then(() => {
-      console.log('saved ingredient to DB');
+      // console.log('saved ingredient to DB');
     })
     .catch(err => {
       console.log(
