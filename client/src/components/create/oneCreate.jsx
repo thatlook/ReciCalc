@@ -19,7 +19,7 @@ class Create extends React.Component {
       ingredients: [], // ingredient list ex: [{ndbno: '808', quantity: 2, name:'spam'}]
       instructions: [], // instruction list ex: ['mix', 'sautee']
 
-      userId: 0,
+      userId: '',
       description: '',
 
       searching: false,
@@ -37,7 +37,7 @@ class Create extends React.Component {
         }
       ]
     };
-    // this.userProfile;
+    this.userProfile;
 
     // bind methods
     this.handleChange = this.handleChange.bind(this);
@@ -48,45 +48,43 @@ class Create extends React.Component {
     this.submitRecipe = this.submitRecipe.bind(this);
   }
 
-  /*
   componentDidMount() {
-    this.getAccessToken();
-    this.getProfile();
+    // this.getAccessToken();
+    // this.getProfile();
     this.setUser();
   }
 
-  getAccessToken() {
-    const accessToken = localStorage.getItem('accessToken');
-    if (!accessToken) {
-      throw new Error('No Access Token found');
-    }
-    return accessToken;
-  }
+  // getAccessToken() {
+  //   const accessToken = localStorage.getItem('accessToken');
+  //   if (!accessToken) {
+  //     throw new Error('No Access Token found');
+  //   }
+  //   return accessToken;
+  // }
 
-  getProfile(cb) {
-    let accessToken = this.getAccessToken();
-    this.auth0.client.userInfo(accessToken, (err, profile) => {
-      if (profile) {
-        this.userProfile = profile;
-      }
-      cb(err, profile);
-    });
-  }
+  // getProfile(cb) {
+  //   let accessToken = this.getAccessToken();
+  //   this.auth0.client.userInfo(accessToken, (err, profile) => {
+  //     if (profile) {
+  //       this.userProfile = profile;
+  //     }
+  //     cb(err, profile);
+  //   });
+  // }
 
   setUser() {
     let profile = localStorage.getItem('profile');
     let profileJSON = JSON.parse(profile);
-    axios.post('/api/users', {
-      user: profileJSON.nickname
-    })
-    .then(res => {
-      this.setState({
-        userId: parseInt(res.data)
+    axios
+      .post('/api/users', {
+        user: profileJSON.nickname
       })
-
-    })
+      .then(res => {
+        this.setState({
+          userId: parseInt(res.data)
+        });
+      });
   }
-  */
 
   handleChange(event) {
     let key = event.target.name;

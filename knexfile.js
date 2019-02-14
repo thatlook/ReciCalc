@@ -1,15 +1,19 @@
 const configDB = require('./db_config.js').location;
-require('dotenv').config()
+const path = require('path');
+
+require('dotenv').config();
 
 module.exports = {
-
   development: {
     client: 'pg',
     connection: configDB,
     pool: {
-      min:0,
-      max:5
+      min: 0,
+      max: 5
     }
+    // seeds: {
+    //   directory: path.join(__dirname, '/database/seeds')
+    // }
   },
 
   staging: {
@@ -24,7 +28,6 @@ module.exports = {
     }
   },
 
-
   production: {
     client: 'pg',
     connection: process.env.DATABASE_URL + '?ssl=true',
@@ -36,5 +39,4 @@ module.exports = {
       tableName: 'knex_migrations'
     }
   }
-
 };

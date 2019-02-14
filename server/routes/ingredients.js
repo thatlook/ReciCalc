@@ -102,10 +102,14 @@ const IngredientSearch = (req, res) => {
       // console.log('saved ingredient to DB');
     })
     .catch(err => {
-      console.log(
+      console.error(
         'couldnt save ingredient to DB or ingredient not in usda',
-        err.error
+        err
       );
+      // console.log(
+      //   'couldnt save ingredient to DB or ingredient not in usda',
+      //   err.error
+      // );
     });
 };
 
@@ -197,7 +201,6 @@ module.exports.ingredients = {
         } else {
           db.addIngredient(data.data.report.foods[0])
             .then(() => {
-              console.log('>>> where is foods', data.data.report.foods[0]);
               return res.status(200).send(data.data.report.foods[0]);
             })
             .catch(err => {
